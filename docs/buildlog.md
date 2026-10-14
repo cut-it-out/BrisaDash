@@ -44,7 +44,7 @@ Running record of how this project was built with Claude Code. "I" is the develo
 (Keep current; every session updates this list.)
 
 - Device details not recorded (Sessions 10–12), mine, small: Android plays at 110+ fps (118 FPS, 42 draw calls on my Session 11 screenshot) and its share sheet works; the iPhone 14 showed 60 FPS and 42 draw calls. Still missing for GDD §12: the Android phone model and browser version, and the iPhone's Safari version.
-- Session 12 changes to judge on the phone, mine: the café table and menu board (`obstacleMix.*`), the sound at 40% (`soundVolume`), and the slower-growing row gap (`rowGapGrowth`; lower is harder). Log run lengths (target 30–60 s for a first-timer) and write any changes into `src/game/config.js`. The villas, boats, stones, seagulls and zigzag pairs were approved in Session 12 ("other not mentioned things look good").
+- Session 12 changes to judge on the phone, mine: the café table and menu board (`obstacleMix.*`, turns in `OBSTACLE_TURNS`), the sound at 40% (`soundVolume`), and the slower-growing row gap (`rowGapGrowth`; lower is harder). Log run lengths (target 30–60 s for a first-timer) and write any changes into `src/game/config.js`. The villas, boats, stones, seagulls and zigzag pairs were approved in Session 12 ("other not mentioned things look good").
 - Deckchair model (Session 12), mine: I'm looking for a CC0 or CC BY deckchair model. When it's in `model-to-import/`, check its licence, credit it, and add it as an obstacle look; the code-built deckchair was rejected.
 - Preview URL is hard-coded (Session 9): `og:url` and `og:image` in `index.html` name https://brisa-dash.pages.dev. If the Pages project is renamed or a custom domain is added, update both.
 - Parked (Session 3, mine): a Brisa Turquoise apron on the barista ("no apron for now, maybe later"). All of the character's colour comes from one texture, so it would need a code-built overlay box or a recoloured torso.
@@ -466,19 +466,68 @@ Running record of how this project was built with Claude Code. "I" is the develo
   - Next: my review on the iPhone 14 with `?debug`: FPS and draw calls, the sounds, the villas/boats/gulls/obstacle looks, and run lengths with the new balance and zigzag pairs. Tune with `seagullCount`, `obstacleMix.*`, `zigzagChance`, `zigzagGapSeconds` from the URL, then write any changes into `src/game/config.js`.
 - **Showcase line:** I asked for a livelier seafront and more obstacle variety, chose new Kenney packs over primitives, and asked for a switch to turn the seagulls off. Claude Code audited four packs, picked villas, boats, stones, a tent and a barrel from labelled sheets, and shipped best score, sound and a zigzag row pattern in one Phase 6 build for me to review on the phone.
 
-### Session 12 — Thursday 15 October 2026 — (in progress)
+### Session 12 — Thursday 15 October 2026 — Phase 6 review: café obstacles, quieter sound, tighter rows
 
-- [correction] "the barrels are not good, the color takes away the attention from the collectables" and "the tents are sort of ok, but I just don't like them, they dont really fit in here imho" — "give me alternative options. show me/tell me first before you make this change". From the four options Claude Code offered (striped deckchair, beach windbreak, surfboard rack, promenade planter), I picked the promenade planter and the striped deckchair.
-- [direction] "the seagulls can stay, they are cool"
-- [direction] "the sounds feel a bit intrusive, tune the volume down"
-- [direction] "the balance of the game is better now, but the long play it still feels "easy". it has to do with the distance between obstacles: lets keep the initial obstacle distance but do not extend it that much to make the game harder by time" — I picked "Medium": the gap grows 0.5 m per 1 m/s of speed (17 m at 60 s instead of 27.6 m).
-- [correction] "one of the rock on the right side sometimes placed that it is entering the play area. it does not interfere with gameplay, but it is disturbing and misleading if that lane is free or not" — from my iPhone and Android screenshots.
-- [playtest] "other not mentioned things look good. android also plays fine, it has continuous 110+ fps" — my Android screenshot showed 118 FPS and 42 draw calls; the iPhone 14 screenshot showed 60 FPS and 42 draw calls.
-- [playtest] "android share also ok, checked it" — the Android share sheet works.
-- [correction] "The deck chair looks very bad, not like a deck chair and planter look out of place. Any other options? Like a basic circle table maybe?" — after the screenshot sheet; nothing was pushed.
-- [correction] "Also the parasols beds headrest/back looks like if it is tilted in the wrong direction" — the lounger backrest was rotated -0.9 rad, raising its seat-side edge.
-- [direction] "I will look for a cc0 or attribution deck chair model also"
-- [decision] "Café tablet and menu board, but: move the chairs closer together and in front of the table, the menu board should be rotated 30 degrees" — picked from mock-ups of a café table, a menu board, a surfboard rack and a windbreak; the deckchair and planter are dropped.
-- [direction] "could wel also rotate the parasols and the table+chair combo ? rotate them 20 degrees and lets rotate all objects randomly clockwise/counter-clockwise directions"
-- [direction] "rotate the parasols only 10 degrees but make the lounger beds wider a bit"
-- [direction] "widen the beds to .8m"
+- **Goal:** Act on my phone review of the Phase 6 build (from me; Session 11's next step was my review on the iPhone 14).
+- **Direction given:**
+  - Barrel and tent: "the barrels are not good, the color takes away the attention from the collectables" and "the tents are sort of ok, but I just don't like them, they dont really fit in here imho". Then: "give me alternative options. show me/tell me first before you make this change".
+  - "the seagulls can stay, they are cool"
+  - "the sounds feel a bit intrusive, tune the volume down"
+  - "the balance of the game is better now, but the long play it still feels "easy". it has to do with the distance between obstacles: lets keep the initial obstacle distance but do not extend it that much to make the game harder by time"
+  - From my iPhone and Android screenshots: "one of the rock on the right side sometimes placed that it is entering the play area. it does not interfere with gameplay, but it is disturbing and misleading if that lane is free or not"
+  - "other not mentioned things look good."
+  - Obstacle tuning:
+    - "could wel also rotate the parasols and the table+chair combo ? rotate them 20 degrees and lets rotate all objects randomly clockwise/counter-clockwise directions"
+    - Then "rotate the parasols only 10 degrees but make the lounger beds wider a bit".
+    - Then "widen the beds to .8m".
+  - At the end: "please update the app and then push the changes and wrap up this session".
+- **Course corrections:**
+  - Claude Code offered four replacements by description (striped deckchair, beach windbreak, surfboard rack, promenade planter). I picked the deckchair and the planter, then rejected both from the screenshot sheet: "The deck chair looks very bad, not like a deck chair and planter look out of place. Any other options? Like a basic circle table maybe?"
+  - This time Claude Code mocked up four candidates in the scene before I chose: my café table, a menu board, a surfboard rack and a windbreak. I picked "Café tablet and menu board, but: move the chairs closer together and in front of the table, the menu board should be rotated 30 degrees".
+  - I caught that "the parasols beds headrest/back looks like if it is tilted in the wrong direction". The backrest had been rotated −0.9 rad since Phase 2, so it leaned over the bed.
+  - Nothing went live until I had seen screenshots of the final obstacles, as I asked.
+- **What was built:**
+  1. Obstacles (`src/render/entities.js`):
+     - Parasol 50%, café table 25%, menu board 25% (`obstacleMix`), all built in code in turquoise, white and Deep Ocean.
+     - Café table: a round white top with a turquoise rim and two turquoise stools in front, scaled 1.2×.
+     - Menu board: an A-frame Deep Ocean chalkboard with a white frame and a turquoise header.
+     - Each obstacle turns clockwise or counter-clockwise at random (`OBSTACLE_TURNS`: parasol 10°, table 20°, board 30°). The knock-aside still tips it straight out of the lane.
+     - Lounger: backrest leaning back, width 0.6 → 0.8 m (`LOUNGER_WIDTH`).
+     - Removed: the barrel, the tent, and the deckchair and planter tried this session; their GLBs are out of `public/models` and the credits.
+  2. Sound: every effect plays through one gain node at `soundVolume` 0.4 (about −8 dB).
+  3. Row spacing (`src/game/spawner.js`):
+     - `rowGap` = max(`rowGapStart` 9.6 + (speed − 8) × `rowGapGrowth` 0.5, speed × `rowGapMinSeconds` 0.5). That gives 17.1 m at 60 s (was 27.6 m) and 25.6 m at top speed (was 48 m).
+     - `zigzagGap` = 2 × hitDepth + speed × `zigzagRunSeconds` 0.5, so a zigzag pair stays shorter than a normal gap.
+     - Removed `rowGapSeconds`, `minRowGap`, `zigzagGapSeconds` and `zigzagMinGap`.
+  4. Scenery: the right-side `rockLarge` moved from x 3.4 to 4.5. It had reached 0.57 m into the right lane. `clearOfTrack` in `src/render/world.js` now pushes every non-palm piece clear of the kerb.
+  5. Credits: `CREDITS.md` regenerated after my `src/credits.json` edit.
+  6. Docs: GDD §5, §7, §10 and §11, and Part 1 (Models, Balancing, Audio).
+- **Decisions:**
+  - Café table and A-frame menu board as the extra obstacles; the table set and the board are on-brand for a café. [directed]
+  - Obstacle turns: parasol 10°, table 20°, board 30°, direction random per obstacle; lounger 0.8 m wide. [directed]
+  - "Medium" row spacing (0.5 m per m/s), chosen from mild 0.75 / medium 0.5 / hard 0.3. [proposed → accepted]
+  - Sound at 40% through one master gain, adjustable from the URL, rather than re-encoding each file. [Claude's call]
+  - A floor of 0.5 s between rows, so a low `rowGapGrowth` override can't make rows impossible. [Claude's call]
+  - Turn direction picked in the renderer with `Math.random`, not in the spawner, so the tested spawn sequence doesn't change. [Claude's call]
+  - Table scaled 1.2× so it reads from far away (proposed with the options, not objected to). [Claude's call]
+  - Sound conversions are not listed as "changes" in the credits. [directed, by my hand edit]
+- **What broke or was wrong:**
+  - The lounger backrest had leaned the wrong way since Phase 2; I spotted it, and nobody had noticed it before.
+  - The rock overlapping the right lane dated from the Session 7 layout. A check of every piece's turned footprint found it was the only one.
+  - Claude Code's first single-look screenshots skipped the overrides: the URLs had no `?debug`, which overrides need. They were rerun.
+- **Hand edits:** `src/credits.json`: I removed the "changes" line from the three sound packs, because I don't count format conversion as a change and it took space in the credits screen.
+- **Testing / playtest notes:**
+  - My phone review of the Session 11 build:
+    - iPhone 14: 60 FPS, 42 draw calls.
+    - Android: "continuous 110+ fps" (118 FPS, 42 draw calls on my screenshot), and "android share also ok, checked it".
+  - `npm test`: 12 files, 70 tests passed (68 at the start). New tests cover the row gap curve, the 0.5 s floor, the zigzag gap and the master volume.
+  - `npm run build`: JS 645.42 kB (165.28 kB gzip). `public/models` 796 KB.
+  - Headless Edge screenshot sheets sent to me before each decision: candidates A–D, the final table and board, the turns, the wider loungers.
+  - Not yet seen on the phone: the café obstacles, the quieter sound and the new spacing. Run lengths not logged yet.
+- **Learned:** Describing a model in words wasn't enough: two options I picked from descriptions looked wrong on screen. Mocking up candidates in the real scene before asking gave a choice that stuck.
+- **Where things stand / next step:**
+  - Six Session 12 commits plus this wrap-up are on `main`. They are pushed to GitHub, so Cloudflare Pages deploys them to https://brisa-dash.pages.dev.
+  - `npm test` 70/70.
+  - Next: play the new build on the phone. Judge the café obstacles, the 40% sound and the tighter rows (`?debug&rowGapGrowth=` and `soundVolume=` to tune), log run lengths, and write any changes into `src/game/config.js`.
+  - If I find a CC0 or CC BY deckchair model, it goes in `model-to-import/` as a fourth obstacle look.
+- **Showcase line:** My phone review found the new obstacles off-brand and the late game too easy. I had Claude Code mock up alternatives in the scene, chose a café table and menu board, fixed a backwards lounger I spotted, and tightened the row spacing so the run gets harder as it speeds up.

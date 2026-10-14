@@ -70,7 +70,6 @@ Every third-party asset used in Brisa Dash. CC0 assets are public domain and cre
 
 - Source: https://kenney.nl/assets/interface-sounds
 - License: CC0 1.0 (http://creativecommons.org/publicdomain/zero/1.0/)
-- Changes: Converted from OGG to mono MP3 with the volume evened out.
 - Files used (under `public/`):
   - `sounds/interface/glass_002.mp3`
   - `sounds/interface/confirmation_001.mp3`
@@ -80,7 +79,6 @@ Every third-party asset used in Brisa Dash. CC0 assets are public domain and cre
 
 - Source: https://kenney.nl/assets/impact-sounds
 - License: CC0 1.0 (http://creativecommons.org/publicdomain/zero/1.0/)
-- Changes: Converted from OGG to mono MP3 with the volume evened out.
 - Files used (under `public/`):
   - `sounds/impact/impactSoft_heavy_000.mp3`
 
@@ -88,7 +86,6 @@ Every third-party asset used in Brisa Dash. CC0 assets are public domain and cre
 
 - Source: https://kenney.nl/assets/digital-audio
 - License: CC0 1.0 (http://creativecommons.org/publicdomain/zero/1.0/)
-- Changes: Converted from OGG to mono MP3 with the volume evened out.
 - Files used (under `public/`):
   - `sounds/digital/lowDown.mp3`
 

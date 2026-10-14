@@ -1,6 +1,6 @@
 # Brisa Dash — Execution Plan
 
-*Progress: Phases 0–4 done (Sessions 3–8); Phase 5 done on the iPhone 14 (Sessions 9–10), Android check still to do; Phase 6 built in Session 11, waiting for my review on the phone.*
+*Progress: Phases 0–4 done (Sessions 3–8); Phase 5 done on the iPhone 14 (Sessions 9–10), Android check still to do; Phase 6 built in Session 11 and revised after my phone review in Session 12 (café table and menu board as the extra obstacles, quieter sound, tighter row spacing).*
 
 *Status: approved, 14 October 2026 (Session 2). Built from [GDD.md](GDD.md). Each phase ends with something playable that can be committed. Tick phases off in [buildlog.md](buildlog.md); if the plan changes, edit this file in the same session.*
 
