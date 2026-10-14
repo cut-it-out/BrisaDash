@@ -95,7 +95,7 @@ public/models/             only the GLBs actually used
 
 *Goal: swap the primitives for the CC0 models chosen in Phase 0 and make the credits real.*
 
-1. Copy only the chosen GLBs into `public/models/`. Load them with GLTFLoader before Play is enabled and clone them for the pools. Tint the apron Turquoise if Phase 0 found that possible. Any entity without a fitting model keeps its primitive.
+1. Copy only the chosen GLBs into `public/models/`: `character-f.glb` (Blocky Characters), `cup-coffee.glb` (Food Kit), and a few `tree_palm*` / `rock_*` models (Nature Kit). Copy each pack's texture next to its GLBs, because Blocky and Food Kit GLBs reference an external `Textures/*.png`. Load them with GLTFLoader before Play is enabled and clone them for the pools. Scale each pack separately: the character is about 2.7 units tall, the cup 0.5 and the palm 1.4. No apron for now. The obstacle stays a primitive parasol, because no pack has one.
 2. Add the brief's "little low-poly scenery": a few palms or rocks beside the track, pooled and recycled.
 3. `src/credits.json` is the single source (creator, pack, URL, licence, files used). `npm run credits` generates `CREDITS.md`. A Vitest test fails if `CREDITS.md` doesn't match the JSON or if a GLB in `public/models/` has no credit entry.
 4. Check the draw-call count in the debug overlay. Merge or instance meshes only if the phone numbers call for it.

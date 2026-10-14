@@ -66,11 +66,11 @@ The wobble is just a **code-driven change of position and rotation** on a static
 
 | Entity | What it is | Source |
 |---|---|---|
-| Runner | A barista made from a Kenney **Blocky Character**, in a static pose with a code-driven run bob and the apron tinted Brisa Turquoise if the model allows it | Blocky Characters (CC0) |
-| Obstacle (one type) | A beach parasol or deckchair blocking one lane | Nature Kit or Food Kit, if either has a fitting model (to verify on the pack pages); otherwise build one from primitives (a parasol is a cylinder plus a cone) |
-| Coffee pickup | A takeaway cup in Sunset Coral that spins and bobs | Food Kit (CC0); the cup model is to be verified, and the fallback is primitives (a cylinder plus a lid) |
+| Runner | A barista made from Kenney Blocky Character **`character-f.glb`** (teal shirt), in a static pose with a code-driven run bob. No apron for now; it may come later | Blocky Characters (CC0) |
+| Obstacle (one type) | A beach parasol or deckchair blocking one lane | Built from primitives (a parasol is a cylinder plus a cone). None of the three packs has a parasol or deckchair (checked 14 October 2026) |
+| Coffee pickup | A coffee cup that spins and bobs: **`cup-coffee.glb`** (a ceramic cup with a handle). `frappe.glb` (a takeaway cup with a lid and straw) is parked as a possible later add-on | Food Kit (CC0) |
 | Track | A sandy promenade in Sunlit Sand with lane lines | Code-built planes, recycled in segments |
-| Scenery | A few palms or rocks beside the track, with turquoise sea on one side and sky behind | Nature Kit (to verify), recycled |
+| Scenery | A few palms or rocks beside the track, with turquoise sea on one side and sky behind | Nature Kit (CC0): `tree_palm*` and `rock_*` models, recycled |
 
 - **Spawning:** obstacles come in rows, and every row **leaves at least one lane free**. Coffees come in short lines of 3–5 cups (tune) in a lane that is free at that point, which rewards reading the road.
 - **Recycling:** every track segment, obstacle, cup and scenery piece comes from a small pool and moves back ahead of the runner once it has passed behind the camera. No infinite world is built.
