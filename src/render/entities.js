@@ -24,7 +24,7 @@ const CUP_BOB = 0.08;
 const MAX_OBSTACLES = 24; // per look
 // How far each obstacle look is turned about its vertical axis; each obstacle picks clockwise or
 // counter-clockwise at random, so the rows don't look stamped out (tune)
-const OBSTACLE_TURNS = { parasol: Math.PI / 9, cafeTable: Math.PI / 9, menuBoard: Math.PI / 6 }; // 20°, 20°, 30°
+const OBSTACLE_TURNS = { parasol: Math.PI / 18, cafeTable: Math.PI / 9, menuBoard: Math.PI / 6 }; // 10°, 20°, 30°
 const MAX_COFFEES = 48;
 
 const middle = Math.floor(CONFIG.laneCount / 2);
@@ -65,12 +65,13 @@ export function createRunner(scene, model) {
 }
 
 // Obstacle from primitives: a parasol over a lounger (no pack has one, GDD §7)
+const LOUNGER_WIDTH = 0.75; // (tune) was 0.6 until Session 12
 function parasolModel() {
   return primitiveModel([
     painted(new THREE.CylinderGeometry(0.04, 0.04, 2.0, 6).translate(0, 1.0, 0), PALETTE.seaSaltWhite),
     painted(new THREE.ConeGeometry(0.85, 0.45, 8).translate(0, 2.1, 0), PALETTE.brisaTurquoise),
-    painted(new THREE.BoxGeometry(0.6, 0.3, 1.0).translate(0, 0.15, 0.1), PALETTE.seaSaltWhite),
-    painted(new THREE.BoxGeometry(0.6, 0.08, 0.6).rotateX(0.9).translate(0, 0.5, -0.45), PALETTE.seaSaltWhite), // backrest, leaning back
+    painted(new THREE.BoxGeometry(LOUNGER_WIDTH, 0.3, 1.0).translate(0, 0.15, 0.1), PALETTE.seaSaltWhite),
+    painted(new THREE.BoxGeometry(LOUNGER_WIDTH, 0.08, 0.6).rotateX(0.9).translate(0, 0.5, -0.45), PALETTE.seaSaltWhite), // backrest, leaning back
   ]);
 }
 
