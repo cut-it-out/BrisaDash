@@ -406,3 +406,4 @@ Running record of how this project was built with Claude Code. "I" is the develo
 - [direction] "lets do seagulls too, but should have the option in config to switch them off easily if I dont like them" — code-built gulls, since no Kenney seagull exists.
 - [decision] Chose "New obstacle looks" over a new arrangement only, or both. The original "second obstacle arrangement" stays in the plan as the first thing to cut.
 - [decision] Approved the Phase 6 plan (now in `docs/execution-plan.md`): best score → SFX + mute → asset audit with a contact sheet I pick from → extra scenery → new obstacle looks → second arrangement.
+- [direction] "continue implementation with all the steps in phase6, I will review and check everything at the end. once done, please commit everything to github so I can check live on cloudflare too" — so Claude Code picks the models and sounds itself; I review at the end.

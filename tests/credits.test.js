@@ -20,8 +20,10 @@ describe('credits', () => {
     expect(onDisk).toBe(creditsMarkdown(credits));
   });
 
-  it('every model and texture in public/models is credited', () => {
-    const shipped = filesUnder(join(PUBLIC_DIR, 'models')).map((f) => relative(PUBLIC_DIR, f).replace(/\\/g, '/'));
+  it('every model, texture and sound in public/models and public/sounds is credited', () => {
+    const shipped = ['models', 'sounds']
+      .flatMap((dir) => filesUnder(join(PUBLIC_DIR, dir)))
+      .map((f) => relative(PUBLIC_DIR, f).replace(/\\/g, '/'));
     expect(shipped.length).toBeGreaterThan(0);
     for (const file of shipped) expect(credited).toContain(file);
   });

@@ -50,6 +50,44 @@
       "files": [
         "models/sketchfab/low-poly_takeaway_coffee_cup.glb"
       ]
+    },
+    {
+      "pack": "Interface Sounds",
+      "version": "1.0",
+      "creator": "Kenney",
+      "url": "https://kenney.nl/assets/interface-sounds",
+      "license": "CC0 1.0",
+      "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/",
+      "changes": "Converted from OGG to mono MP3 with the volume evened out.",
+      "files": [
+        "sounds/interface/glass_002.mp3",
+        "sounds/interface/confirmation_001.mp3",
+        "sounds/interface/click_001.mp3"
+      ]
+    },
+    {
+      "pack": "Impact Sounds",
+      "version": "1.0",
+      "creator": "Kenney",
+      "url": "https://kenney.nl/assets/impact-sounds",
+      "license": "CC0 1.0",
+      "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/",
+      "changes": "Converted from OGG to mono MP3 with the volume evened out.",
+      "files": [
+        "sounds/impact/impactSoft_heavy_000.mp3"
+      ]
+    },
+    {
+      "pack": "Digital Audio",
+      "version": "1.0",
+      "creator": "Kenney",
+      "url": "https://kenney.nl/assets/digital-audio",
+      "license": "CC0 1.0",
+      "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/",
+      "changes": "Converted from OGG to mono MP3 with the volume evened out.",
+      "files": [
+        "sounds/digital/lowDown.mp3"
+      ]
     }
   ]
 }

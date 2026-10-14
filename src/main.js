@@ -9,6 +9,7 @@ import { createCoffees, createObstacles, createRunner } from './render/entities.
 import { loadModels } from './render/models.js';
 import { createCameraShake, createScene, hasWebGL2 } from './render/scene.js';
 import { createScenery, createWorld } from './render/world.js';
+import { createAudio } from './ui/audio.js';
 import { loadBest, recordScore } from './ui/best.js';
 import { createDebugOverlay } from './ui/debug.js';
 import { bindInput } from './ui/input.js';
@@ -16,6 +17,7 @@ import {
   createCreditsScreen,
   createGameOverScreen,
   createHud,
+  createMuteToggle,
   createPauseScreen,
   createStartScreen,
   showGestureHint,
@@ -58,6 +60,8 @@ if (!hasWebGL2()) {
     onCredits: creditsScreen.show,
   });
   const pauseScreen = createPauseScreen(overlay, { onResume: resume });
+  const audio = createAudio();
+  createMuteToggle(overlay, audio);
   let best = loadBest();
   startScreen.setBest(best);
   startScreen.show(); // Play stays disabled until the models have loaded
@@ -70,6 +74,8 @@ if (!hasWebGL2()) {
   startScreen.setReady();
 
   function startRun() {
+    audio.unlock(); // Play and Retry are taps, so audio may start here
+    audio.play('tap');
     run = createRun(CONFIG, Math.random);
     state = 'playing';
     startScreen.hide();
@@ -79,11 +85,13 @@ if (!hasWebGL2()) {
   }
 
   function resume() {
+    audio.unlock(); // the phone may have suspended audio while the tab was hidden
     state = 'playing';
     pauseScreen.hide();
   }
 
   async function share() {
+    audio.play('tap');
     const metres = Math.floor(run.distance);
     const text = shareText(runScore(run), metres, run.coffeeCount);
     const result = await shareScore(text, `${location.origin}/`);
@@ -121,10 +129,17 @@ if (!hasWebGL2()) {
 
     if (state === 'playing') {
       for (const event of updateRun(run, dt)) {
-        if (event.type === 'coffee') popAboveRunner(`+${event.points}`);
-        if (event.type === 'stumble') shake.start();
+        if (event.type === 'coffee') {
+          popAboveRunner(`+${event.points}`);
+          audio.play(event.kind === 'frappe' ? 'frappe' : 'coffee');
+        }
+        if (event.type === 'stumble') {
+          shake.start();
+          audio.play('stumble');
+        }
         if (event.type === 'gameOver') {
           shake.start();
+          audio.play('gameOver');
           state = 'over';
           overSeconds = 0;
           hideHint?.();

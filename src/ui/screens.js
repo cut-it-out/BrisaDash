@@ -132,6 +132,25 @@ export function createGameOverScreen(overlay, { onRetry, onShare, onCredits }) {
   };
 }
 
+// Sound on/off in the top-right corner, over every screen and the HUD (GDD §10)
+export function createMuteToggle(overlay, audio) {
+  const button = document.createElement('button');
+  button.className = 'mute-toggle';
+  overlay.append(button);
+  function render() {
+    const muted = audio.isMuted();
+    button.textContent = muted ? '🔇' : '🔊';
+    button.setAttribute('aria-label', muted ? 'Sound off. Turn sound on' : 'Sound on. Turn sound off');
+  }
+  button.addEventListener('click', () => {
+    audio.setMuted(!audio.isMuted());
+    audio.play('tap');
+    render();
+    button.blur(); // keeps Enter and Space from toggling it again by accident
+  });
+  render();
+}
+
 export function createPauseScreen(overlay, { onResume }) {
   const element = screen(overlay, 'pause-screen', '<div class="panel"><h2>Paused</h2><p>Tap to resume</p></div>');
   element.addEventListener('click', onResume);
