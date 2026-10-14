@@ -95,6 +95,20 @@ export function paintByUv(baked, split, topColor, bottomColor) {
   return { geometry: baked.geometry, materials: baked.materials.map(() => flat) };
 }
 
+// Gives a geometry one flat vertex colour, so differently coloured parts can merge into one mesh
+export function painted(geometry, color) {
+  const rgb = new THREE.Color(color);
+  const colors = new Float32Array(geometry.attributes.position.count * 3);
+  for (let i = 0; i < colors.length; i += 3) rgb.toArray(colors, i);
+  geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+  return geometry;
+}
+
+// Code-built parts merged into one vertex-coloured geometry, for an InstancedMesh
+export function primitiveModel(parts) {
+  return { geometry: mergeGeometries(parts), materials: new THREE.MeshLambertMaterial({ vertexColors: true }) };
+}
+
 export function instancedModel(scene, baked, capacity) {
   const mesh = new THREE.InstancedMesh(baked.geometry, baked.materials, capacity);
   mesh.count = 0;

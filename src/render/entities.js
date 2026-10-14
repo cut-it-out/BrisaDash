@@ -1,9 +1,8 @@
 import * as THREE from 'three';
-import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { CONFIG } from '../game/config.js';
 import { lanePosition } from '../game/lanes.js';
 import { runMeter } from '../game/run.js';
-import { bakeModel, instancedModel, normalise, paintByUv } from './models.js';
+import { bakeModel, instancedModel, normalise, paintByUv, painted, primitiveModel } from './models.js';
 import { PALETTE } from './palette.js';
 
 const RUNNER_HEIGHT = 1.5; // (tune)
@@ -60,20 +59,6 @@ export function createRunner(scene, model) {
 
   // The pop label is placed relative to this point (feet at y = 0)
   return { update, position: runner.position, height: RUNNER_HEIGHT };
-}
-
-// Gives a geometry one flat vertex colour, so differently coloured parts can merge into one mesh
-function painted(geometry, color) {
-  const rgb = new THREE.Color(color);
-  const colors = new Float32Array(geometry.attributes.position.count * 3);
-  for (let i = 0; i < colors.length; i += 3) rgb.toArray(colors, i);
-  geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-  return geometry;
-}
-
-// Code-built parts merged into one vertex-coloured geometry, for an InstancedMesh
-function primitiveModel(parts) {
-  return { geometry: mergeGeometries(parts), materials: new THREE.MeshLambertMaterial({ vertexColors: true }) };
 }
 
 // Obstacle from primitives: a parasol over a lounger (no pack has one, GDD §7)

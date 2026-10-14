@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { CONFIG } from '../src/game/config.js';
-import { createSpawner, pickCupKind, rowGap, spawnUntil } from '../src/game/spawner.js';
+import { createSpawner, pickCupKind, rowGap, spawnUntil, zigzagGap } from '../src/game/spawner.js';
 import { seededRng } from './rng.js';
 
 function spawnMany(seed, speed, horizon) {
@@ -98,6 +98,38 @@ describe('spawner', () => {
     const frappeShare = picks.filter((k) => k === 'frappe').length / picks.length;
     expect(frappeShare).toBeGreaterThan(0.46);
     expect(frappeShare).toBeLessThan(0.54);
+  });
+
+  it('zigzag pairs: two two-lane rows, zigzagGap apart, whose free lanes are neighbours', () => {
+    for (const speed of [CONFIG.startSpeed, CONFIG.maxSpeed]) {
+      const { obstacles } = spawnMany(21, speed, 3000 * rowGap(speed, CONFIG));
+      const rows = [...rowsOf(obstacles)].sort((a, b) => a[0] - b[0]);
+      const freeLane = (lanes) => [0, 1, 2].find((lane) => !lanes.includes(lane));
+      let pairs = 0;
+      for (let i = 1; i < rows.length; i++) {
+        const [prevAt, prevLanes] = rows[i - 1];
+        const [at, lanes] = rows[i];
+        const gap = at - prevAt;
+        if (Math.abs(gap - zigzagGap(speed, CONFIG)) > 1e-9) {
+          expect(gap).toBeCloseTo(rowGap(speed, CONFIG), 9); // every other gap is a normal row gap
+          continue;
+        }
+        pairs++;
+        expect(prevLanes.length).toBe(2);
+        expect(lanes.length).toBe(2);
+        expect(Math.abs(freeLane(lanes) - freeLane(prevLanes))).toBe(1);
+      }
+      const share = pairs / (rows.length - pairs);
+      expect(share).toBeGreaterThan(CONFIG.zigzagChance - 0.04);
+      expect(share).toBeLessThan(CONFIG.zigzagChance + 0.04);
+    }
+  });
+
+  it('a zigzag pair leaves time to swipe between its rows', () => {
+    // hit window on each row is ±hitDepth; at least 0.5 s of free running between them at any speed
+    for (const speed of [CONFIG.startSpeed, 15, 25, CONFIG.maxSpeed]) {
+      expect((zigzagGap(speed, CONFIG) - 2 * CONFIG.hitDepth) / speed).toBeGreaterThanOrEqual(0.5);
+    }
   });
 
   it('rows spread out as speed grows', () => {

@@ -16,6 +16,9 @@ export const CONFIG = {
   rowGapSeconds: 1.2, // rows are this many seconds apart at the current speed...
   minRowGap: 9, // ...but never closer than this
   twoBlockedChance: 0.55, // otherwise a row blocks one lane
+  zigzagChance: 0.2, // share of rows that come as a zigzag pair (two two-lane rows, free lanes side by side)
+  zigzagGapSeconds: 0.7, // the pair's rows are this many seconds apart at the current speed...
+  zigzagMinGap: 6, // ...but never closer than this
   coffeeLineChance: 0.6,
   cupLineMix: { coffee: 0.4, takeaway: 0.4, frappe: 0.2 }, // share of cup lines of each kind (sums to 1)
   coffeeLineMin: 3,
@@ -39,6 +42,7 @@ export const CONFIG = {
   pointsPerFrappe: 20,
 
   // Rendering
+  seagullCount: 4, // gulls circling over the sea; 0 turns them off (try ?debug&seagullCount=0)
   maxPixelRatio: 2,
   maxFrameSeconds: 0.1, // clamps dt after a stall so nothing jumps
 };

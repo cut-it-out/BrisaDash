@@ -8,7 +8,7 @@ import { createRun, runMeter, runScore, updateRun } from './game/run.js';
 import { createCoffees, createObstacles, createRunner } from './render/entities.js';
 import { loadModels } from './render/models.js';
 import { createCameraShake, createScene, hasWebGL2 } from './render/scene.js';
-import { createScenery, createWorld } from './render/world.js';
+import { createScenery, createSeagulls, createWorld } from './render/world.js';
 import { createAudio } from './ui/audio.js';
 import { loadBest, recordScore } from './ui/best.js';
 import { createDebugOverlay } from './ui/debug.js';
@@ -68,6 +68,7 @@ if (!hasWebGL2()) {
 
   const models = await loadModels();
   const scenery = createScenery(scene, models);
+  const seagulls = createSeagulls(scene, CONFIG.seagullCount);
   const runner = createRunner(scene, models.runner);
   const obstacles = createObstacles(scene);
   const coffees = createCoffees(scene, models);
@@ -159,6 +160,7 @@ if (!hasWebGL2()) {
 
     world.update(run.distance);
     scenery.update(run.distance);
+    seagulls.update(timeSeconds);
     runner.update(run, timeSeconds);
     obstacles.update(run, timeSeconds);
     coffees.update(run, timeSeconds);

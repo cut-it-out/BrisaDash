@@ -10,4 +10,5 @@ export const PALETTE = {
   sky: '#cdeef0', // pale turquoise
   beachSand: '#e8cf9f', // darker than the promenade so the track edge reads
   laneLine: '#d6b98a',
+  gullGrey: '#b9c3c9', // seagull wings
 };

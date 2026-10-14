@@ -1,4 +1,6 @@
 // Obstacle rows and coffee lines (GDD §7). Every row leaves at least one lane free.
+// Some rows come as a zigzag pair: two two-lane rows close together whose free lanes are neighbours,
+// so the runner has to swipe straight after the first row (the second arrangement, Phase 6).
 // Coffee lines sit in a lane that is free in the row they lead into, between that row and the one before.
 // Each line is one kind of cup, picked by config.cupLineMix.
 // rng is a function returning [0, 1), injected so tests are repeatable.
@@ -31,9 +33,8 @@ export function pickCupKind(rng, mix) {
   return Object.keys(mix)[0]; // only reached through rounding
 }
 
-function spawnRow(at, prevAt, rng, config, obstacles, coffees) {
-  const lanes = shuffledLanes(config.laneCount, rng);
-  const blockedCount = Math.min(rng() < config.twoBlockedChance ? 2 : 1, config.laneCount - 1);
+// lanes is an ordering of every lane: the first blockedCount get obstacles, the rest stay free
+function placeRow(at, prevAt, lanes, blockedCount, rng, config, obstacles, coffees) {
   for (const lane of lanes.slice(0, blockedCount)) {
     obstacles.push({ lane, at, knocked: false });
   }
@@ -51,11 +52,32 @@ function spawnRow(at, prevAt, rng, config, obstacles, coffees) {
   }
 }
 
+export function zigzagGap(speed, config) {
+  return Math.max(config.zigzagMinGap, speed * config.zigzagGapSeconds);
+}
+
+// Returns where the last row of the arrangement went
+function spawnArrangement(at, prevAt, speed, rng, config, obstacles, coffees) {
+  const lanes = shuffledLanes(config.laneCount, rng);
+  if (config.laneCount === 3 && rng() < config.zigzagChance) {
+    const firstFree = lanes[2];
+    const neighbours = [firstFree - 1, firstFree + 1].filter((lane) => lane >= 0 && lane < config.laneCount);
+    const secondFree = neighbours[Math.floor(rng() * neighbours.length)];
+    const secondAt = at + zigzagGap(speed, config);
+    placeRow(at, prevAt, lanes, 2, rng, config, obstacles, coffees);
+    const secondLanes = [0, 1, 2].filter((lane) => lane !== secondFree).concat(secondFree);
+    placeRow(secondAt, at, secondLanes, 2, rng, config, obstacles, coffees);
+    return secondAt;
+  }
+  const blockedCount = Math.min(rng() < config.twoBlockedChance ? 2 : 1, config.laneCount - 1);
+  placeRow(at, prevAt, lanes, blockedCount, rng, config, obstacles, coffees);
+  return at;
+}
+
 // Adds rows until the next one would be past `horizon`
 export function spawnUntil(spawner, horizon, speed, rng, config, obstacles, coffees) {
   while (spawner.nextRowAt <= horizon) {
-    spawnRow(spawner.nextRowAt, spawner.lastRowAt, rng, config, obstacles, coffees);
-    spawner.lastRowAt = spawner.nextRowAt;
-    spawner.nextRowAt += rowGap(speed, config);
+    spawner.lastRowAt = spawnArrangement(spawner.nextRowAt, spawner.lastRowAt, speed, rng, config, obstacles, coffees);
+    spawner.nextRowAt = spawner.lastRowAt + rowGap(speed, config);
   }
 }

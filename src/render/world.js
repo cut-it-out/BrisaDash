@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { CONFIG } from '../game/config.js';
-import { bakeModel, instancedModel } from './models.js';
+import { bakeModel, instancedModel, painted, primitiveModel } from './models.js';
 import { PALETTE } from './palette.js';
 
 const NEAR_Z = 8; // just behind the camera
@@ -114,6 +114,71 @@ export function createScenery(scene, models) {
       });
       mesh.instanceMatrix.needsUpdate = true;
     }
+  }
+  update(0);
+
+  return { update };
+}
+
+// Seagulls from primitives (no pack has one): a white body, grey wings in a shallow V with dark tips
+// and a coral beak, about 0.9 m across before scaling. Each gull circles over the sea ahead of the runner, as if
+// following the barista for crumbs, banking into the turn with a slow bob. Code-driven, no rig.
+const GULL_WING_LIFT = 0.25; // radians
+const GULL_WING_SPAN = 0.42; // one wing
+
+function seagullModel() {
+  const wing = (side) => [
+    painted(
+      new THREE.BoxGeometry(GULL_WING_SPAN, 0.02, 0.16)
+        .translate((side * GULL_WING_SPAN) / 2, 0, 0)
+        .rotateZ(side * GULL_WING_LIFT),
+      PALETTE.gullGrey,
+    ),
+    painted(
+      new THREE.BoxGeometry(0.1, 0.025, 0.12)
+        .translate(side * (GULL_WING_SPAN + 0.03), 0, 0.01)
+        .rotateZ(side * GULL_WING_LIFT),
+      PALETTE.deepOcean,
+    ),
+  ];
+  return primitiveModel([
+    painted(new THREE.BoxGeometry(0.12, 0.1, 0.36), PALETTE.seaSaltWhite),
+    painted(new THREE.BoxGeometry(0.09, 0.08, 0.1).translate(0, 0.05, -0.2), PALETTE.seaSaltWhite),
+    painted(new THREE.BoxGeometry(0.03, 0.03, 0.08).translate(0, 0.04, -0.28), PALETTE.sunsetCoral),
+    painted(new THREE.BoxGeometry(0.1, 0.02, 0.12).translate(0, 0, 0.22), PALETTE.seaSaltWhite), // tail
+    ...wing(-1),
+    ...wing(1),
+  ]);
+}
+
+// [centre x, height, centre z, radius, turn speed (rad/s), start angle]; the sea starts at x ≈ -4.75
+const GULL_PATHS = [
+  [-6.5, 3.6, -13, 2.5, 0.45, 0],
+  [-8, 4.6, -22, 3.5, -0.35, 2],
+  [-6, 4.2, -32, 3, 0.3, 4],
+  [-10, 5.4, -18, 4, -0.25, 1],
+];
+const GULL_SCALE = 1.6; // the model is about 0.9 m across; bigger reads better on a phone
+
+export function createSeagulls(scene, count) {
+  const paths = GULL_PATHS.slice(0, Math.max(0, Math.floor(count)));
+  if (paths.length === 0) return { update() {} };
+  const mesh = instancedModel(scene, seagullModel(), paths.length);
+  mesh.count = paths.length;
+  const dummy = new THREE.Object3D();
+  dummy.scale.setScalar(GULL_SCALE);
+
+  function update(timeSeconds) {
+    paths.forEach(([cx, cy, cz, radius, turnSpeed, start], i) => {
+      const angle = start + timeSeconds * turnSpeed;
+      dummy.position.set(cx + Math.cos(angle) * radius, cy + Math.sin(timeSeconds * 1.3 + i) * 0.25, cz + Math.sin(angle) * radius);
+      // Face along the circle (the model's beak points to -z) and lean into the turn
+      const turn = Math.sign(turnSpeed);
+      dummy.rotation.set(0, ((1 + turn) * Math.PI) / 2 - angle, -turn * 0.35, 'YXZ');
+      dummy.updateMatrix();
+      mesh.setMatrixAt(i, dummy.matrix);
+    });
+    mesh.instanceMatrix.needsUpdate = true;
   }
   update(0);
 
