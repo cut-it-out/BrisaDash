@@ -58,8 +58,8 @@ The wobble is just a **code-driven change of position and rotation** on a static
 ## 6. Scoring
 
 - **Distance:** +1 point per metre run (tune).
-- **Coffee:** +10 points per cup (tune). A small "+10" pops up above the runner when one is picked up.
-- The HUD shows the score. The game-over screen shows the score, the distance in metres and the coffees collected.
+- **Pickups:** +10 points per coffee mug and +20 per frappe (tune). A small "+10" or "+20" pops up above the runner on each pickup.
+- The HUD shows the score. The game-over screen shows the score, the distance in metres and the coffees collected. Frappes count as coffees in that total and in the share text; only the score shows their extra value.
 - **Best score (nice-to-have):** stored in `localStorage` on the device and shown as "Best: N" on the start and game-over screens.
 
 ## 7. World and entities
@@ -68,11 +68,12 @@ The wobble is just a **code-driven change of position and rotation** on a static
 |---|---|---|
 | Runner | A barista made from Kenney Blocky Character **`character-f.glb`** (teal shirt), in a static pose with a code-driven run bob. No apron for now; it may come later | Blocky Characters (CC0) |
 | Obstacle (one type) | A beach parasol or deckchair blocking one lane | Built from primitives (a parasol is a cylinder plus a cone). None of the three packs has a parasol or deckchair (checked 14 October 2026) |
-| Coffee pickup | A coffee cup that spins and bobs: **`cup-coffee.glb`** (a ceramic cup with a handle). `frappe.glb` (a takeaway cup with a lid and straw) is parked as a possible later add-on | Food Kit (CC0) |
+| Pickup A: coffee mug | The common pickup, spinning and bobbing: **`cup-coffee.glb`** (a ceramic cup with a handle), tinted Sunset Coral, 0.3 m tall. Worth +10 | Food Kit (CC0) |
+| Pickup B: frappe | The rarer pickup: **`frappe.glb`** (a takeaway cup with a lid and straw) in its own colours, 0.45 m tall. Worth +20 | Food Kit (CC0) |
 | Track | A sandy promenade in Sunlit Sand with white kerbs and dashed lane lines | Code-built planes that stay still. Only the lane-line dashes move and get recycled (one instanced mesh) |
 | Scenery | A few palms or rocks beside the track, with turquoise sea on one side and sky behind | Nature Kit (CC0): `tree_palm*` and `rock_*` models, recycled |
 
-- **Spawning:** obstacles come in rows, and every row **leaves at least one lane free**. Coffees come in short lines of 3–5 cups (tune) in a lane that is free at that point, which rewards reading the road.
+- **Spawning:** obstacles come in rows, and every row **leaves at least one lane free**. Coffees come in short lines of 3–5 cups (tune) in a lane that is free at that point, which rewards reading the road. Each line is all mugs or, with a 20% chance (tune), all frappes.
 - **Recycling:** every track segment, obstacle, cup and scenery piece comes from a small pool and moves back ahead of the runner once it has passed behind the camera. No infinite world is built.
 - **Camera:** a fixed perspective camera behind and above the runner, looking down the track. The look-at point stays steady; the only camera motion is the stumble shake.
 - **Lighting:** ambient plus one directional light, with flat colours. No shadows by default; they could be added later only if the frame rate allows.
@@ -108,9 +109,9 @@ The wobble is just a **code-driven change of position and rotation** on a static
 **Must-haves (from the brief):**
 - A real-time 3D three-lane runner
 - Swipe and keyboard controls
-- One obstacle type and one pickup
+- One obstacle type and two pickups: a coffee mug and a rarer, higher-value frappe. The brief asked for one; I added the second in Session 3
 - The stumble fail rule
-- Distance plus coffee scoring
+- Distance plus pickup scoring
 - The start, HUD, game-over and credits screens
 - Share with a copy fallback
 - Portrait-first resizing, capped device pixel ratio, few draw calls

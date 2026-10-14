@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { CONFIG } from '../src/game/config.js';
 import { createRun, runMeter, runScore, updateRun } from '../src/game/run.js';
-import { score } from '../src/game/score.js';
+import { pickupValue, score } from '../src/game/score.js';
 import { rowGap } from '../src/game/spawner.js';
 import { baseSpeed } from '../src/game/speed.js';
 import { seededRng } from './rng.js';
@@ -21,7 +21,13 @@ function runFor(run, seconds, step = 1 / 60) {
 
 describe('score', () => {
   it('is whole metres plus a bonus per coffee', () => {
-    expect(score(412.9, 23, CONFIG)).toBe(412 + 23 * CONFIG.pointsPerCoffee);
+    expect(score(412.9, 230, CONFIG)).toBe(412 + 230);
+  });
+
+  it('a frappe is worth more than a coffee mug', () => {
+    expect(pickupValue('coffee', CONFIG)).toBe(CONFIG.pointsPerCoffee);
+    expect(pickupValue('frappe', CONFIG)).toBe(CONFIG.pointsPerFrappe);
+    expect(CONFIG.pointsPerFrappe).toBeGreaterThan(CONFIG.pointsPerCoffee);
   });
 });
 
@@ -62,8 +68,8 @@ describe('run', () => {
 
   it('collects coffee in the runner lane and scores it', () => {
     const run = emptyRun();
-    run.coffees.push({ lane: 1, at: 5, collected: false });
-    run.coffees.push({ lane: 0, at: 6, collected: false });
+    run.coffees.push({ lane: 1, at: 5, kind: 'coffee', collected: false });
+    run.coffees.push({ lane: 0, at: 6, kind: 'coffee', collected: false });
     const events = runFor(run, 1.5);
     expect(events.filter((e) => e.type === 'coffee')).toHaveLength(1);
     expect(run.coffeeCount).toBe(1);
@@ -81,6 +87,17 @@ describe('run', () => {
     const gaps = rows.slice(1).map((at, i) => at - rows[i]);
     expect(gaps.length).toBeGreaterThan(1);
     for (const gap of gaps) expect(gap).toBeCloseTo(rowGap(baseSpeed(run.elapsed, CONFIG), CONFIG), 1);
+  });
+
+  it('scores a frappe at its higher value and counts it as a coffee', () => {
+    const run = emptyRun();
+    run.coffees.push({ lane: 1, at: 5, kind: 'frappe', collected: false });
+    const events = runFor(run, 1.5);
+    expect(events.filter((e) => e.type === 'coffee')).toEqual([
+      { type: 'coffee', lane: 1, kind: 'frappe', points: CONFIG.pointsPerFrappe },
+    ]);
+    expect(run.coffeeCount).toBe(1);
+    expect(runScore(run)).toBe(Math.floor(run.distance) + CONFIG.pointsPerFrappe);
   });
 
   it('slows to the stumble speed after a hit', () => {

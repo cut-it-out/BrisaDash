@@ -59,7 +59,7 @@ if (!hasWebGL2()) {
   const scenery = createScenery(scene, models);
   const runner = createRunner(scene, models.runner);
   const obstacles = createObstacles(scene);
-  const coffees = createCoffees(scene, models.cup);
+  const coffees = createCoffees(scene, models);
   startScreen.setReady();
 
   function startRun() {
@@ -114,7 +114,7 @@ if (!hasWebGL2()) {
 
     if (state === 'playing') {
       for (const event of updateRun(run, dt)) {
-        if (event.type === 'coffee') popAboveRunner(`+${CONFIG.pointsPerCoffee}`);
+        if (event.type === 'coffee') popAboveRunner(`+${event.points}`);
         if (event.type === 'stumble') shake.start();
         if (event.type === 'gameOver') {
           shake.start();

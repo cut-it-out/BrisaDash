@@ -16,7 +16,7 @@
       "url": "https://kenney.nl/assets/food-kit",
       "license": "CC0 1.0",
       "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/",
-      "files": ["models/food/cup-coffee.glb", "models/food/Textures/colormap.png"]
+      "files": ["models/food/cup-coffee.glb", "models/food/frappe.glb", "models/food/Textures/colormap.png"]
     },
     {
       "pack": "Nature Kit",

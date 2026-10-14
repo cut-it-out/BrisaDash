@@ -18,6 +18,7 @@ Every third-party asset used in Brisa Dash. All are CC0 (public domain); credit 
 - License: CC0 1.0 (http://creativecommons.org/publicdomain/zero/1.0/)
 - Files used (under `public/`):
   - `models/food/cup-coffee.glb`
+  - `models/food/frappe.glb`
   - `models/food/Textures/colormap.png`
 
 ## Nature Kit 2.1 by Kenney

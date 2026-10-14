@@ -17,6 +17,7 @@ export const CONFIG = {
   minRowGap: 12, // ...but never closer than this
   twoBlockedChance: 0.4, // otherwise a row blocks one lane
   coffeeLineChance: 0.6,
+  frappeLineChance: 0.2, // otherwise a line is coffee mugs
   coffeeLineMin: 3,
   coffeeLineMax: 5,
   coffeeSpacing: 1.8,
@@ -35,6 +36,7 @@ export const CONFIG = {
   // Scoring (GDD §6)
   pointsPerMetre: 1,
   pointsPerCoffee: 10,
+  pointsPerFrappe: 20,
 
   // Rendering
   maxPixelRatio: 2,

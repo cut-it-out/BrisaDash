@@ -73,6 +73,23 @@ describe('spawner', () => {
     }
   });
 
+  it('each coffee line is one kind, and about frappeLineChance of lines are frappes', () => {
+    const { coffees } = spawnMany(11, CONFIG.startSpeed, 200_000);
+    const sorted = [...coffees].sort((a, b) => a.at - b.at);
+    const lines = [[sorted[0]]];
+    for (let i = 1; i < sorted.length; i++) {
+      const prev = sorted[i - 1];
+      const sameLine = sorted[i].lane === prev.lane && Math.abs(sorted[i].at - prev.at - CONFIG.coffeeSpacing) < 1e-9;
+      if (sameLine) lines.at(-1).push(sorted[i]);
+      else lines.push([sorted[i]]);
+    }
+    for (const line of lines) expect(new Set(line.map((c) => c.kind)).size).toBe(1);
+    const frappeShare = lines.filter((line) => line[0].kind === 'frappe').length / lines.length;
+    expect(lines.length).toBeGreaterThan(1000);
+    expect(frappeShare).toBeGreaterThan(CONFIG.frappeLineChance - 0.04);
+    expect(frappeShare).toBeLessThan(CONFIG.frappeLineChance + 0.04);
+  });
+
   it('rows spread out as speed grows', () => {
     expect(rowGap(CONFIG.startSpeed, CONFIG)).toBeLessThan(rowGap(CONFIG.maxSpeed, CONFIG));
     expect(rowGap(1, CONFIG)).toBe(CONFIG.minRowGap);

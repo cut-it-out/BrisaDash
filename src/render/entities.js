@@ -7,7 +7,8 @@ import { bakeModel, instancedModel, normalise } from './models.js';
 import { PALETTE } from './palette.js';
 
 const RUNNER_HEIGHT = 1.5; // (tune)
-const CUP_HEIGHT = 0.4; // (tune) the Kenney mug is squat: about 0.6 wide at this height
+const CUP_HEIGHT = 0.3; // (tune) the Kenney mug is squat: about 0.45 wide at this height
+const FRAPPE_HEIGHT = 0.45; // (tune) tall and thin: about 0.23 wide
 const BOB_HEIGHT = 0.12; // (tune)
 const BOB_STEPS_PER_SECOND = 5; // (tune)
 const WOBBLE_ANGLE = 0.3; // radians at a full stumble meter (tune)
@@ -112,29 +113,40 @@ export function createObstacles(scene) {
   return { update };
 }
 
-// Coffee pickup: Kenney cup-coffee.glb, or a Sunset Coral primitive cup if the model didn't load
-export function createCoffees(scene, model) {
-  const baked = model
-    ? bakeModel(model, CUP_HEIGHT)
-    : primitiveModel([
-        painted(new THREE.CylinderGeometry(0.2, 0.15, 0.45, 10).translate(0, 0.225, 0), PALETTE.sunsetCoral),
-        painted(new THREE.CylinderGeometry(0.22, 0.22, 0.06, 10).translate(0, 0.48, 0), PALETTE.seaSaltWhite),
-      ]);
-  const mesh = instancedModel(scene, baked, MAX_COFFEES);
+// Primitive coral cup with a white lid, used if a cup model didn't load
+function primitiveCup() {
+  return primitiveModel([
+    painted(new THREE.CylinderGeometry(0.2, 0.15, 0.45, 10).translate(0, 0.225, 0), PALETTE.sunsetCoral),
+    painted(new THREE.CylinderGeometry(0.22, 0.22, 0.06, 10).translate(0, 0.48, 0), PALETTE.seaSaltWhite),
+  ]);
+}
+
+// Pickups (GDD §7): Kenney cup-coffee.glb tinted Sunset Coral (the tint multiplies the mostly white texture),
+// and the rarer frappe.glb in its own colours. One InstancedMesh per kind.
+export function createCoffees(scene, models) {
+  const mug = models.cup ? bakeModel(models.cup, CUP_HEIGHT) : primitiveCup();
+  if (models.cup) for (const material of mug.materials) material.color.set(PALETTE.sunsetCoral);
+  const meshes = {
+    coffee: instancedModel(scene, mug, MAX_COFFEES),
+    frappe: instancedModel(scene, models.frappe ? bakeModel(models.frappe, FRAPPE_HEIGHT) : primitiveCup(), MAX_COFFEES),
+  };
   const dummy = new THREE.Object3D();
 
   function update(run, timeSeconds) {
-    let i = 0;
+    const counts = { coffee: 0, frappe: 0 };
     for (const coffee of run.coffees) {
-      if (i === MAX_COFFEES) break;
+      const mesh = meshes[coffee.kind];
+      if (counts[coffee.kind] === MAX_COFFEES) continue;
       const phase = timeSeconds * 3 + coffee.at;
       dummy.position.set(laneX(coffee.lane), CUP_HOVER + Math.sin(phase) * CUP_BOB, run.distance - coffee.at);
       dummy.rotation.set(0, phase, 0);
       dummy.updateMatrix();
-      mesh.setMatrixAt(i++, dummy.matrix);
+      mesh.setMatrixAt(counts[coffee.kind]++, dummy.matrix);
     }
-    mesh.count = i;
-    mesh.instanceMatrix.needsUpdate = true;
+    for (const kind of Object.keys(meshes)) {
+      meshes[kind].count = counts[kind];
+      meshes[kind].instanceMatrix.needsUpdate = true;
+    }
   }
 
   return { update };

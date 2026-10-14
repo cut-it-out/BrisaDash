@@ -1,5 +1,6 @@
 // Obstacle rows and coffee lines (GDD §7). Every row leaves at least one lane free.
 // Coffee lines sit in a lane that is free in the row they lead into, between that row and the one before.
+// Each line is all coffee mugs or, less often, all frappes.
 // rng is a function returning [0, 1), injected so tests are repeatable.
 
 export function createSpawner(config) {
@@ -33,8 +34,9 @@ function spawnRow(at, prevAt, rng, config, obstacles, coffees) {
   const fits = Math.floor((at - prevAt - 2 * config.coffeeMargin) / config.coffeeSpacing) + 1;
   const count = Math.min(wanted, fits);
   if (count < config.coffeeLineMin) return;
+  const kind = rng() < config.frappeLineChance ? 'frappe' : 'coffee'; // one kind per line
   for (let k = 0; k < count; k++) {
-    coffees.push({ lane, at: at - config.coffeeMargin - k * config.coffeeSpacing, collected: false });
+    coffees.push({ lane, at: at - config.coffeeMargin - k * config.coffeeSpacing, kind, collected: false });
   }
 }
 

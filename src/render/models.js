@@ -6,6 +6,7 @@ import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 const MODEL_FILES = {
   runner: 'models/blocky/character-f.glb',
   cup: 'models/food/cup-coffee.glb',
+  frappe: 'models/food/frappe.glb',
   palm: 'models/nature/tree_palm.glb',
   palmBend: 'models/nature/tree_palmBend.glb',
   palmTall: 'models/nature/tree_palmTall.glb',

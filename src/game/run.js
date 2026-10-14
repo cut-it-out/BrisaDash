@@ -1,7 +1,7 @@
 // One run's state. updateRun advances it by dt and returns what happened, for the renderer and UI.
 import { touchesRunner } from './collision.js';
 import { createLaneState, effectiveLane, updateLanes } from './lanes.js';
-import { score } from './score.js';
+import { pickupValue, score } from './score.js';
 import { createSpawner, spawnUntil } from './spawner.js';
 import { baseSpeed, stumbleSpeedFactor } from './speed.js';
 import { createStumble, hitStumble, stumbleMeter, updateStumble } from './stumble.js';
@@ -18,7 +18,8 @@ export function createRun(config, rng) {
     spawner: createSpawner(config),
     obstacles: [],
     coffees: [],
-    coffeeCount: 0,
+    coffeeCount: 0, // mugs and frappes together
+    pickupPoints: 0,
     over: false,
   };
 }
@@ -28,10 +29,10 @@ export function runMeter(run) {
 }
 
 export function runScore(run) {
-  return score(run.distance, run.coffeeCount, run.config);
+  return score(run.distance, run.pickupPoints, run.config);
 }
 
-// Returns events: { type: 'coffee' | 'stumble' | 'gameOver', lane }
+// Returns events: { type: 'coffee' | 'stumble' | 'gameOver', lane }; coffee events also carry kind and points
 export function updateRun(run, dt) {
   const events = [];
   if (run.over) return events;
@@ -63,8 +64,10 @@ export function updateRun(run, dt) {
   for (const coffee of run.coffees) {
     if (coffee.collected || !touchesRunner(coffee, lane, prevDistance, run.distance, config.pickupDepth)) continue;
     coffee.collected = true;
+    const points = pickupValue(coffee.kind, config);
     run.coffeeCount++;
-    events.push({ type: 'coffee', lane });
+    run.pickupPoints += points;
+    events.push({ type: 'coffee', lane, kind: coffee.kind, points });
   }
 
   const behind = run.distance - config.despawnBehind;
