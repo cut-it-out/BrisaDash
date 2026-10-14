@@ -36,3 +36,29 @@ export function createScene(canvas) {
 
   return { renderer, scene, camera };
 }
+
+const SHAKE_SECONDS = 0.35; // (tune)
+const SHAKE_AMOUNT = 0.12;
+
+// The only camera motion (GDD §7): a small shake on a hit. The look direction stays steady.
+export function createCameraShake(camera) {
+  const base = camera.position.clone();
+  let timeLeft = 0;
+
+  function start() {
+    timeLeft = SHAKE_SECONDS;
+  }
+
+  function update(dt) {
+    if (timeLeft <= 0) return;
+    timeLeft = Math.max(0, timeLeft - dt);
+    const amount = (SHAKE_AMOUNT * timeLeft) / SHAKE_SECONDS;
+    camera.position.set(
+      base.x + (Math.random() * 2 - 1) * amount,
+      base.y + (Math.random() * 2 - 1) * amount,
+      base.z,
+    );
+  }
+
+  return { start, update };
+}

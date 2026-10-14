@@ -98,3 +98,89 @@ body {
   color: var(--sea-salt-white);
   background: rgb(23 75 100 / 0.8);
 }
+
+/* HUD (GDD §8): top centre, the bottom half stays clear for the thumb */
+.hud {
+  position: absolute;
+  top: calc(env(safe-area-inset-top) + 12px);
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  color: var(--deep-ocean);
+  text-shadow: 0 1px 0 var(--sea-salt-white);
+}
+
+.hud-score {
+  font-size: 2.2rem;
+  font-weight: 800;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.hud-coffee {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.hud-meter {
+  width: 40%;
+  height: 8px;
+  margin-top: 4px;
+  border-radius: 4px;
+  background: rgb(23 75 100 / 0.2);
+  overflow: hidden;
+}
+
+.hud-meter[hidden] {
+  display: none;
+}
+
+.hud-meter-fill {
+  height: 100%;
+  background: var(--sunset-coral);
+}
+
+.pop {
+  position: absolute;
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--sunset-coral);
+  text-shadow: 0 1px 0 var(--sea-salt-white), 0 0 6px var(--sea-salt-white);
+  animation: pop-up 0.7s ease-out forwards;
+}
+
+@keyframes pop-up {
+  from {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, calc(-50% - 48px));
+  }
+}
+
+/* Temporary run-over panel until Phase 3 */
+.run-over {
+  position: absolute;
+  top: 38%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  background: var(--sea-salt-white);
+  color: var(--deep-ocean);
+  white-space: nowrap;
+  box-shadow: 0 4px 16px rgb(23 75 100 / 0.25);
+}
+
+.run-over strong {
+  font-size: 1.5rem;
+}

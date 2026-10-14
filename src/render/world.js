@@ -46,6 +46,7 @@ export function createWorld(scene) {
     new THREE.MeshLambertMaterial({ color: PALETTE.laneLine }),
     lineXs.length * DASHES_PER_LINE,
   );
+  dashes.frustumCulled = false; // instances move every frame; the default bounds would go stale
   scene.add(dashes);
   const matrix = new THREE.Matrix4();
 
