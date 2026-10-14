@@ -83,3 +83,7 @@ Running record of how this project was built with Claude Code. "I" is the develo
 - **Learned:** Asking which toolchain to use before writing the plan also fixed the test command, so each phase's verification step could name a real command instead of a placeholder.
 - **Where things stand / next step:** `main` holds `39fdef4` plus this session's commit (`docs/execution-plan.md`, build log, `CLAUDE.md`), not pushed. No code yet. Next is Phase 0 of `docs/execution-plan.md`: scaffold Vite + `three` + Vitest, the 9:16 page with palette tokens, a renderer with the DPR cap and a placeholder cube, the Kenney pack check, and the Cloudflare Pages connection (mine). Done when `npm test` and `npm run build` pass and the `*.pages.dev` URL shows the cube on a phone.
 - **Showcase line:** I had Claude Code turn a one-paragraph client email into a reviewed GDD, steering the fail rule to a forgiving "stumble" and keeping the runner a barista, then into a seven-phase execution plan where every phase ends playable and testable.
+
+### Session 3 — Wednesday 14 October 2026 — (in progress)
+
+- [direction] "lets continue with the execution, move to phase 0, i've already created the cloudflare pages with the npm run build command targeting the dist folder, waiting for actual things to build" — starts Phase 0; the Cloudflare Pages project is connected (build `npm run build`, output `dist`).

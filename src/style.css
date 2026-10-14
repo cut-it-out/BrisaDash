@@ -1,0 +1,59 @@
+/* Palette from docs/brisa-cafe-brand-palette.md */
+:root {
+  --brisa-turquoise: #168f9c;
+  --deep-ocean: #174b64;
+  --sunlit-sand: #f3dfbb;
+  --sunset-coral: #e87f63;
+  --sea-salt-white: #fcfaf4;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: var(--brisa-turquoise); /* letterbox colour beside the game column */
+}
+
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: system-ui, sans-serif;
+  color: var(--deep-ocean);
+}
+
+/* 9:16 column: fills a portrait phone, centred and letterboxed in landscape or on desktop */
+#game {
+  position: relative;
+  height: 100vh;
+  height: 100dvh;
+  width: min(100vw, 100vh * 9 / 16);
+  width: min(100vw, 100dvh * 9 / 16);
+  overflow: hidden;
+  background: var(--sunlit-sand);
+  touch-action: none;
+  overscroll-behavior: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+#scene {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+#overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.message {
+  margin: 0;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  font-size: 1.1rem;
+}
