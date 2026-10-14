@@ -57,3 +57,44 @@ body {
   text-align: center;
   font-size: 1.1rem;
 }
+
+/* Gesture hint: bottom half, where the thumb is (GDD §3) */
+.gesture-hint {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 18%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  color: var(--deep-ocean);
+  text-shadow: 0 1px 0 var(--sea-salt-white);
+}
+
+.gesture-hand {
+  font-size: 3rem;
+  animation: swipe-hint 1.4s ease-in-out infinite;
+}
+
+@keyframes swipe-hint {
+  0%,
+  100% {
+    transform: translateX(-40px) rotate(-10deg);
+  }
+  50% {
+    transform: translateX(40px) rotate(10deg);
+  }
+}
+
+.debug-panel {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font: 12px/1.4 ui-monospace, monospace;
+  color: var(--sea-salt-white);
+  background: rgb(23 75 100 / 0.8);
+}

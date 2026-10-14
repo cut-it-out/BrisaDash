@@ -69,7 +69,7 @@ The wobble is just a **code-driven change of position and rotation** on a static
 | Runner | A barista made from Kenney Blocky Character **`character-f.glb`** (teal shirt), in a static pose with a code-driven run bob. No apron for now; it may come later | Blocky Characters (CC0) |
 | Obstacle (one type) | A beach parasol or deckchair blocking one lane | Built from primitives (a parasol is a cylinder plus a cone). None of the three packs has a parasol or deckchair (checked 14 October 2026) |
 | Coffee pickup | A coffee cup that spins and bobs: **`cup-coffee.glb`** (a ceramic cup with a handle). `frappe.glb` (a takeaway cup with a lid and straw) is parked as a possible later add-on | Food Kit (CC0) |
-| Track | A sandy promenade in Sunlit Sand with lane lines | Code-built planes, recycled in segments |
+| Track | A sandy promenade in Sunlit Sand with white kerbs and dashed lane lines | Code-built planes that stay still. Only the lane-line dashes move and get recycled (one instanced mesh) |
 | Scenery | A few palms or rocks beside the track, with turquoise sea on one side and sky behind | Nature Kit (CC0): `tree_palm*` and `rock_*` models, recycled |
 
 - **Spawning:** obstacles come in rows, and every row **leaves at least one lane free**. Coffees come in short lines of 3–5 cups (tune) in a lane that is free at that point, which rewards reading the road.

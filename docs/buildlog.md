@@ -96,3 +96,15 @@ Running record of how this project was built with Claude Code. "I" is the develo
 - [decision] Apron: "no apron for now, maybe later". Claude Code had recommended a code-built overlay box.
 - [decision] Coffee pickup: "use cup-coffee and keep frappe as a potential addon for later." Claude Code had recommended comparing a coral primitive with `frappe.glb` on the phone in Phase 4.
 - [decision] The `credits` npm script was left out of Phase 0 and moves to Phase 4, because `scripts/gen-credits.mjs` doesn't exist yet and a script that fails when run is worse than none. `docs/execution-plan.md` was updated to match. (Claude Code's call)
+- [direction] "everything looks good on cloudflare, go ahead and continue. push the docs commits together with phase 1" — the Phase 0 phone check passed on the `*.pages.dev` deploy; Phase 1 starts, and `20b6603` + `2fe7bbb` get pushed with it.
+- [note] Phase 1 built:
+  - `src/game/config.js`: all the GDD (tune) values.
+  - `src/game/lanes.js`: lane state, 0.12 s eased slide, one queued move, edge moves ignored, `effectiveLane` = the target lane.
+  - `src/render/palette.js`, `scene.js`, `world.js`, `entities.js`: a Deep Ocean placeholder block with a run bob.
+  - `src/ui/input.js`: a swipe fires at 30 px, once per touch; arrows and A/D work too.
+  - `src/ui/screens.js`: the gesture hint, removed on the first successful lane change.
+  - `src/ui/debug.js`: `?debug` shows FPS and draw calls.
+  - `npm test`: 2 files, 8 tests passed (7 of them lane tests). `npm run build`: JS 535 kB (133.7 kB gzip).
+  - Headless Chrome (SwiftShader) screenshots at 480×854 showed the sea on the left, kerbs, scrolling dashes, the runner and the hint. Swipes and FPS still need checking on my phone.
+- [decision] Track: the sand, kerbs and sea planes stay still, and only the lane-line dashes move. They are recycled by wrapping z inside one `InstancedMesh`, which costs one draw call. The plan said "track segments, pooled and recycled"; this keeps the draw count down and has no seams. The GDD §7 Track row was updated to match. (Claude Code's call)
+- [decision] Colours not in the brand doc, added in `src/render/palette.js` to be tuned on the phone: sky `#cdeef0` (pale turquoise), beach `#e8cf9f` (darker than the promenade so the track edge reads), lane lines `#d6b98a`. Fog from 40 to 75 m hides recycled objects appearing at the far end. Camera: FOV 70 at (0, 3.4, 6.2) looking at (0, 0, -4); the first look point (0, 0.4, -6) left about a third of the screen as sky. (Claude Code's call)

@@ -1,6 +1,6 @@
 import * as THREE from 'three';
-
-const MAX_PIXEL_RATIO = 2; // (tune) moves to src/game/config.js in Phase 1
+import { CONFIG } from '../game/config.js';
+import { PALETTE } from './palette.js';
 
 export function hasWebGL2() {
   return !!document.createElement('canvas').getContext('webgl2');
@@ -8,26 +8,21 @@ export function hasWebGL2() {
 
 export function createScene(canvas) {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, MAX_PIXEL_RATIO));
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, CONFIG.maxPixelRatio));
 
   const scene = new THREE.Scene();
-  scene.background = new THREE.Color('#fcfaf4');
+  scene.background = new THREE.Color(PALETTE.sky);
+  scene.fog = new THREE.Fog(PALETTE.sky, 40, 75); // hides recycled objects appearing at the far end
 
-  const camera = new THREE.PerspectiveCamera(60, 1, 0.1, 100);
-  camera.position.set(0, 1.5, 4);
-  camera.lookAt(0, 0, 0);
+  // Fixed camera behind and above the runner, looking down the track (GDD §7)
+  const camera = new THREE.PerspectiveCamera(70, 1, 0.1, 100);
+  camera.position.set(0, 3.4, 6.2);
+  camera.lookAt(0, 0, -4);
 
-  scene.add(new THREE.AmbientLight(0xffffff, 1.2));
-  const sun = new THREE.DirectionalLight(0xffffff, 1.5);
-  sun.position.set(2, 4, 3);
+  scene.add(new THREE.AmbientLight(0xffffff, 1.6));
+  const sun = new THREE.DirectionalLight(0xffffff, 1.4);
+  sun.position.set(3, 6, 4);
   scene.add(sun);
-
-  // Phase 0 placeholder: proves the pipeline renders on a phone
-  const cube = new THREE.Mesh(
-    new THREE.BoxGeometry(1, 1, 1),
-    new THREE.MeshLambertMaterial({ color: '#168f9c' }),
-  );
-  scene.add(cube);
 
   function resize() {
     const width = canvas.clientWidth;
@@ -39,5 +34,5 @@ export function createScene(canvas) {
   new ResizeObserver(resize).observe(canvas);
   resize();
 
-  return { renderer, scene, camera, cube };
+  return { renderer, scene, camera };
 }
