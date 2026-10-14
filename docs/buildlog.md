@@ -13,7 +13,15 @@ Running record of how this project was built with Claude Code. "I" is the develo
 - UI: HTML/CSS overlay for the start screen, gesture hint, score, game over, one-tap retry, a text logo and a visible Credits link on the start and end screens (directed, brief).
 - Sharing: Web Share API when available, otherwise copy text plus link. No leaderboard (directed, brief).
 - Engineering: canvas and camera resize for portrait phones, capped device pixel ratio, few draw calls, keyboard arrows for desktop testing, HTTPS deployment. Target is smooth play near 30 FPS on the tested phone, reported honestly (directed, brief).
-- Assets: verified CC0 low-poly 3D packs only, preferably glTF/GLB. Candidates are Kenney Nature Kit, Food Kit and Blocky Characters; use one primary pack plus at most one supporting pack. Code-built primitives are allowed as fallbacks. No AI-generated art. Only assets actually used get recorded in `CREDITS.md` (directed, brief).
+- Assets: verified CC0 low-poly 3D packs only, preferably glTF/GLB. Three Kenney packs are allowed: Blocky Characters, Food Kit and Nature Kit. This lifts the brief's limit of one primary plus one supporting pack. Code-built primitives are allowed as fallbacks. No AI-generated art. Only assets actually used get recorded in `CREDITS.md` (directed, Session 2).
+- Design source: `docs/GDD.md`, reviewed 14 October 2026. Runner = a barista (Kenney Blocky Character); obstacle = a beach parasol or deckchair; English only (directed / proposed → accepted, Session 2).
+- Fail rule: the stumble. The first hit slows the runner to 70% for a 5 s window; a second hit inside that window ends the run. Both numbers are starting points to tune (directed, Session 2).
+- Scoring: distance plus a coffee bonus (+1 per metre, +10 per cup, both to tune) (proposed → accepted, Session 2).
+- Audio: a few CC0 SFX, muted by default; first on the cut list (directed, Session 2).
+- Hosting: Cloudflare Pages at the default `*.pages.dev` address, with the code on GitHub. No custom domain (directed, Session 2).
+- Test devices: an iPhone 14 and/or a Samsung Galaxy S20 FE (directed, Session 2).
+- Toolchain: Vite + `three` from npm + Vitest, in plain JavaScript. Test command `npm test`; build `npm run build` → `dist/` (directed, Session 2).
+- Execution plan: `docs/execution-plan.md`, Phases 0–6, each ending in a committable, playable state. Game logic lives in pure `src/game/` modules with no Three.js or DOM imports, so it can be unit-tested (proposed → accepted, Session 2).
 - Branding: an assumed palette in `docs/brisa-cafe-brand-palette.md`: Brisa Turquoise `#168F9C` (primary/CTA), Deep Ocean `#174B64` (text/HUD), Sunlit Sand `#F3DFBB` (environment), Sunset Coral `#E87F63` (coffee pickups/highlights), Sea Salt White `#FCFAF4` (panels) (directed, brief).
 - Nice-to-haves, only once the core game is finished: a device-local best score and a second obstacle configuration. Cut first: extra scenery, best score, extra patterns (directed, brief).
 - Time box: at most 3 focused days. Day 1 is the scene, camera, CC0 pack, swipes and lanes. Day 2 is obstacles, pickups, collisions, scoring and the overlay. Day 3 is styling, sharing, portrait QA, deployment and credits (directed, brief).
@@ -26,10 +34,10 @@ Running record of how this project was built with Claude Code. "I" is the develo
 
 (Keep current; every session updates this list.)
 
-- Nothing committed yet (Session 1): `main` has no commits. `CLAUDE.md` and everything in `docs/` are untracked. Close it with a first commit when I ask for one.
-- No toolchain or test command yet (Session 1): the brief doesn't say whether to use a bundler (e.g. Vite) or plain ES modules with an import map, nor how to run tests. Under the CLAUDE.md "Surface Trade-offs" rule, present options before scaffolding. Then fill in the test command in the CLAUDE.md build-log block.
-- CC0 pack not chosen (Session 1): the brief lists Kenney Nature Kit, Food Kit and Blocky Characters as candidates. Choose on Day 1, verify the CC0 licence on the pack page and start `CREDITS.md`.
-- Hosting not chosen (Session 1): the brief requires HTTPS deployment but names no host. Decide by Day 3.
+- No code yet (Session 2): `npm test` is the chosen test command, but it only works once Phase 0 of `docs/execution-plan.md` scaffolds Vite + Vitest. Close this when `npm test` runs green.
+- Kenney models not verified (Sessions 1–2): GDD §7 marks the parasol/deckchair, takeaway cup and palm/rock models "to verify", along with whether the Blocky Character's apron can be tinted. Execution plan Phase 0 step 4: download the three packs outside the repo, confirm each CC0 licence file, list the GLBs, and decide model or primitive for each entity. Record the outcome here.
+- Cloudflare Pages project not connected (Session 2): I connect the GitHub repo in the Cloudflare dashboard (build `npm run build`, output `dist`) during Phase 0. Claude Code asks before every push.
+- Tuning values unconfirmed (Session 2): stumble 5 s / 70%, start speed, acceleration, cap and spawn spacing are GDD starting points. They live in `src/game/config.js` from Phase 1. Judge them in Phase 2 playtests (a first run should last about 30–60 s) and on the test phones in Phase 5.
 
 ### Session 1 — Wednesday 14 October 2026 — Agent rules and build log set up
 
@@ -49,13 +57,29 @@ Running record of how this project was built with Claude Code. "I" is the develo
 - **Where things stand / next step:** Branch `main` has no commits; `CLAUDE.md` and `docs/` are uncommitted. No code, toolchain or tests yet. Next is Day 1 of the brief: present toolchain options (see Open issues), then set up the Three.js scene and camera, pick and import one CC0 pack, and add swipe and arrow-key switching between three fixed lanes.
 - **Showcase line:** Before writing any game code, I gave Claude Code standing rules (small edits, verify before claiming, ask instead of guessing) and set up a build log, so every session starts from the brief and the last session's notes.
 
-### Session 2 — Wednesday 14 October 2026 — (in progress)
+### Session 2 — Wednesday 14 October 2026 — GDD, first commit and phased execution plan
 
-- [direction] "lets build a game. please find the BRIEF in the docs. read it and ask questions. first lets create a game design document (gdd), which I will review, then based on that gdd we will create an execution plan." — sets the order: questions → GDD for my review → execution plan.
-- [decision] "the game will be hosted on Cloudflare Pages and the code on is on GitHub (already have the repo setup)" — closes the hosting open issue.
-- [correction] Claude Code offered one-hit / 3 hearts / fixed 60 s timer as the fail rule; I answered "Use a Stumble Mechanic instead." Then chose: first hit = stumble, a second hit within the stumble window ends the run.
-- [decision] GDD lives at docs/GDD.md; score = distance + coffee bonus; English only; runner = Kenney Blocky Character; obstacles = beach umbrellas/chairs (all accepted from Claude Code's recommended options).
-- [decision] Audio: a few CC0 SFX, muted by default — I picked this over Claude Code's recommended "no audio" (adds scope beyond the brief).
-- [decision] Claude Code drafted docs/GDD.md for my review; execution plan waits until the GDD is approved.
-- [decision] GDD review answers: "use 3 packs" (Blocky Characters + Food Kit + Nature Kit; I turned down Claude Code's suggestion to keep the brief's two-pack limit); share link "will go with default" (*.pages.dev); runner stays a barista — "customer chasing order would not send the right message"; stumble 5 s / 70% accepted — "i will adjust later based on results"; test phones "older iphone like iphone 14 and/or a Samsung s20fe".
-- [direction] "once done with the gdd update please do an initial commit"
+- **Goal:** Turn the brief into a reviewed GDD, then an execution plan, before any code. This came from me, following on from Session 1's next step.
+- **Direction given:** I said "lets build a game. please find the BRIEF in the docs. read it and ask questions. first lets create a game design document (gdd), which I will review, then based on that gdd we will create an execution plan." I set hosting: "the game will be hosted on Cloudflare Pages and the code on is on GitHub (already have the repo setup)". After the review I asked: "once done with the gdd update please do an initial commit". Then: "have a look at the GDD and the project and lets formulate a plan of execution to build the game in phases (break down the plan into incremental features)."
+- **Course corrections:**
+  - Fail rule: Claude Code offered one hit, 3 hearts or a fixed 60 s timer. I answered "Use a Stumble Mechanic instead": the first hit is a stumble, and a second hit inside the stumble window ends the run.
+  - Audio: Claude Code recommended no audio, since the brief doesn't mention it. I chose a few CC0 SFX, muted by default, and accepted the added scope.
+  - Asset packs: Claude Code suggested keeping the brief's two-pack limit. I said "use 3 packs" (Blocky Characters + Food Kit + Nature Kit).
+  - Runner: I kept the barista and turned down the customer-chasing-their-order idea: "customer chasing order would not send the right message".
+- **What was built:** (1) `docs/GDD.md`, reviewed, with the review answers in §13. (2) The initial commit `39fdef4` on `main` (brief, palette, GDD, build log, `CLAUDE.md`). (3) `docs/execution-plan.md`: Phases 0–6 (scaffold and deploy pipeline → scene and lanes → core loop → screens and share → Kenney models and credits → polish and QA → nice-to-haves), each with steps and a verification check, mapped onto the brief's 3-day box. (4) Build log: Part 1 rewritten for this session's decisions, Open issues refreshed, and the CLAUDE.md test command set to `npm test`.
+- **Decisions:**
+  - Hosting on Cloudflare Pages at the default `*.pages.dev` address (my answer was "will go with default"), with the code on GitHub. [directed]
+  - Stumble numbers start at 5 s and 70%: "i will adjust later based on results". [directed]
+  - Test phones: "older iphone like iphone 14 and/or a Samsung s20fe". [directed]
+  - Score = distance + coffee bonus; English only; runner = a Kenney Blocky Character; obstacles = beach parasols or deckchairs. [proposed → accepted]
+  - Toolchain: Vite + `three` from npm + Vitest. The alternatives were plain ES modules with a CDN import map (no build step, but a runtime CDN dependency and no test runner) and Vite without tests. [proposed → accepted]
+  - The plan is copied into `docs/execution-plan.md` and committed, since Claude Code's own plan file sits outside the repo and doesn't persist. The alternative was to keep the plan file only. [proposed → accepted]
+  - Game logic in pure `src/game/` modules (lanes, speed, spawner, collision, stumble, score, run) with no Three.js or DOM imports, so Vitest can test them without WebGL. [Claude's call, in the approved plan]
+  - The Kenney asset check comes in Phase 0, although models are only swapped in during Phase 4, because GDD §7 leaves several models unverified and the primitive fallbacks should be decided before gameplay tuning. [Claude's call, in the approved plan]
+  - Phase 6 build order: best score → SFX → extra scenery → second arrangement (cheapest first), cutting in GDD §11 order if time runs short. [Claude's call, in the approved plan]
+- **What broke or was wrong:** None.
+- **Hand edits:** None seen. The working tree was clean (`git status`) before this session's planning edits.
+- **Testing / playtest notes:** None. No code exists yet, and `npm test` was not run because the project isn't scaffolded.
+- **Learned:** Asking which toolchain to use before writing the plan also fixed the test command, so each phase's verification step could name a real command instead of a placeholder.
+- **Where things stand / next step:** `main` holds `39fdef4` plus this session's commit (`docs/execution-plan.md`, build log, `CLAUDE.md`), not pushed. No code yet. Next is Phase 0 of `docs/execution-plan.md`: scaffold Vite + `three` + Vitest, the 9:16 page with palette tokens, a renderer with the DPR cap and a placeholder cube, the Kenney pack check, and the Cloudflare Pages connection (mine). Done when `npm test` and `npm run build` pass and the `*.pages.dev` URL shows the cube on a phone.
+- **Showcase line:** I had Claude Code turn a one-paragraph client email into a reviewed GDD, steering the fail rule to a forgiving "stumble" and keeping the runner a barista, then into a seven-phase execution plan where every phase ends playable and testable.
