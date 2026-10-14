@@ -22,6 +22,9 @@ const CUP_HOVER = 0.45;
 const CUP_BOB = 0.08;
 
 const MAX_OBSTACLES = 24; // per look
+// How far each obstacle look is turned about its vertical axis; each obstacle picks clockwise or
+// counter-clockwise at random, so the rows don't look stamped out (tune)
+const OBSTACLE_TURNS = { parasol: Math.PI / 9, cafeTable: Math.PI / 9, menuBoard: Math.PI / 6 }; // 20°, 20°, 30°
 const MAX_COFFEES = 48;
 
 const middle = Math.floor(CONFIG.laneCount / 2);
@@ -94,8 +97,7 @@ function cafeTableModel() {
 }
 
 // A café A-frame menu board: a Deep Ocean chalkboard in a white frame, a turquoise header and chalk lines.
-// Two panels lean against each other, about 0.7 m wide and 1 m tall, turned 30° to the runner
-const BOARD_TURN = Math.PI / 6;
+// Two panels lean against each other, about 0.7 m wide and 1 m tall
 function menuBoardModel() {
   const panel = (facing) => {
     const parts = [
@@ -114,9 +116,7 @@ function menuBoardModel() {
       g.rotateY(facing > 0 ? 0 : Math.PI).rotateX(-facing * 0.22).translate(0, 0.49, facing * 0.11),
     );
   };
-  const model = primitiveModel([...panel(1), ...panel(-1)]);
-  model.geometry.rotateY(BOARD_TURN);
-  return model;
+  return primitiveModel([...panel(1), ...panel(-1)]);
 }
 
 // Obstacles (GDD §7): three looks that all hit the same way, picked per obstacle by config.obstacleMix:
@@ -129,6 +129,7 @@ export function createObstacles(scene, models) {
     menuBoard: instancedModel(scene, menuBoardModel(), MAX_OBSTACLES),
   };
   const knockStarted = new WeakMap(); // obstacle → render time its knock-aside began
+  const turnSign = new WeakMap(); // obstacle → 1 or -1, picked once so it doesn't flicker
   const dummy = new THREE.Object3D();
 
   function update(run, timeSeconds) {
@@ -137,7 +138,9 @@ export function createObstacles(scene, models) {
       const kind = meshes[obstacle.kind] ? obstacle.kind : 'parasol';
       if (counts[kind] === MAX_OBSTACLES) continue;
       dummy.position.set(laneX(obstacle.lane), 0, run.distance - obstacle.at);
-      dummy.rotation.set(0, 0, 0);
+      if (!turnSign.has(obstacle)) turnSign.set(obstacle, Math.random() < 0.5 ? -1 : 1);
+      // ZYX: the turn is applied first, so the knock-aside tilt still tips it straight out of the lane
+      dummy.rotation.set(0, turnSign.get(obstacle) * OBSTACLE_TURNS[kind], 0, 'ZYX');
       if (obstacle.knocked) {
         if (!knockStarted.has(obstacle)) knockStarted.set(obstacle, timeSeconds);
         const t = Math.min((timeSeconds - knockStarted.get(obstacle)) / KNOCK_SECONDS, 1);
