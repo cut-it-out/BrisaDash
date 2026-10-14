@@ -8,8 +8,8 @@ import { PALETTE } from './palette.js';
 
 const RUNNER_HEIGHT = 1.5; // (tune)
 const CUP_HEIGHT = 0.3; // (tune) the Kenney mug is squat: about 0.45 wide at this height
-const FRAPPE_HEIGHT = 0.7; // (tune) tall and thin: about 0.36 wide
-const TAKEAWAY_HEIGHT = 0.55; // (tune) about 0.4 wide
+const FRAPPE_HEIGHT = 0.8; // (tune) tall and thin: about 0.36 wide
+const TAKEAWAY_HEIGHT = 0.58; // (tune) about 0.4 wide
 const BOB_HEIGHT = 0.12; // (tune)
 const BOB_STEPS_PER_SECOND = 5; // (tune)
 const WOBBLE_ANGLE = 0.3; // radians at a full stumble meter (tune)

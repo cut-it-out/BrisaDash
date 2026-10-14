@@ -8,14 +8,14 @@ export const CONFIG = {
 
   // Speed in m/s (GDD §5)
   startSpeed: 8,
-  acceleration: 0.15,
-  maxSpeed: 18,
+  acceleration: 0.25,
+  maxSpeed: 40,
 
   // Spawning (GDD §7)
   firstRowAt: 30, // empty track before the first row
-  rowGapSeconds: 1.5, // rows are this many seconds apart at the current speed...
-  minRowGap: 12, // ...but never closer than this
-  twoBlockedChance: 0.4, // otherwise a row blocks one lane
+  rowGapSeconds: 1.2, // rows are this many seconds apart at the current speed...
+  minRowGap: 9, // ...but never closer than this
+  twoBlockedChance: 0.55, // otherwise a row blocks one lane
   coffeeLineChance: 0.6,
   cupLineMix: { coffee: 0.4, takeaway: 0.4, frappe: 0.2 }, // share of cup lines of each kind (sums to 1)
   coffeeLineMin: 3,

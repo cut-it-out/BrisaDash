@@ -16,7 +16,7 @@ Running record of how this project was built with Claude Code. "I" is the develo
 - Assets: verified CC0 low-poly 3D packs, preferably glTF/GLB, plus one CC BY 4.0 exception, the takeaway cup (directed, Session 8; GDD §13 item 6). Three Kenney packs are allowed: Blocky Characters, Food Kit and Nature Kit. This lifts the brief's limit of one primary plus one supporting pack. Code-built primitives are allowed as fallbacks. No AI-generated art. Only assets actually used get recorded in `CREDITS.md` (directed, Session 2).
 - Design source: `docs/GDD.md`, reviewed 14 October 2026. Runner = a barista (Kenney Blocky Character); obstacle = a beach parasol or deckchair; English only (directed / proposed → accepted, Session 2).
 - Models (packs checked 14 October 2026, all three CC0): runner = `character-f.glb` (teal shirt), 1.5 m, with no apron for now; obstacle = a primitive parasol over a lounger, because no pack has a parasol or deckchair; scenery = Nature Kit `tree_palm*` / `rock_*`, 14 pieces repeating every 80 m (directed, Session 3; sizes Session 7).
-- Pickups: `cup-coffee.glb` tinted Sunset Coral (0.3 m, +10), the CC BY takeaway cup recoloured with a Sunset Coral body and Sea Salt White lid (0.55 m, +10), and the rarer `frappe.glb` in its own colours (0.7 m, +20). Each cup line is one kind, split by `cupLineMix` (mug 40% / takeaway 40% / frappe 20%; shares are relative). Three pickups go beyond the brief's "one pickup" (directed, Session 8).
+- Pickups: `cup-coffee.glb` tinted Sunset Coral (0.3 m, +10), the CC BY takeaway cup recoloured with a Sunset Coral body and Sea Salt White lid (0.58 m, +10), and the rarer `frappe.glb` in its own colours (0.8 m, +20). Each cup line is one kind, split by `cupLineMix` (mug 40% / takeaway 40% / frappe 20%; shares are relative). Three pickups go beyond the brief's "one pickup" (directed, Session 8; takeaway and frappe heights set by me by hand, Session 10).
 - Rendering: every model material becomes flat `MeshLambertMaterial`, because Kenney's PBR materials are metallic and render dark (Claude's call, Session 7). Obstacles, each cup kind, lane dashes and each scenery model are one `InstancedMesh` each; the track, kerbs and sea are static planes; about 25 draw calls in total (Claude's call, Sessions 4–8).
 - Camera: FOV 70 at (0, 4.0, 4.5) looking at (0, 0, -8), for a closer runner and a longer view ahead (directed, Session 4).
 - Node: `.nvmrc` pins Node 24 for the Cloudflare build (Vitest 5 needs Node ≥ 22.12) (Claude's call, Session 3).
@@ -29,7 +29,7 @@ Running record of how this project was built with Claude Code. "I" is the develo
 - Execution plan: `docs/execution-plan.md`, Phases 0–6, each ending in a committable, playable state. Game logic lives in pure `src/game/` modules with no Three.js or DOM imports, so it can be unit-tested (proposed → accepted, Session 2).
 - Screens and flow: start → playing ⇄ paused (`visibilitychange`) → game over (after 0.7 s) → Retry; a credits overlay from `src/credits.json`; the gesture hint returns each run until the first successful lane change; system font, no brand font (Claude's call, Session 6; font proposed → accepted, Session 9).
 - Credits: `src/credits.json` is the single source for the in-game credits and `CREDITS.md` (`npm run credits`). `tests/credits.test.js` fails if they drift, if any file in `public/models` is uncredited, or if an asset is neither CC0 nor CC BY 4.0 with its changes stated (Claude's call, Session 7; CC BY rule, directed, Session 8).
-- Balancing: tuned on the phone with `?debug&<configKey>=<value>` URL overrides (`src/game/overrides.js`), listed in the debug panel; the final values get written into `src/game/config.js` (proposed → accepted, Session 9).
+- Balancing: tuned on the phone with `?debug&<configKey>=<value>` URL overrides (`src/game/overrides.js`), listed in the debug panel; the final values get written into `src/game/config.js` (proposed → accepted, Session 9). Current values, set by me by hand after phone tests and first-time testers both found it too easy: acceleration 0.25, maxSpeed 40, rowGapSeconds 1.2, minRowGap 9, twoBlockedChance 0.55, to be judged while playing Phase 6 (directed, Session 10).
 - Link preview: Open Graph tags in `index.html` and `public/og-image.png` (1200×630, a real gameplay capture with the logo; the CC BY cup kept out of it). `og:url` and `og:image` point at https://brisa-dash.pages.dev (proposed → accepted, Session 9).
 - Branding: an assumed palette in `docs/brisa-cafe-brand-palette.md`: Brisa Turquoise `#168F9C` (primary/CTA), Deep Ocean `#174B64` (text/HUD), Sunlit Sand `#F3DFBB` (environment), Sunset Coral `#E87F63` (coffee pickups/highlights), Sea Salt White `#FCFAF4` (panels) (directed, brief).
 - Nice-to-haves, only once the core game is finished: a device-local best score and a second obstacle configuration. Cut first: extra scenery, best score, extra patterns (directed, brief).
@@ -43,12 +43,11 @@ Running record of how this project was built with Claude Code. "I" is the develo
 
 (Keep current; every session updates this list.)
 
-- Phase 5 device QA in progress (Session 9): I'm testing now. Record for the iPhone 14 (Safari) and Galaxy S20 FE (Chrome), each with `?debug`: FPS over 3 runs, draw calls (expect 25), browser version; the Android share sheet; the link preview card when the share text is pasted into WhatsApp or Messages (apps cache cards: use a new chat or add `?v=1`); on the iPhone, the logo clear of the notch and the hint clear of the home bar; one first-time tester's words, quoted as given. GDD §12 is the acceptance list.
-- Balancing pass pending (Sessions 7–9): I said it "feels a bit easy at the moment". Tune on the phone with URL overrides; a harder set to start from is `https://brisa-dash.pages.dev/?debug&twoBlockedChance=0.55&rowGapSeconds=1.3&minRowGap=10&acceleration=0.2&maxSpeed=20`. At the start speed `minRowGap` (12 m) sets the row spacing, not `rowGapSeconds`. Close when my chosen values are in `src/game/config.js`, with before → after values and run lengths logged (target 30–60 s for a first-timer).
-- Pickup readability on the phone (Session 8): the coral tint renders a little toward terracotta (it multiplies a light grey texture); the frappe is in brown and white. Judge all three cups on the phone; the levers are `CUP_HEIGHT` / `FRAPPE_HEIGHT` / `TAKEAWAY_HEIGHT` in `src/render/entities.js`.
+- Android device QA (Sessions 9–10), mine, "later": on the Galaxy S20 FE (Chrome) with `?debug`, record FPS over 3 runs, draw calls (expect 25), the browser version and the Android share sheet. The iPhone 14 is done (Session 10); its Safari version and draw-call count were not recorded, so add them if convenient. GDD §12 is the acceptance list.
+- New balance to judge (Session 10): my hand-set values in `src/game/config.js` (acceleration 0.25, maxSpeed 40, rowGapSeconds 1.2, minRowGap 9, twoBlockedChance 0.55) get judged while playing Phase 6. Two effects to keep in mind: `minRowGap` no longer has any effect, because spacing is max(minRowGap, speed × rowGapSeconds) (`src/game/spawner.js`) and 8 × 1.2 = 9.6 m already beats 9 m; and maxSpeed 40 is only reached after 128 s (`src/game/speed.js`), so speed keeps climbing for the whole of a 30–60 s run (23 m/s at 60 s, past the old 18 cap). Close when run lengths are logged (target 30–60 s for a first-timer) and I'm happy with the values.
 - Preview URL is hard-coded (Session 9): `og:url` and `og:image` in `index.html` name https://brisa-dash.pages.dev. If the Pages project is renamed or a custom domain is added, update both.
 - Parked (Session 3, mine): a Brisa Turquoise apron on the barista ("no apron for now, maybe later"). All of the character's colour comes from one texture, so it would need a code-built overlay box or a recoloured torso.
-- Unexplained test run (Session 7): once, `npm test` straight after `npm run credits` reported "9 failed, no tests"; it didn't reproduce in 4 runs. If it recurs, capture the full output.
+- Unexplained test run (Session 7): once, `npm test` straight after `npm run credits` reported "9 failed, no tests"; it didn't reproduce in 4 runs (nor in Session 10). If it recurs, capture the full output.
 
 ### Session 1 — Wednesday 14 October 2026 — Agent rules and build log set up
 
@@ -356,3 +355,45 @@ Running record of how this project was built with Claude Code. "I" is the develo
   - Next session: write my chosen balance values into `src/game/config.js`, record the device results and the first-time tester's words, and close Phase 5.
   - Then Phase 6, in the plan's order: best score → SFX + mute → extra scenery → a second obstacle arrangement.
 - **Showcase line:** For the balancing pass I chose to tune on the phone, so Claude Code made every gameplay number adjustable from the URL. I can now try difficulty settings on the iPhone and S20 FE without a redeploy.
+
+### Session 10 — Wednesday 14 October 2026 — Phase 5 device results and my balance changes
+
+- **Goal:** Log my iPhone 14 results, the first-time testers' feedback and my hand edits from Phase 5 device QA, then wrap up before Phase 6 (from me; Session 9's next step).
+- **Direction given:**
+  - "it was too easy, I've updated the config, lets see in the next phase how it plays now."
+  - "link preview card was also checked and ok, tick that one too"
+  - "I'll do an android later, lets wrap this up, then I clear the session and move to phase 6"
+- **Course corrections:** None.
+- **What was built:** Claude Code wrote no code this session.
+  1. `CREDITS.md` regenerated with `npm run credits` after my credit URL change.
+  2. Cup heights updated to my values in GDD §6 and Part 1 (frappe 0.8 m, takeaway 0.58 m).
+  3. The progress line in `docs/execution-plan.md`, this entry, Open issues and Part 1 (Pickups, Balancing).
+- **Decisions:**
+  - A harder balance, because my own phone tests and the first-time testers both found it too easy: acceleration 0.15 → 0.25, maxSpeed 18 → 40, rowGapSeconds 1.5 → 1.2, minRowGap 12 → 9, twoBlockedChance 0.4 → 0.55. Session 9's suggested starting set (0.55 / 1.3 / 10 / 0.2 / 20) was not taken as is; my values go further on row gap, acceleration and the speed cap. [directed]
+  - Frappe 0.7 → 0.8 m and takeaway cup 0.55 → 0.58 m. [directed]
+  - The takeaway cup credit uses the shortened Sketchfab link https://skfb.ly/oxqpp instead of the full model URL. [directed]
+  - Move on to Phase 6 with the Android check still open, although the plan says Phase 6 starts "only once Phase 5 passes". Phase 5 passes on the iPhone 14. [directed]
+- **What broke or was wrong:** After my credit URL change, `npm test` failed 1 of 52 tests: `CREDITS.md` is generated from `src/credits.json` and the drift check caught that it hadn't been regenerated. Claude Code ran `npm run credits`; `npm test` then passed 52/52.
+- **Hand edits:** All three were mine, made between Sessions 9 and 10:
+  - `src/game/config.js`: the balance values above.
+  - `src/render/entities.js`: `FRAPPE_HEIGHT` 0.7 → 0.8, `TAKEAWAY_HEIGHT` 0.55 → 0.58.
+  - `src/credits.json`: the takeaway cup's `url` shortened to https://skfb.ly/oxqpp.
+- **Testing / playtest notes:**
+  - iPhone 14: "iphone plays the game well, its almost continuously 60fps, sometimes it dips to ~58, but barely noticed it." and "everything else looks ok so far". The Safari version and the draw-call count were not recorded.
+  - Link preview card: "checked and ok".
+  - First-time testers: "first time testers liked it, but also go the feedback that it is too easy (confirmed my findings, thus the changes)".
+  - GDD §12, against that evidence:
+    1. Complete loop, readable in portrait: met on the iPhone 14.
+    2. First-time tester: feedback recorded as given, above. Whether they found the swipe without help wasn't stated.
+    3. Share and credits: link preview card checked; the credits test passes. The Android share sheet is not checked yet.
+    4. Performance: about 60 fps on the iPhone 14 against a 30 fps target. Android not tested yet.
+  - Run lengths with the new balance: not measured yet.
+  - Claude Code pointed out two effects of the new values, with no change made: `minRowGap` 9 no longer has any effect (8 m/s × 1.2 s = 9.6 m is already larger), and maxSpeed 40 is only reached after 128 s, so a 60 s run ends at 23 m/s.
+  - `npm test`: 10 files, 52 tests passed. `npm run build`: not run.
+- **Learned:** A test that compares a generated file with its source turns a forgotten regeneration step into a failing test, not a stale credit on the live site.
+- **Where things stand / next step:**
+  - Committed on `main`, two commits ahead of `origin/main` (the Session 9 wrap-up and this one). Not pushed: a push deploys the harder balance to https://brisa-dash.pages.dev.
+  - `npm test` 52/52.
+  - Phase 5 passes on the iPhone 14. The Galaxy S20 FE check is mine, "later" (see Open issues).
+  - Next session: Phase 6 in the plan's order: best score → SFX + mute → extra scenery → a second obstacle arrangement. Judge the new balance while playing it.
+- **Showcase line:** My own iPhone tests and the first-time testers both said the game was too easy, so I raised the speed ramp, the row density and the two-lane blocks by hand. The iPhone 14 held close to 60 fps, against the brief's 30 fps target.

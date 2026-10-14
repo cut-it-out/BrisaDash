@@ -69,8 +69,8 @@ The wobble is just a **code-driven change of position and rotation** on a static
 | Runner | A barista made from Kenney Blocky Character **`character-f.glb`** (teal shirt), in a static pose with a code-driven run bob. No apron for now; it may come later | Blocky Characters (CC0) |
 | Obstacle (one type) | A beach parasol or deckchair blocking one lane | Built from primitives (a parasol is a cylinder plus a cone). None of the three packs has a parasol or deckchair (checked 14 October 2026) |
 | Pickup A: coffee mug | The common pickup, spinning and bobbing: **`cup-coffee.glb`** (a ceramic cup with a handle), tinted Sunset Coral, 0.3 m tall. Worth +10 | Food Kit (CC0) |
-| Pickup B: frappe | The rarer pickup: **`frappe.glb`** (a takeaway cup with a lid and straw) in its own colours, 0.7 m tall. Worth +20 | Food Kit (CC0) |
-| Pickup C: takeaway cup | A common pickup: "Low-Poly Takeaway Coffee Cup", recoloured in code with a Sunset Coral body and a Sea Salt White lid, 0.55 m tall. Worth +10 | PickledCactusAlan on Sketchfab (**CC BY 4.0**, see §13) |
+| Pickup B: frappe | The rarer pickup: **`frappe.glb`** (a takeaway cup with a lid and straw) in its own colours, 0.8 m tall. Worth +20 | Food Kit (CC0) |
+| Pickup C: takeaway cup | A common pickup: "Low-Poly Takeaway Coffee Cup", recoloured in code with a Sunset Coral body and a Sea Salt White lid, 0.58 m tall. Worth +10 | PickledCactusAlan on Sketchfab (**CC BY 4.0**, see §13) |
 | Track | A sandy promenade in Sunlit Sand with white kerbs and dashed lane lines | Code-built planes that stay still. Only the lane-line dashes move and get recycled (one instanced mesh) |
 | Scenery | A few palms or rocks beside the track, with turquoise sea on one side and sky behind | Nature Kit (CC0): `tree_palm*` and `rock_*` models, recycled |
 
