@@ -53,7 +53,7 @@ The wobble is just a **code-driven change of position and rotation** on a static
 
 - The start speed and acceleration (tune) are set so a typical first-time run ends somewhere around 30–60 s.
 - Speed ramps up gradually to a **cap**, so the game stays readable on a small screen.
-- Obstacle spacing grows with speed, so there is always time to react.
+- Obstacle spacing grows with speed, but more slowly than the speed itself (Session 12): rows start 9.6 m apart and the gap grows 0.5 m per m/s (tune), so rows come more often as the run goes on: 0.74 s apart at 60 s, 0.64 s at top speed, and never under 0.5 s.
 
 ## 6. Scoring
 
@@ -67,7 +67,7 @@ The wobble is just a **code-driven change of position and rotation** on a static
 | Entity | What it is | Source |
 |---|---|---|
 | Runner | A barista made from Kenney Blocky Character **`character-f.glb`** (teal shirt), in a static pose with a code-driven run bob. No apron for now; it may come later | Blocky Characters (CC0) |
-| Obstacles (three looks, one behaviour) | Each blocks one lane and hits the same way. The look is picked per obstacle by `obstacleMix` (tune): a beach parasol over a lounger 50%, a beach tent 25%, a barrel lying across the lane 25%. Obstacles are turquoise or brown, never coral, because coral means a cup to collect | Parasol built from primitives (no pack has one, checked 14 October 2026). Tent: Nature Kit `tent_smallClosed.glb` tinted Brisa Turquoise, 1.1 m. Barrel: Food Kit `barrel.glb`, 0.95 m (CC0) |
+| Obstacles (three looks, one behaviour) | Each blocks one lane and hits the same way. The look is picked per obstacle by `obstacleMix` (tune): a beach parasol over a lounger 50%, a round café table with two stools 25%, a café A-frame menu board turned 30° 25%. Obstacles use turquoise, white and Deep Ocean, never coral, because coral means a cup to collect | All built from primitives (Session 12). The tent and barrel tried in Session 11, and a code-built deckchair and a City Kit planter tried in Session 12, were dropped after my review. A deckchair model may come later |
 | Pickup A: coffee mug | The common pickup, spinning and bobbing: **`cup-coffee.glb`** (a ceramic cup with a handle), tinted Sunset Coral, 0.3 m tall. Worth +10 | Food Kit (CC0) |
 | Pickup B: frappe | The rarer pickup: **`frappe.glb`** (a takeaway cup with a lid and straw) in its own colours, 0.8 m tall. Worth +20 | Food Kit (CC0) |
 | Pickup C: takeaway cup | A common pickup: "Low-Poly Takeaway Coffee Cup", recoloured in code with a Sunset Coral body and a Sea Salt White lid, 0.58 m tall. Worth +10 | PickledCactusAlan on Sketchfab (**CC BY 4.0**, see §13) |
@@ -75,7 +75,7 @@ The wobble is just a **code-driven change of position and rotation** on a static
 | Scenery | Palms, sandy rocks and gray stones on both sides; a few stones in the shallows; a row of white villas with terracotta roofs on the right; three boats on the turquoise sea on the left, bobbing. One layout of 24 pieces (6 palms, 4 rocks, 6 stones, 5 villas, 3 boats) repeats every 80 m | Nature Kit: `tree_palm*`, `rock_*` and `stone_*` (tinted gray). City Kit (Suburban): `building-type-g/k/m/r` with the pack's terracotta roof colours swapped into the shared texture. Watercraft Kit: `boat-sail-a`, `boat-speed-j`, `boat-fishing-small` (all CC0) |
 | Seagulls | Four gulls circling over the sea ahead of the runner, banking into the turn with a slow bob. `seagullCount` in `config.js` sets how many; 0 turns them off | Built from primitives (no pack has a seagull) |
 
-- **Spawning:** obstacles come in rows, and every row **leaves at least one lane free**. A share of rows (`zigzagChance`, 20%, tune) come as a **zigzag pair**: two rows that each block two lanes, about 0.7 s apart, whose free lanes sit side by side, so the runner has to swipe straight after the first row. That leaves at least 0.5 s between the two rows' hit windows at any speed. Coffees come in short lines of 3–5 cups (tune) in a lane that is free at that point, which rewards reading the road. Each line is one kind of cup: mugs 40%, takeaway cups 40%, frappes 20% (tune).
+- **Spawning:** obstacles come in rows, and every row **leaves at least one lane free**. A share of rows (`zigzagChance`, 20%, tune) come as a **zigzag pair**: two rows that each block two lanes, whose free lanes sit side by side, so the runner has to swipe straight after the first row. The second row is placed so there is exactly 0.5 s (`zigzagRunSeconds`, tune) of free running between the two rows' hit windows at any speed. Coffees come in short lines of 3–5 cups (tune) in a lane that is free at that point, which rewards reading the road. Each line is one kind of cup: mugs 40%, takeaway cups 40%, frappes 20% (tune).
 - **Recycling:** every track segment, obstacle, cup and scenery piece comes from a small pool and moves back ahead of the runner once it has passed behind the camera. No infinite world is built.
 - **Camera:** a fixed perspective camera behind and above the runner, looking down the track. The look-at point stays steady; the only camera motion is the stumble shake.
 - **Lighting:** ambient plus one directional light, with flat colours. No shadows by default; they could be added later only if the frame rate allows.
@@ -102,7 +102,7 @@ The wobble is just a **code-driven change of position and rotation** on a static
 ## 10. Audio
 
 - A few **CC0 sound effects** (built in Phase 6), from three Kenney packs checked as CC0 and credited: a glass clink for a mug or takeaway cup and a brighter chime for a frappe (Interface Sounds), a soft thud for a stumble (Impact Sounds), a falling tone for game over (Digital Audio) and a click for Play, Retry and Share (Interface Sounds). Converted to mono MP3 with the volume evened out, so they play in iOS Safari.
-- Sound is **muted by default**, and a mute/unmute toggle in the top-right corner (over every screen and the HUD) turns it on; the choice is remembered on the device. Audio only starts after a user gesture, as mobile browsers require: the unmute, Play, Retry and resume taps.
+- Sound is **muted by default**, and a mute/unmute toggle in the top-right corner (over every screen and the HUD) turns it on; the choice is remembered on the device. Every sound plays at 40% volume (`soundVolume`, tune), turned down in Session 12 because it felt intrusive. Audio only starts after a user gesture, as mobile browsers require: the unmute, Play, Retry and resume taps.
 - There's no music.
 - **Scope note:** the brief doesn't mention audio, and you chose to add it. It's first on the cut list (section 11).
 
@@ -124,7 +124,7 @@ The wobble is just a **code-driven change of position and rotation** on a static
 - Sound effects (added in the Session 2 review)
 - Best score
 - A second obstacle arrangement: the zigzag pair (§7)
-- Added in Phase 6 (Session 11) at my direction: two more obstacle looks (a tent and a barrel), and extra scenery (villas, boats, gray stones, seagulls). Both go past the brief's "one obstacle type" and "little low-poly scenery" on purpose
+- Added in Phase 6 (Session 11) at my direction: two more obstacle looks (a café table and a menu board since Session 12), and extra scenery (villas, boats, gray stones, seagulls). Both go past the brief's "one obstacle type" and "little low-poly scenery" on purpose
 
 **Cut first, in this order:**
 1. Sound effects
