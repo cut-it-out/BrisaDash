@@ -67,25 +67,44 @@ export function createWorld(scene) {
   return { update };
 }
 
-// Palms and rocks beside the track (Kenney Nature Kit, GDD §7). A fixed layout repeats every SPAN metres,
-// wrapped in z like the dashes. One InstancedMesh per model, so each model costs one draw call per material.
+// Scenery beside the track (GDD §7): Nature Kit palms, sandy rocks and gray stones, City Kit (Suburban) houses
+// on the right and Watercraft Kit boats on the sea. A fixed layout repeats every SPAN metres, wrapped in z like
+// the dashes. One InstancedMesh per model, so each model costs one draw call per material.
 // [model, x, offset along the span (m), height (m), turn (radians)]; the sea starts at x ≈ -4.75
 const SCENERY_LAYOUT = [
+  // Sea side: palms, rocks and stones on the sand, a few stones in the shallows, boats further out
   ['palmTall', -4.0, 0, 4.4, 0.4],
   ['rockSmall', -4.6, 9, 0.5, 1.2],
-  ['palm', -4.0, 17, 4, 2.1],
+  ['stoneLarge', -5.8, 14, 0.5, 0.8],
+  ['boatSail', -11, 20, 4.5, 0.3],
+  ['stoneSmall', -4.4, 27, 0.35, 2.0],
   ['palmBend', -4.1, 35, 3.8, 3.6],
   ['rockLarge', -4.6, 44, 0.6, 0.3],
-  ['palmTall', -4.0, 52, 4.6, 5.1],
+  ['boatSpeed', -8, 48, 1.3, 2.9],
+  ['stoneRound', -6.3, 55, 0.7, 1.4],
+  ['stoneSmall', -5.4, 61, 0.3, 4.1],
   ['palm', -4.0, 68, 4.2, 1.0],
+  ['boatFishing', -10, 72, 2.4, -0.4],
+  // Town side: palms by the kerb, stones, and a row of white villas behind them, facing the track
   ['palm', 4.3, 7, 4.2, 2.8],
+  ['houseVilla', 10, 4, 3.4, -Math.PI / 2],
   ['rockLarge', 3.4, 15, 0.7, 4.0],
-  ['palmBend', 7.0, 24, 3.9, 0.9],
+  ['houseNarrow', 9, 20, 5.5, -Math.PI / 2],
+  ['stoneRound', 3.5, 31, 0.6, 0.6],
+  ['houseBungalow', 10, 36, 3.2, -Math.PI / 2],
   ['palmTall', 4.3, 40, 4.5, 4.4],
   ['rockSmall', 3.3, 49, 0.45, 2.2],
-  ['palm', 7.2, 58, 4, 5.9],
+  ['houseBalcony', 9, 54, 5.5, -Math.PI / 2],
+  ['stoneLarge', 5.6, 64, 0.45, 2.5],
+  ['houseVilla', 10, 70, 3.4, -Math.PI / 2],
   ['palmBend', 4.3, 74, 3.8, 1.7],
 ];
+
+// Nature Kit stones are pale cyan; every material (some have a white second one) is tinted gray
+const SCENERY_TINTS = { stoneSmall: PALETTE.stoneGrey, stoneLarge: PALETTE.stoneGrey, stoneRound: PALETTE.stoneGrey };
+const BOAT_BOB = 0.08; // metres
+const BOAT_ROLL = 0.05; // radians
+const BOAT_DRAFT = 0.12; // how far the hull sits below the water line
 
 export function createScenery(scene, models) {
   const byModel = new Map();
@@ -97,17 +116,23 @@ export function createScenery(scene, models) {
 
   const groups = [...byModel].map(([name, placements]) => {
     const baked = bakeModel(models[name], 1); // unit height; each placement scales it
+    if (SCENERY_TINTS[name]) for (const material of baked.materials) material.color.set(SCENERY_TINTS[name]);
     const mesh = instancedModel(scene, baked, placements.length);
     mesh.count = placements.length;
-    return { mesh, placements };
+    return { mesh, placements, floats: name.startsWith('boat') };
   });
   const dummy = new THREE.Object3D();
 
-  function update(distance) {
-    for (const { mesh, placements } of groups) {
+  function update(distance, timeSeconds = 0) {
+    for (const { mesh, placements, floats } of groups) {
       placements.forEach((p, i) => {
         dummy.position.set(p.x, 0, FAR_Z + ((p.offset + distance) % SPAN));
         dummy.rotation.set(0, p.turn, 0);
+        if (floats) {
+          const phase = timeSeconds * 1.4 + p.offset;
+          dummy.position.y = Math.sin(phase) * BOAT_BOB - BOAT_DRAFT;
+          dummy.rotation.z = Math.sin(phase * 0.8) * BOAT_ROLL;
+        }
         dummy.scale.setScalar(p.height);
         dummy.updateMatrix();
         mesh.setMatrixAt(i, dummy.matrix);

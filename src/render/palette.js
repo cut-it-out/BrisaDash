@@ -11,4 +11,6 @@ export const PALETTE = {
   beachSand: '#e8cf9f', // darker than the promenade so the track edge reads
   laneLine: '#d6b98a',
   gullGrey: '#b9c3c9', // seagull wings
+  stoneGrey: '#8f969c', // Nature Kit stones, tinted from their pale cyan
+  turquoiseShade: '#0f6f7a', // the tent's shaded side
 };

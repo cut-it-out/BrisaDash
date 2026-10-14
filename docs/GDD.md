@@ -60,7 +60,7 @@ The wobble is just a **code-driven change of position and rotation** on a static
 - **Distance:** +1 point per metre run (tune).
 - **Pickups:** +10 points per coffee mug or takeaway cup, and +20 per frappe (tune). A small "+10" or "+20" pops up above the runner on each pickup.
 - The HUD shows the score. The game-over screen shows the score, the distance in metres and the coffees collected. Frappes count as coffees in that total and in the share text; only the score shows their extra value.
-- **Best score (nice-to-have):** stored in `localStorage` on the device and shown as "Best: N" on the start and game-over screens.
+- **Best score (built in Phase 6):** stored in `localStorage` on the device and shown as "Best: N" on the start and game-over screens, or "New best: N!" when a run beats an earlier best. If storage is blocked (private browsing), the game plays the same without it.
 
 ## 7. World and entities
 
@@ -100,8 +100,8 @@ The wobble is just a **code-driven change of position and rotation** on a static
 
 ## 10. Audio
 
-- A few **CC0 sound effects**: coffee pickup, stumble, game over, and optionally a button tap. The source pack has to be verified as CC0 and credited.
-- Sound is **muted by default**, and a mute/unmute toggle on the start screen and HUD turns it on. Audio only starts after a user gesture, as mobile browsers require.
+- A few **CC0 sound effects** (built in Phase 6), from three Kenney packs checked as CC0 and credited: a glass clink for a mug or takeaway cup and a brighter chime for a frappe (Interface Sounds), a soft thud for a stumble (Impact Sounds), a falling tone for game over (Digital Audio) and a click for Play, Retry and Share (Interface Sounds). Converted to mono MP3 with the volume evened out, so they play in iOS Safari.
+- Sound is **muted by default**, and a mute/unmute toggle in the top-right corner (over every screen and the HUD) turns it on; the choice is remembered on the device. Audio only starts after a user gesture, as mobile browsers require: the unmute, Play, Retry and resume taps.
 - There's no music.
 - **Scope note:** the brief doesn't mention audio, and you chose to add it. It's first on the cut list (section 11).
 

@@ -22,6 +22,7 @@
       "files": [
         "models/food/cup-coffee.glb",
         "models/food/frappe.glb",
+        "models/food/barrel.glb",
         "models/food/Textures/colormap.png"
       ]
     },
@@ -37,7 +38,42 @@
         "models/nature/tree_palmBend.glb",
         "models/nature/tree_palmTall.glb",
         "models/nature/rock_smallA.glb",
-        "models/nature/rock_largeA.glb"
+        "models/nature/rock_largeA.glb",
+        "models/nature/stone_smallA.glb",
+        "models/nature/stone_largeA.glb",
+        "models/nature/stone_smallH.glb",
+        "models/nature/tent_smallClosed.glb"
+      ],
+      "changes": "Stones tinted gray and the tent tinted Brisa Turquoise in code."
+    },
+    {
+      "pack": "City Kit (Suburban)",
+      "version": "2.0",
+      "creator": "Kenney",
+      "url": "https://kenney.nl/assets/city-kit-suburban",
+      "license": "CC0 1.0",
+      "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/",
+      "changes": "Textures/colormap.png has the green roof colours replaced by the terracotta roof colours from the pack's variation-b texture.",
+      "files": [
+        "models/city/building-type-g.glb",
+        "models/city/building-type-k.glb",
+        "models/city/building-type-m.glb",
+        "models/city/building-type-r.glb",
+        "models/city/Textures/colormap.png"
+      ]
+    },
+    {
+      "pack": "Watercraft Kit",
+      "version": "2.1",
+      "creator": "Kenney",
+      "url": "https://kenney.nl/assets/watercraft-kit",
+      "license": "CC0 1.0",
+      "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/",
+      "files": [
+        "models/watercraft/boat-sail-a.glb",
+        "models/watercraft/boat-speed-j.glb",
+        "models/watercraft/boat-fishing-small.glb",
+        "models/watercraft/Textures/colormap.png"
       ]
     },
     {

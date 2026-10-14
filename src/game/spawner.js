@@ -2,7 +2,7 @@
 // Some rows come as a zigzag pair: two two-lane rows close together whose free lanes are neighbours,
 // so the runner has to swipe straight after the first row (the second arrangement, Phase 6).
 // Coffee lines sit in a lane that is free in the row they lead into, between that row and the one before.
-// Each line is one kind of cup, picked by config.cupLineMix.
+// Each line is one kind of cup, picked by config.cupLineMix; each obstacle's look is picked by config.obstacleMix.
 // rng is a function returning [0, 1), injected so tests are repeatable.
 
 export function createSpawner(config) {
@@ -23,7 +23,7 @@ function shuffledLanes(laneCount, rng) {
 }
 
 // Shares are relative, so the mix needn't add up to 1 (e.g. after overriding one share from the URL)
-export function pickCupKind(rng, mix) {
+export function pickKind(rng, mix) {
   const total = Object.values(mix).reduce((sum, share) => sum + share, 0);
   let roll = rng() * total;
   for (const [kind, share] of Object.entries(mix)) {
@@ -36,7 +36,7 @@ export function pickCupKind(rng, mix) {
 // lanes is an ordering of every lane: the first blockedCount get obstacles, the rest stay free
 function placeRow(at, prevAt, lanes, blockedCount, rng, config, obstacles, coffees) {
   for (const lane of lanes.slice(0, blockedCount)) {
-    obstacles.push({ lane, at, knocked: false });
+    obstacles.push({ lane, at, kind: pickKind(rng, config.obstacleMix), knocked: false });
   }
 
   if (rng() >= config.coffeeLineChance) return;
@@ -46,7 +46,7 @@ function placeRow(at, prevAt, lanes, blockedCount, rng, config, obstacles, coffe
   const fits = Math.floor((at - prevAt - 2 * config.coffeeMargin) / config.coffeeSpacing) + 1;
   const count = Math.min(wanted, fits);
   if (count < config.coffeeLineMin) return;
-  const kind = pickCupKind(rng, config.cupLineMix); // one kind per line
+  const kind = pickKind(rng, config.cupLineMix); // one kind per line
   for (let k = 0; k < count; k++) {
     coffees.push({ lane, at: at - config.coffeeMargin - k * config.coffeeSpacing, kind, collected: false });
   }

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { CONFIG } from '../src/game/config.js';
-import { createSpawner, pickCupKind, rowGap, spawnUntil, zigzagGap } from '../src/game/spawner.js';
+import { createSpawner, pickKind, rowGap, spawnUntil, zigzagGap } from '../src/game/spawner.js';
 import { seededRng } from './rng.js';
 
 function spawnMany(seed, speed, horizon) {
@@ -92,9 +92,21 @@ describe('spawner', () => {
     }
   });
 
+  it('every obstacle has a look from obstacleMix, in about those shares', () => {
+    const { obstacles } = spawnMany(17, CONFIG.startSpeed, 100_000);
+    const total = Object.values(CONFIG.obstacleMix).reduce((sum, share) => sum + share, 0);
+    expect(obstacles.length).toBeGreaterThan(5000);
+    for (const o of obstacles) expect(Object.keys(CONFIG.obstacleMix)).toContain(o.kind);
+    for (const [kind, share] of Object.entries(CONFIG.obstacleMix)) {
+      const actual = obstacles.filter((o) => o.kind === kind).length / obstacles.length;
+      expect(actual, kind).toBeGreaterThan(share / total - 0.03);
+      expect(actual, kind).toBeLessThan(share / total + 0.03);
+    }
+  });
+
   it('treats cup shares as relative, so they need not add up to 1', () => {
     const rng = seededRng(13);
-    const picks = Array.from({ length: 10_000 }, () => pickCupKind(rng, { coffee: 1, frappe: 1 }));
+    const picks = Array.from({ length: 10_000 }, () => pickKind(rng, { coffee: 1, frappe: 1 }));
     const frappeShare = picks.filter((k) => k === 'frappe').length / picks.length;
     expect(frappeShare).toBeGreaterThan(0.46);
     expect(frappeShare).toBeLessThan(0.54);

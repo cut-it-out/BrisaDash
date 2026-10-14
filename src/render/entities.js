@@ -9,6 +9,8 @@ const RUNNER_HEIGHT = 1.5; // (tune)
 const CUP_HEIGHT = 0.3; // (tune) the Kenney mug is squat: about 0.45 wide at this height
 const FRAPPE_HEIGHT = 0.8; // (tune) tall and thin: about 0.36 wide
 const TAKEAWAY_HEIGHT = 0.58; // (tune) about 0.4 wide
+const TENT_HEIGHT = 1.1; // (tune) about 1.1 wide
+const BARREL_HEIGHT = 0.95; // (tune) lying on its side, about 1.05 wide
 const BOB_HEIGHT = 0.12; // (tune)
 const BOB_STEPS_PER_SECOND = 5; // (tune)
 const WOBBLE_ANGLE = 0.3; // radians at a full stumble meter (tune)
@@ -21,7 +23,7 @@ const KNOCK_TILT = 1.2; // tips over
 const CUP_HOVER = 0.45;
 const CUP_BOB = 0.08;
 
-const MAX_OBSTACLES = 24;
+const MAX_OBSTACLES = 24; // per look
 const MAX_COFFEES = 48;
 
 const middle = Math.floor(CONFIG.laneCount / 2);
@@ -62,24 +64,43 @@ export function createRunner(scene, model) {
 }
 
 // Obstacle from primitives: a parasol over a lounger (no pack has one, GDD §7)
-export function createObstacles(scene) {
-  const mesh = instancedModel(
-    scene,
-    primitiveModel([
-      painted(new THREE.CylinderGeometry(0.04, 0.04, 2.0, 6).translate(0, 1.0, 0), PALETTE.seaSaltWhite),
-      painted(new THREE.ConeGeometry(0.85, 0.45, 8).translate(0, 2.1, 0), PALETTE.brisaTurquoise),
-      painted(new THREE.BoxGeometry(0.6, 0.3, 1.0).translate(0, 0.15, 0.1), PALETTE.seaSaltWhite),
-      painted(new THREE.BoxGeometry(0.6, 0.08, 0.6).rotateX(-0.9).translate(0, 0.5, -0.45), PALETTE.seaSaltWhite),
-    ]),
-    MAX_OBSTACLES,
-  );
+function parasolModel() {
+  return primitiveModel([
+    painted(new THREE.CylinderGeometry(0.04, 0.04, 2.0, 6).translate(0, 1.0, 0), PALETTE.seaSaltWhite),
+    painted(new THREE.ConeGeometry(0.85, 0.45, 8).translate(0, 2.1, 0), PALETTE.brisaTurquoise),
+    painted(new THREE.BoxGeometry(0.6, 0.3, 1.0).translate(0, 0.15, 0.1), PALETTE.seaSaltWhite),
+    painted(new THREE.BoxGeometry(0.6, 0.08, 0.6).rotateX(-0.9).translate(0, 0.5, -0.45), PALETTE.seaSaltWhite),
+  ]);
+}
+
+// Nature Kit tent_smallClosed, its reds tinted Brisa Turquoise like the parasol (the wood stays as it is).
+// Not coral: in this game coral means a cup to collect.
+function tentModel(model) {
+  const baked = bakeModel(model, TENT_HEIGHT);
+  for (const material of baked.materials) {
+    if (material.name === 'colorRed') material.color.set(PALETTE.brisaTurquoise);
+    if (material.name === 'colorRedDark') material.color.set(PALETTE.turquoiseShade);
+  }
+  return baked;
+}
+
+// Obstacles (GDD §7): three looks that all hit the same way, picked per obstacle by config.obstacleMix.
+// The parasol is built in code; the beach tent (Nature Kit) and the barrel lying across the lane (Food Kit)
+// fall back to the parasol if their model didn't load. One InstancedMesh per look.
+export function createObstacles(scene, models) {
+  const meshes = {
+    parasol: instancedModel(scene, parasolModel(), MAX_OBSTACLES),
+    tent: instancedModel(scene, models.tent ? tentModel(models.tent) : parasolModel(), MAX_OBSTACLES),
+    barrel: instancedModel(scene, models.barrel ? bakeModel(models.barrel, BARREL_HEIGHT) : parasolModel(), MAX_OBSTACLES),
+  };
   const knockStarted = new WeakMap(); // obstacle → render time its knock-aside began
   const dummy = new THREE.Object3D();
 
   function update(run, timeSeconds) {
-    let i = 0;
+    const counts = Object.fromEntries(Object.keys(meshes).map((kind) => [kind, 0]));
     for (const obstacle of run.obstacles) {
-      if (i === MAX_OBSTACLES) break;
+      const kind = meshes[obstacle.kind] ? obstacle.kind : 'parasol';
+      if (counts[kind] === MAX_OBSTACLES) continue;
       dummy.position.set(laneX(obstacle.lane), 0, run.distance - obstacle.at);
       dummy.rotation.set(0, 0, 0);
       if (obstacle.knocked) {
@@ -90,10 +111,12 @@ export function createObstacles(scene) {
         dummy.rotation.z = -dir * t * KNOCK_TILT;
       }
       dummy.updateMatrix();
-      mesh.setMatrixAt(i++, dummy.matrix);
+      meshes[kind].setMatrixAt(counts[kind]++, dummy.matrix);
     }
-    mesh.count = i;
-    mesh.instanceMatrix.needsUpdate = true;
+    for (const kind of Object.keys(meshes)) {
+      meshes[kind].count = counts[kind];
+      meshes[kind].instanceMatrix.needsUpdate = true;
+    }
   }
 
   return { update };

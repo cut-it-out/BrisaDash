@@ -70,7 +70,7 @@ if (!hasWebGL2()) {
   const scenery = createScenery(scene, models);
   const seagulls = createSeagulls(scene, CONFIG.seagullCount);
   const runner = createRunner(scene, models.runner);
-  const obstacles = createObstacles(scene);
+  const obstacles = createObstacles(scene, models);
   const coffees = createCoffees(scene, models);
   startScreen.setReady();
 
@@ -159,7 +159,7 @@ if (!hasWebGL2()) {
     }
 
     world.update(run.distance);
-    scenery.update(run.distance);
+    scenery.update(run.distance, timeSeconds);
     seagulls.update(timeSeconds);
     runner.update(run, timeSeconds);
     obstacles.update(run, timeSeconds);

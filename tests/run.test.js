@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { CONFIG } from '../src/game/config.js';
 import { createRun, runMeter, runScore, updateRun } from '../src/game/run.js';
 import { pickupValue, score } from '../src/game/score.js';
-import { rowGap } from '../src/game/spawner.js';
+import { rowGap, zigzagGap } from '../src/game/spawner.js';
 import { baseSpeed } from '../src/game/speed.js';
 import { seededRng } from './rng.js';
 
@@ -87,7 +87,10 @@ describe('run', () => {
     const rows = [...new Set(run.obstacles.map((o) => o.at))].sort((a, b) => a - b);
     const gaps = rows.slice(1).map((at, i) => at - rows[i]);
     expect(gaps.length).toBeGreaterThan(1);
-    for (const gap of gaps) expect(gap).toBeCloseTo(rowGap(baseSpeed(run.elapsed, CONFIG), CONFIG), 1);
+    const unslowed = baseSpeed(run.elapsed, CONFIG);
+    // a gap is either a normal row gap or the short gap inside a zigzag pair, both at the unslowed speed
+    const expected = [rowGap(unslowed, CONFIG), zigzagGap(unslowed, CONFIG)];
+    for (const gap of gaps) expect(Math.min(...expected.map((e) => Math.abs(gap - e)))).toBeLessThan(0.05);
   });
 
   it('scores a frappe at its higher value and counts it as a coffee', () => {

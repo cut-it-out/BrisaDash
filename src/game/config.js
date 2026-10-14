@@ -19,6 +19,7 @@ export const CONFIG = {
   zigzagChance: 0.2, // share of rows that come as a zigzag pair (two two-lane rows, free lanes side by side)
   zigzagGapSeconds: 0.7, // the pair's rows are this many seconds apart at the current speed...
   zigzagMinGap: 6, // ...but never closer than this
+  obstacleMix: { parasol: 0.5, tent: 0.25, barrel: 0.25 }, // share of obstacles of each look; all hit the same way
   coffeeLineChance: 0.6,
   cupLineMix: { coffee: 0.4, takeaway: 0.4, frappe: 0.2 }, // share of cup lines of each kind (sums to 1)
   coffeeLineMin: 3,

@@ -13,6 +13,18 @@ const MODEL_FILES = {
   palmTall: 'models/nature/tree_palmTall.glb',
   rockSmall: 'models/nature/rock_smallA.glb',
   rockLarge: 'models/nature/rock_largeA.glb',
+  stoneSmall: 'models/nature/stone_smallA.glb',
+  stoneLarge: 'models/nature/stone_largeA.glb',
+  stoneRound: 'models/nature/stone_smallH.glb',
+  houseBungalow: 'models/city/building-type-g.glb',
+  houseNarrow: 'models/city/building-type-k.glb',
+  houseVilla: 'models/city/building-type-m.glb',
+  houseBalcony: 'models/city/building-type-r.glb',
+  boatSail: 'models/watercraft/boat-sail-a.glb',
+  boatSpeed: 'models/watercraft/boat-speed-j.glb',
+  boatFishing: 'models/watercraft/boat-fishing-small.glb',
+  tent: 'models/nature/tent_smallClosed.glb',
+  barrel: 'models/food/barrel.glb',
 };
 
 // Resolves to { name: THREE.Group | null }. A model that fails to load is null,
