@@ -13,13 +13,13 @@ export const CONFIG = {
 
   // Spawning (GDD §7)
   firstRowAt: 30, // empty track before the first row
-  rowGapSeconds: 1.2, // rows are this many seconds apart at the current speed...
-  minRowGap: 9, // ...but never closer than this
+  rowGapStart: 9.6, // metres between rows at startSpeed...
+  rowGapGrowth: 0.5, // ...plus this many metres per m/s above it, so rows come closer in time as the run speeds up
+  rowGapMinSeconds: 0.5, // ...but never less than this far apart in time
   twoBlockedChance: 0.55, // otherwise a row blocks one lane
   zigzagChance: 0.2, // share of rows that come as a zigzag pair (two two-lane rows, free lanes side by side)
-  zigzagGapSeconds: 0.7, // the pair's rows are this many seconds apart at the current speed...
-  zigzagMinGap: 6, // ...but never closer than this
-  obstacleMix: { parasol: 0.5, tent: 0.25, barrel: 0.25 }, // share of obstacles of each look; all hit the same way
+  zigzagRunSeconds: 0.5, // free running between the hit windows of a zigzag pair's two rows
+  obstacleMix: { parasol: 0.5, deckchair: 0.25, planter: 0.25 }, // share of obstacles of each look; all hit the same way
   coffeeLineChance: 0.6,
   cupLineMix: { coffee: 0.4, takeaway: 0.4, frappe: 0.2 }, // share of cup lines of each kind (sums to 1)
   coffeeLineMin: 3,
@@ -43,6 +43,7 @@ export const CONFIG = {
   pointsPerFrappe: 20,
 
   // Rendering
+  soundVolume: 0.4, // 0–1, every sound effect (try ?debug&soundVolume=0.25)
   seagullCount: 4, // gulls circling over the sea; 0 turns them off (try ?debug&seagullCount=0)
   maxPixelRatio: 2,
   maxFrameSeconds: 0.1, // clamps dt after a stall so nothing jumps

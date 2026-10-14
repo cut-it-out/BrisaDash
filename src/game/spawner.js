@@ -9,8 +9,10 @@ export function createSpawner(config) {
   return { nextRowAt: config.firstRowAt, lastRowAt: 0 };
 }
 
+// Metres between rows: grows with speed, but slower than speed does, so rows come more often as the run goes on
 export function rowGap(speed, config) {
-  return Math.max(config.minRowGap, speed * config.rowGapSeconds);
+  const gap = config.rowGapStart + (speed - config.startSpeed) * config.rowGapGrowth;
+  return Math.max(gap, speed * config.rowGapMinSeconds);
 }
 
 function shuffledLanes(laneCount, rng) {
@@ -52,8 +54,9 @@ function placeRow(at, prevAt, lanes, blockedCount, rng, config, obstacles, coffe
   }
 }
 
+// The second row sits past the first row's hit window, plus zigzagRunSeconds of running, plus its own hit window
 export function zigzagGap(speed, config) {
-  return Math.max(config.zigzagMinGap, speed * config.zigzagGapSeconds);
+  return 2 * config.hitDepth + speed * config.zigzagRunSeconds;
 }
 
 // Returns where the last row of the arrangement went

@@ -60,7 +60,7 @@ if (!hasWebGL2()) {
     onCredits: creditsScreen.show,
   });
   const pauseScreen = createPauseScreen(overlay, { onResume: resume });
-  const audio = createAudio();
+  const audio = createAudio({ volume: CONFIG.soundVolume });
   createMuteToggle(overlay, audio);
   let best = loadBest();
   startScreen.setBest(best);

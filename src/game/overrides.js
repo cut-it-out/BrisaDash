@@ -1,5 +1,5 @@
 // Balancing on the phone (Phase 5): with ?debug in the URL, numeric config values can be overridden,
-// e.g. ?debug&twoBlockedChance=0.6&rowGapSeconds=1.2&cupLineMix.frappe=0.3
+// e.g. ?debug&twoBlockedChance=0.6&rowGapGrowth=0.4&cupLineMix.frappe=0.3
 // Only numbers that already exist in the config are accepted. laneCount is fixed (the renderer reads it at startup).
 const FIXED_KEYS = ['laneCount'];
 

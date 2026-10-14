@@ -23,8 +23,7 @@ const MODEL_FILES = {
   boatSail: 'models/watercraft/boat-sail-a.glb',
   boatSpeed: 'models/watercraft/boat-speed-j.glb',
   boatFishing: 'models/watercraft/boat-fishing-small.glb',
-  tent: 'models/nature/tent_smallClosed.glb',
-  barrel: 'models/food/barrel.glb',
+  planter: 'models/city/planter.glb',
 };
 
 // Resolves to { name: THREE.Group | null }. A model that fails to load is null,

@@ -465,3 +465,13 @@ Running record of how this project was built with Claude Code. "I" is the develo
   - `npm test` 68/68.
   - Next: my review on the iPhone 14 with `?debug`: FPS and draw calls, the sounds, the villas/boats/gulls/obstacle looks, and run lengths with the new balance and zigzag pairs. Tune with `seagullCount`, `obstacleMix.*`, `zigzagChance`, `zigzagGapSeconds` from the URL, then write any changes into `src/game/config.js`.
 - **Showcase line:** I asked for a livelier seafront and more obstacle variety, chose new Kenney packs over primitives, and asked for a switch to turn the seagulls off. Claude Code audited four packs, picked villas, boats, stones, a tent and a barrel from labelled sheets, and shipped best score, sound and a zigzag row pattern in one Phase 6 build for me to review on the phone.
+
+### Session 12 — Thursday 15 October 2026 — (in progress)
+
+- [correction] "the barrels are not good, the color takes away the attention from the collectables" and "the tents are sort of ok, but I just don't like them, they dont really fit in here imho" — "give me alternative options. show me/tell me first before you make this change". From the four options Claude Code offered (striped deckchair, beach windbreak, surfboard rack, promenade planter), I picked the promenade planter and the striped deckchair.
+- [direction] "the seagulls can stay, they are cool"
+- [direction] "the sounds feel a bit intrusive, tune the volume down"
+- [direction] "the balance of the game is better now, but the long play it still feels "easy". it has to do with the distance between obstacles: lets keep the initial obstacle distance but do not extend it that much to make the game harder by time" — I picked "Medium": the gap grows 0.5 m per 1 m/s of speed (17 m at 60 s instead of 27.6 m).
+- [correction] "one of the rock on the right side sometimes placed that it is entering the play area. it does not interfere with gameplay, but it is disturbing and misleading if that lane is free or not" — from my iPhone and Android screenshots.
+- [playtest] "other not mentioned things look good. android also plays fine, it has continuous 110+ fps" — my Android screenshot showed 118 FPS and 42 draw calls; the iPhone 14 screenshot showed 60 FPS and 42 draw calls.
+- [playtest] "android share also ok, checked it" — the Android share sheet works.

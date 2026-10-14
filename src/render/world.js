@@ -88,7 +88,7 @@ const SCENERY_LAYOUT = [
   // Town side: palms by the kerb, stones, and a row of white villas behind them, facing the track
   ['palm', 4.3, 7, 4.2, 2.8],
   ['houseVilla', 10, 4, 3.4, -Math.PI / 2],
-  ['rockLarge', 3.4, 15, 0.7, 4.0],
+  ['rockLarge', 4.5, 15, 0.7, 4.0],
   ['houseNarrow', 9, 20, 5.5, -Math.PI / 2],
   ['stoneRound', 3.5, 31, 0.6, 0.6],
   ['houseBungalow', 10, 36, 3.2, -Math.PI / 2],
@@ -105,6 +105,17 @@ const SCENERY_TINTS = { stoneSmall: PALETTE.stoneGrey, stoneLarge: PALETTE.stone
 const BOAT_BOB = 0.08; // metres
 const BOAT_ROLL = 0.05; // radians
 const BOAT_DRAFT = 0.12; // how far the hull sits below the water line
+const TRACK_CLEARANCE = 0.25; // gap between the kerb and the nearest scenery (palm leaves may overhang)
+
+// Pushes a placement sideways, if needed, so its turned footprint stays clear of the track and kerbs:
+// a rock reaching into a lane looks like an obstacle
+function clearOfTrack(placement, box) {
+  const hx = ((box.max.x - box.min.x) / 2) * placement.height;
+  const hz = ((box.max.z - box.min.z) / 2) * placement.height;
+  const reach = Math.abs(Math.cos(placement.turn)) * hx + Math.abs(Math.sin(placement.turn)) * hz;
+  const nearest = (CONFIG.laneCount * CONFIG.laneWidth) / 2 + KERB_WIDTH + TRACK_CLEARANCE + reach;
+  return { ...placement, x: Math.sign(placement.x) * Math.max(Math.abs(placement.x), nearest) };
+}
 
 export function createScenery(scene, models) {
   const byModel = new Map();
@@ -117,9 +128,11 @@ export function createScenery(scene, models) {
   const groups = [...byModel].map(([name, placements]) => {
     const baked = bakeModel(models[name], 1); // unit height; each placement scales it
     if (SCENERY_TINTS[name]) for (const material of baked.materials) material.color.set(SCENERY_TINTS[name]);
-    const mesh = instancedModel(scene, baked, placements.length);
-    mesh.count = placements.length;
-    return { mesh, placements, floats: name.startsWith('boat') };
+    baked.geometry.computeBoundingBox();
+    const placed = name.startsWith('palm') ? placements : placements.map((p) => clearOfTrack(p, baked.geometry.boundingBox));
+    const mesh = instancedModel(scene, baked, placed.length);
+    mesh.count = placed.length;
+    return { mesh, placements: placed, floats: name.startsWith('boat') };
   });
   const dummy = new THREE.Object3D();
 

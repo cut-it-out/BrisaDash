@@ -9,8 +9,7 @@ const RUNNER_HEIGHT = 1.5; // (tune)
 const CUP_HEIGHT = 0.3; // (tune) the Kenney mug is squat: about 0.45 wide at this height
 const FRAPPE_HEIGHT = 0.8; // (tune) tall and thin: about 0.36 wide
 const TAKEAWAY_HEIGHT = 0.58; // (tune) about 0.4 wide
-const TENT_HEIGHT = 1.1; // (tune) about 1.1 wide
-const BARREL_HEIGHT = 0.95; // (tune) lying on its side, about 1.05 wide
+const PLANTER_HEIGHT = 0.6; // (tune) about 1.3 wide and 1 deep
 const BOB_HEIGHT = 0.12; // (tune)
 const BOB_STEPS_PER_SECOND = 5; // (tune)
 const WOBBLE_ANGLE = 0.3; // radians at a full stumble meter (tune)
@@ -73,25 +72,32 @@ function parasolModel() {
   ]);
 }
 
-// Nature Kit tent_smallClosed, its reds tinted Brisa Turquoise like the parasol (the wood stays as it is).
-// Not coral: in this game coral means a cup to collect.
-function tentModel(model) {
-  const baked = bakeModel(model, TENT_HEIGHT);
-  for (const material of baked.materials) {
-    if (material.name === 'colorRed') material.color.set(PALETTE.brisaTurquoise);
-    if (material.name === 'colorRedDark') material.color.set(PALETTE.turquoiseShade);
-  }
-  return baked;
+// A deckchair from primitives, facing the runner: a white frame and a turquoise and white striped canvas
+// sloping from the top of the back (behind) down to the front bar, about 1 m tall and 1 m wide
+function deckchairModel() {
+  const slope = 0.615; // radians: the canvas drops 0.6 m over 0.85 m towards the runner
+  const canvasStripe = (x, color) =>
+    painted(new THREE.BoxGeometry(0.3, 0.03, 1.04).rotateX(slope).translate(x, 0.7, -0.075), color);
+  const rail = (x) => painted(new THREE.BoxGeometry(0.05, 0.05, 1.1).rotateX(slope).translate(x, 0.7, -0.075), PALETTE.seaSaltWhite);
+  const frontLeg = (x) => painted(new THREE.BoxGeometry(0.05, 0.42, 0.05).translate(x, 0.21, 0.38), PALETTE.seaSaltWhite);
+  const backLeg = (x) => painted(new THREE.BoxGeometry(0.05, 1.03, 0.05).rotateX(0.245).translate(x, 0.5, -0.625), PALETTE.seaSaltWhite);
+  return primitiveModel([
+    canvasStripe(-0.3, PALETTE.brisaTurquoise),
+    canvasStripe(0, PALETTE.seaSaltWhite),
+    canvasStripe(0.3, PALETTE.brisaTurquoise),
+    ...[-0.47, 0.47].flatMap((x) => [rail(x), frontLeg(x), backLeg(x)]),
+    painted(new THREE.BoxGeometry(0.99, 0.05, 0.05).translate(0, 0.42, 0.38), PALETTE.seaSaltWhite), // front bar
+  ]);
 }
 
 // Obstacles (GDD §7): three looks that all hit the same way, picked per obstacle by config.obstacleMix.
-// The parasol is built in code; the beach tent (Nature Kit) and the barrel lying across the lane (Food Kit)
-// fall back to the parasol if their model didn't load. One InstancedMesh per look.
+// The parasol and the deckchair are built in code; the promenade planter (City Kit Suburban) falls back
+// to the parasol if its model didn't load. One InstancedMesh per look. None of them is coral: coral means a cup.
 export function createObstacles(scene, models) {
   const meshes = {
     parasol: instancedModel(scene, parasolModel(), MAX_OBSTACLES),
-    tent: instancedModel(scene, models.tent ? tentModel(models.tent) : parasolModel(), MAX_OBSTACLES),
-    barrel: instancedModel(scene, models.barrel ? bakeModel(models.barrel, BARREL_HEIGHT) : parasolModel(), MAX_OBSTACLES),
+    deckchair: instancedModel(scene, deckchairModel(), MAX_OBSTACLES),
+    planter: instancedModel(scene, models.planter ? bakeModel(models.planter, PLANTER_HEIGHT) : parasolModel(), MAX_OBSTACLES),
   };
   const knockStarted = new WeakMap(); // obstacle → render time its knock-aside began
   const dummy = new THREE.Object3D();

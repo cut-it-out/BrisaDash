@@ -24,7 +24,9 @@ async function fetchSound(file) {
   return response.arrayBuffer();
 }
 
+// volume (0–1) scales every sound through one gain node
 export function createAudio({
+  volume = 1,
   storage = deviceStorage(),
   createContext = () => new AudioContext(),
   loadFile = fetchSound,
@@ -36,6 +38,7 @@ export function createAudio({
     // stays muted
   }
   let context = null;
+  let output = null; // master gain, between the sounds and the speakers
   const buffers = {};
 
   function loadAll() {
@@ -56,6 +59,9 @@ export function createAudio({
       } catch {
         return; // no Web Audio: the game stays silent
       }
+      output = context.createGain();
+      output.gain.value = volume;
+      output.connect(context.destination);
       loadAll();
     }
     if (context.state !== 'running') context.resume(); // iOS can also report 'interrupted'
@@ -65,7 +71,7 @@ export function createAudio({
     if (muted || !context || !buffers[name]) return;
     const source = context.createBufferSource();
     source.buffer = buffers[name];
-    source.connect(context.destination);
+    source.connect(output);
     source.start();
   }
 

@@ -19,14 +19,13 @@ Every third-party asset used in Brisa Dash. CC0 assets are public domain and cre
 - Files used (under `public/`):
   - `models/food/cup-coffee.glb`
   - `models/food/frappe.glb`
-  - `models/food/barrel.glb`
   - `models/food/Textures/colormap.png`
 
 ## Nature Kit 2.1 by Kenney
 
 - Source: https://kenney.nl/assets/nature-kit
 - License: CC0 1.0 (http://creativecommons.org/publicdomain/zero/1.0/)
-- Changes: Stones tinted gray and the tent tinted Brisa Turquoise in code.
+- Changes: Stones tinted gray in code.
 - Files used (under `public/`):
   - `models/nature/tree_palm.glb`
   - `models/nature/tree_palmBend.glb`
@@ -36,7 +35,6 @@ Every third-party asset used in Brisa Dash. CC0 assets are public domain and cre
   - `models/nature/stone_smallA.glb`
   - `models/nature/stone_largeA.glb`
   - `models/nature/stone_smallH.glb`
-  - `models/nature/tent_smallClosed.glb`
 
 ## City Kit (Suburban) 2.0 by Kenney
 
@@ -48,6 +46,7 @@ Every third-party asset used in Brisa Dash. CC0 assets are public domain and cre
   - `models/city/building-type-k.glb`
   - `models/city/building-type-m.glb`
   - `models/city/building-type-r.glb`
+  - `models/city/planter.glb`
   - `models/city/Textures/colormap.png`
 
 ## Watercraft Kit 2.1 by Kenney

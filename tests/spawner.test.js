@@ -137,15 +137,27 @@ describe('spawner', () => {
     }
   });
 
-  it('a zigzag pair leaves time to swipe between its rows', () => {
-    // hit window on each row is ±hitDepth; at least 0.5 s of free running between them at any speed
+  it('a zigzag pair leaves time to swipe between its rows, and is closer than a normal row', () => {
+    // hit window on each row is ±hitDepth; zigzagRunSeconds (0.5 s) of free running between them at any speed
     for (const speed of [CONFIG.startSpeed, 15, 25, CONFIG.maxSpeed]) {
-      expect((zigzagGap(speed, CONFIG) - 2 * CONFIG.hitDepth) / speed).toBeGreaterThanOrEqual(0.5);
+      expect((zigzagGap(speed, CONFIG) - 2 * CONFIG.hitDepth) / speed).toBeCloseTo(CONFIG.zigzagRunSeconds, 9);
+      expect(zigzagGap(speed, CONFIG)).toBeLessThan(rowGap(speed, CONFIG));
     }
   });
 
-  it('rows spread out as speed grows', () => {
-    expect(rowGap(CONFIG.startSpeed, CONFIG)).toBeLessThan(rowGap(CONFIG.maxSpeed, CONFIG));
-    expect(rowGap(1, CONFIG)).toBe(CONFIG.minRowGap);
+  it('rows start rowGapStart apart and spread out more slowly than the speed grows', () => {
+    expect(rowGap(CONFIG.startSpeed, CONFIG)).toBeCloseTo(CONFIG.rowGapStart, 9);
+    expect(rowGap(CONFIG.maxSpeed, CONFIG)).toBeGreaterThan(rowGap(CONFIG.startSpeed, CONFIG));
+    // in time, rows come more often as the run speeds up
+    const seconds = (speed) => rowGap(speed, CONFIG) / speed;
+    expect(seconds(CONFIG.maxSpeed)).toBeLessThan(seconds(CONFIG.startSpeed));
+    expect(rowGap(23, CONFIG)).toBeCloseTo(17.1, 9); // about 60 s into a run
+  });
+
+  it('rows are never less than rowGapMinSeconds apart, even with no growth', () => {
+    const config = { ...CONFIG, rowGapGrowth: 0 };
+    for (const speed of [CONFIG.startSpeed, 25, CONFIG.maxSpeed]) {
+      expect(rowGap(speed, config) / speed).toBeGreaterThanOrEqual(CONFIG.rowGapMinSeconds - 1e-9);
+    }
   });
 });

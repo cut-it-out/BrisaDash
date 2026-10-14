@@ -22,7 +22,6 @@
       "files": [
         "models/food/cup-coffee.glb",
         "models/food/frappe.glb",
-        "models/food/barrel.glb",
         "models/food/Textures/colormap.png"
       ]
     },
@@ -41,10 +40,9 @@
         "models/nature/rock_largeA.glb",
         "models/nature/stone_smallA.glb",
         "models/nature/stone_largeA.glb",
-        "models/nature/stone_smallH.glb",
-        "models/nature/tent_smallClosed.glb"
+        "models/nature/stone_smallH.glb"
       ],
-      "changes": "Stones tinted gray and the tent tinted Brisa Turquoise in code."
+      "changes": "Stones tinted gray in code."
     },
     {
       "pack": "City Kit (Suburban)",
@@ -59,6 +57,7 @@
         "models/city/building-type-k.glb",
         "models/city/building-type-m.glb",
         "models/city/building-type-r.glb",
+        "models/city/planter.glb",
         "models/city/Textures/colormap.png"
       ]
     },

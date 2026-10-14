@@ -15,6 +15,12 @@ function fakeContext() {
       this.state = 'running';
     }),
     destination: {},
+    gains: [],
+    createGain() {
+      const node = { gain: { value: 1 }, connect(target) { node.target = target; } };
+      this.gains.push(node);
+      return node;
+    },
     decodeAudioData: async (data) => ({ decoded: data }),
     createBufferSource: () => ({ connect() {}, start() { started.push(this.buffer.decoded); } }),
   };
@@ -51,6 +57,16 @@ describe('audio', () => {
     audio.setMuted(true);
     audio.play('stumble');
     expect(context.started).toEqual([]);
+  });
+
+  it('plays every sound through one gain node set to the volume', async () => {
+    const context = fakeContext();
+    const audio = createAudio({ volume: 0.4, storage: fakeStorage(), createContext: () => context, loadFile });
+    audio.setMuted(false);
+    await settle();
+    expect(context.gains).toHaveLength(1);
+    expect(context.gains[0].gain.value).toBe(0.4);
+    expect(context.gains[0].target).toBe(context.destination);
   });
 
   it('remembers the choice on the device', () => {
