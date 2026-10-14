@@ -20,8 +20,10 @@ function shuffledLanes(laneCount, rng) {
   return lanes;
 }
 
-function pickCupKind(rng, mix) {
-  let roll = rng();
+// Shares are relative, so the mix needn't add up to 1 (e.g. after overriding one share from the URL)
+export function pickCupKind(rng, mix) {
+  const total = Object.values(mix).reduce((sum, share) => sum + share, 0);
+  let roll = rng() * total;
   for (const [kind, share] of Object.entries(mix)) {
     roll -= share;
     if (roll < 0) return kind;

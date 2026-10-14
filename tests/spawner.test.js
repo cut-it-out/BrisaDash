@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { CONFIG } from '../src/game/config.js';
-import { createSpawner, rowGap, spawnUntil } from '../src/game/spawner.js';
+import { createSpawner, pickCupKind, rowGap, spawnUntil } from '../src/game/spawner.js';
 import { seededRng } from './rng.js';
 
 function spawnMany(seed, speed, horizon) {
@@ -90,6 +90,14 @@ describe('spawner', () => {
       expect(actual, kind).toBeGreaterThan(share - 0.04);
       expect(actual, kind).toBeLessThan(share + 0.04);
     }
+  });
+
+  it('treats cup shares as relative, so they need not add up to 1', () => {
+    const rng = seededRng(13);
+    const picks = Array.from({ length: 10_000 }, () => pickCupKind(rng, { coffee: 1, frappe: 1 }));
+    const frappeShare = picks.filter((k) => k === 'frappe').length / picks.length;
+    expect(frappeShare).toBeGreaterThan(0.46);
+    expect(frappeShare).toBeLessThan(0.54);
   });
 
   it('rows spread out as speed grows', () => {
