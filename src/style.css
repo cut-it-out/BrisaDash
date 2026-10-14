@@ -63,7 +63,7 @@ body {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 4%;
+  bottom: calc(4% + env(safe-area-inset-bottom));
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -90,8 +90,9 @@ body {
 
 .debug-panel {
   position: absolute;
-  top: 0.5rem;
-  left: 0.5rem;
+  top: calc(env(safe-area-inset-top) + 0.5rem);
+  left: calc(env(safe-area-inset-left) + 0.5rem);
+  z-index: 3; /* stays readable over the screens while tuning */
   padding: 0.2rem 0.5rem;
   border-radius: 4px;
   font: 12px/1.4 ui-monospace, monospace;
@@ -176,7 +177,8 @@ body {
   align-items: center;
   justify-content: center;
   gap: 12px;
-  padding: 24px;
+  padding: calc(env(safe-area-inset-top) + 24px) calc(env(safe-area-inset-right) + 24px)
+    calc(env(safe-area-inset-bottom) + 24px) calc(env(safe-area-inset-left) + 24px);
   pointer-events: auto;
   text-align: center;
   z-index: 1; /* above the HUD and hint, which are added later */
@@ -185,7 +187,7 @@ body {
 .start-screen {
   background: linear-gradient(rgb(252 250 244 / 0.9), rgb(252 250 244 / 0.55) 70%, rgb(252 250 244 / 0));
   justify-content: flex-start;
-  padding-top: 22%;
+  padding-top: calc(env(safe-area-inset-top) + 22%);
 }
 
 .logo {

@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import credits from './credits.json';
 import { CONFIG } from './game/config.js';
 import { requestLaneMove } from './game/lanes.js';
+import { applyOverrides } from './game/overrides.js';
 import { createRun, runMeter, runScore, updateRun } from './game/run.js';
 import { createCoffees, createObstacles, createRunner } from './render/entities.js';
 import { loadModels } from './render/models.js';
@@ -23,6 +24,9 @@ import { shareScore, shareText } from './ui/share.js';
 
 const GAME_OVER_DELAY_SECONDS = 0.7; // lets the final knock-over read before the panel covers it (tune)
 
+// Before anything reads CONFIG: ?debug&key=value overrides for balancing on the phone
+const overrides = applyOverrides(CONFIG, new URLSearchParams(location.search));
+
 const canvas = document.getElementById('scene');
 const overlay = document.getElementById('overlay');
 
@@ -35,7 +39,7 @@ if (!hasWebGL2()) {
   const { renderer, scene, camera } = createScene(canvas);
   const world = createWorld(scene);
   const shake = createCameraShake(camera);
-  const debug = createDebugOverlay(overlay);
+  const debug = createDebugOverlay(overlay, overrides);
 
   // 'start' → 'playing' ⇄ 'paused'; 'playing' → 'over' → 'playing' (Retry)
   let state = 'start';
