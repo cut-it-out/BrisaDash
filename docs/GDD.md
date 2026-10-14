@@ -110,7 +110,7 @@ The wobble is just a **code-driven change of position and rotation** on a static
 **Must-haves (from the brief):**
 - A real-time 3D three-lane runner
 - Swipe and keyboard controls
-- One obstacle type and three pickups: a coffee mug, a takeaway cup and a rarer, higher-value frappe. The brief asked for one; I added the others in Session 3
+- One obstacle type and three pickups: a coffee mug, a takeaway cup and a rarer, higher-value frappe. The brief asked for one; I added the others in Session 8
 - The stumble fail rule
 - Distance plus pickup scoring
 - The start, HUD, game-over and credits screens
@@ -146,4 +146,4 @@ The wobble is just a **code-driven change of position and rotation** on a static
 3. **Runner:** a barista. A customer chasing their order was rejected because it "would not send the right message" for the café.
 4. **Stumble numbers:** start at a 5 s window and 70% speed. They'll be adjusted after playtests.
 5. **Test devices:** an iPhone 14 and/or a Samsung Galaxy S20 FE, the older phones the game should run well on.
-6. **CC BY exception (Session 3):** the takeaway cup, "Low-Poly Takeaway Coffee Cup" by PickledCactusAlan (https://skfb.ly/oxqpp), is CC BY 4.0, not CC0. Its page says it was "Modelled in Maya, textured in Photoshop", so it is hand-made. I allowed it as the one exception to the brief's CC0-only rule. It is credited in-game and in `CREDITS.md` with title, author, source, licence and the changes made (recoloured in code).
+6. **CC BY exception (Session 8):** the takeaway cup, "Low-Poly Takeaway Coffee Cup" by PickledCactusAlan (https://skfb.ly/oxqpp), is CC BY 4.0, not CC0. Its page says it was "Modelled in Maya, textured in Photoshop", so it is hand-made. I allowed it as the one exception to the brief's CC0-only rule. It is credited in-game and in `CREDITS.md` with title, author, source, licence and the changes made (recoloured in code).

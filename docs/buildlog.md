@@ -8,22 +8,29 @@ Running record of how this project was built with Claude Code. "I" is the develo
 - Goal: a branded, genuinely 3D endless runner with 30–60-second runs that a first-time player can control without explanation, ending with a score and link they can copy or share (directed, brief).
 - Platform: Three.js + HTML5/CSS in the browser, mobile portrait (9:16), WebGL2-capable iOS/Android browsers, no install, account or backend. Phaser is not used (directed, brief).
 - Core loop: swipe between exactly three fixed lanes on a low-poly seaside promenade, collect coffee pickups, dodge approaching obstacles, score, retry immediately (directed, brief).
-- Gameplay scope: one static character or simple pawn, one obstacle type, one coffee collectible, gradual speed increase. Collisions are lane-plus-distance checks, not a physics engine. Out of scope: jumping, free movement, rigs or animation, physics, procedural levels, post-processing, dynamic lighting, multiple environments or levels, sign-in, analytics, prizes (directed, brief).
+- Gameplay scope: one static character or simple pawn, one obstacle type, coffee collectibles (the brief asked for one; three kinds since Session 8, see Pickups), gradual speed increase. Collisions are lane-plus-distance checks, not a physics engine. Out of scope: jumping, free movement, rigs or animation, physics, procedural levels, post-processing, dynamic lighting, multiple environments or levels, sign-in, analytics, prizes (directed, brief).
 - Scene: fixed perspective camera looking down the track, flat colours and ambient lighting, one short repeating stretch of track. Objects are recycled; no infinite world is built (directed, brief).
 - UI: HTML/CSS overlay for the start screen, gesture hint, score, game over, one-tap retry, a text logo and a visible Credits link on the start and end screens (directed, brief).
 - Sharing: Web Share API when available, otherwise copy text plus link. No leaderboard (directed, brief).
 - Engineering: canvas and camera resize for portrait phones, capped device pixel ratio, few draw calls, keyboard arrows for desktop testing, HTTPS deployment. Target is smooth play near 30 FPS on the tested phone, reported honestly (directed, brief).
-- Assets: verified CC0 low-poly 3D packs, preferably glTF/GLB, plus one CC BY 4.0 exception, the takeaway cup (directed, Session 3; GDD §13 item 6). Three Kenney packs are allowed: Blocky Characters, Food Kit and Nature Kit. This lifts the brief's limit of one primary plus one supporting pack. Code-built primitives are allowed as fallbacks. No AI-generated art. Only assets actually used get recorded in `CREDITS.md` (directed, Session 2).
+- Assets: verified CC0 low-poly 3D packs, preferably glTF/GLB, plus one CC BY 4.0 exception, the takeaway cup (directed, Session 8; GDD §13 item 6). Three Kenney packs are allowed: Blocky Characters, Food Kit and Nature Kit. This lifts the brief's limit of one primary plus one supporting pack. Code-built primitives are allowed as fallbacks. No AI-generated art. Only assets actually used get recorded in `CREDITS.md` (directed, Session 2).
 - Design source: `docs/GDD.md`, reviewed 14 October 2026. Runner = a barista (Kenney Blocky Character); obstacle = a beach parasol or deckchair; English only (directed / proposed → accepted, Session 2).
-- Models (packs checked 14 October 2026, all three CC0): runner = `character-f.glb` (teal shirt) with no apron for now; pickups = `cup-coffee.glb` tinted Sunset Coral (0.3 m, +10), the CC BY takeaway cup recoloured with a Sunset Coral body and Sea Salt White lid (0.55 m, +10), and the rarer `frappe.glb` in its own colours (0.7 m, +20). Cup lines split mug 40% / takeaway 40% / frappe 20%. Three pickups go beyond the brief's "one pickup" (directed, Session 3); obstacle = a primitive parasol, because no pack has a parasol or deckchair; scenery = Nature Kit `tree_palm*` / `rock_*` (directed, Session 3).
+- Models (packs checked 14 October 2026, all three CC0): runner = `character-f.glb` (teal shirt), 1.5 m, with no apron for now; obstacle = a primitive parasol over a lounger, because no pack has a parasol or deckchair; scenery = Nature Kit `tree_palm*` / `rock_*`, 14 pieces repeating every 80 m (directed, Session 3; sizes Session 7).
+- Pickups: `cup-coffee.glb` tinted Sunset Coral (0.3 m, +10), the CC BY takeaway cup recoloured with a Sunset Coral body and Sea Salt White lid (0.55 m, +10), and the rarer `frappe.glb` in its own colours (0.7 m, +20). Each cup line is one kind, split by `cupLineMix` (mug 40% / takeaway 40% / frappe 20%; shares are relative). Three pickups go beyond the brief's "one pickup" (directed, Session 8).
+- Rendering: every model material becomes flat `MeshLambertMaterial`, because Kenney's PBR materials are metallic and render dark (Claude's call, Session 7). Obstacles, each cup kind, lane dashes and each scenery model are one `InstancedMesh` each; the track, kerbs and sea are static planes; about 25 draw calls in total (Claude's call, Sessions 4–8).
+- Camera: FOV 70 at (0, 4.0, 4.5) looking at (0, 0, -8), for a closer runner and a longer view ahead (directed, Session 4).
 - Node: `.nvmrc` pins Node 24 for the Cloudflare build (Vitest 5 needs Node ≥ 22.12) (Claude's call, Session 3).
 - Fail rule: the stumble. The first hit slows the runner to 70% for a 5 s window; a second hit inside that window ends the run. Both numbers are starting points to tune (directed, Session 2).
-- Scoring: distance plus pickup points: +1 per metre, +10 per coffee mug or takeaway cup, +20 per frappe, all to tune. Frappes count as coffees in the ☕ total and the share text (proposed → accepted, Session 2; frappe added, directed, Session 3).
+- Scoring: distance plus pickup points: +1 per metre, +10 per coffee mug or takeaway cup, +20 per frappe, all to tune. Frappes count as coffees in the ☕ total and the share text (proposed → accepted, Session 2; frappe added, directed, Session 8).
 - Audio: a few CC0 SFX, muted by default; first on the cut list (directed, Session 2).
-- Hosting: Cloudflare Pages at the default `*.pages.dev` address, with the code on GitHub. No custom domain (directed, Session 2).
+- Hosting: Cloudflare Pages at https://brisa-dash.pages.dev (confirmed Session 9), building `npm run build` → `dist` on every push to `main` of GitHub `cut-it-out/BrisaDash`. No custom domain. Claude Code asks before pushing; I've had docs and fixes ride along with the next phase's push (directed, Sessions 2–4).
 - Test devices: an iPhone 14 and/or a Samsung Galaxy S20 FE (directed, Session 2).
 - Toolchain: Vite + `three` from npm + Vitest, in plain JavaScript. Test command `npm test`; build `npm run build` → `dist/` (directed, Session 2).
 - Execution plan: `docs/execution-plan.md`, Phases 0–6, each ending in a committable, playable state. Game logic lives in pure `src/game/` modules with no Three.js or DOM imports, so it can be unit-tested (proposed → accepted, Session 2).
+- Screens and flow: start → playing ⇄ paused (`visibilitychange`) → game over (after 0.7 s) → Retry; a credits overlay from `src/credits.json`; the gesture hint returns each run until the first successful lane change; system font, no brand font (Claude's call, Session 6; font proposed → accepted, Session 9).
+- Credits: `src/credits.json` is the single source for the in-game credits and `CREDITS.md` (`npm run credits`). `tests/credits.test.js` fails if they drift, if any file in `public/models` is uncredited, or if an asset is neither CC0 nor CC BY 4.0 with its changes stated (Claude's call, Session 7; CC BY rule, directed, Session 8).
+- Balancing: tuned on the phone with `?debug&<configKey>=<value>` URL overrides (`src/game/overrides.js`), listed in the debug panel; the final values get written into `src/game/config.js` (proposed → accepted, Session 9).
+- Link preview: Open Graph tags in `index.html` and `public/og-image.png` (1200×630, a real gameplay capture with the logo; the CC BY cup kept out of it). `og:url` and `og:image` point at https://brisa-dash.pages.dev (proposed → accepted, Session 9).
 - Branding: an assumed palette in `docs/brisa-cafe-brand-palette.md`: Brisa Turquoise `#168F9C` (primary/CTA), Deep Ocean `#174B64` (text/HUD), Sunlit Sand `#F3DFBB` (environment), Sunset Coral `#E87F63` (coffee pickups/highlights), Sea Salt White `#FCFAF4` (panels) (directed, brief).
 - Nice-to-haves, only once the core game is finished: a device-local best score and a second obstacle configuration. Cut first: extra scenery, best score, extra patterns (directed, brief).
 - Time box: at most 3 focused days. Day 1 is the scene, camera, CC0 pack, swipes and lanes. Day 2 is obstacles, pickups, collisions, scoring and the overlay. Day 3 is styling, sharing, portrait QA, deployment and credits (directed, brief).
@@ -36,11 +43,12 @@ Running record of how this project was built with Claude Code. "I" is the develo
 
 (Keep current; every session updates this list.)
 
-- Phase 0 phone check pending (Session 3): `740a757` is pushed and Cloudflare Pages is connected (build `npm run build`, output `dist`). I still need to confirm that the Cloudflare build succeeded and that the `*.pages.dev` URL shows the spinning turquoise cube in a 9:16 column on a phone. Claude Code asks before every push.
-- Pickup readability (Session 3): the mug is now tinted coral. Because the tint multiplies a light grey texture, it renders a little darker, toward terracotta. The frappe was raised to 0.65 m after I said it looked too small. Judge all three cups on my phone; the levers are `CUP_HEIGHT` / `FRAPPE_HEIGHT` / `TAKEAWAY_HEIGHT` in `src/render/entities.js`.
-- Parked ideas (Session 3, mine): a Brisa Turquoise apron on the barista ("no apron for now, maybe later"; all of the character's colour comes from one texture, so it would need an overlay box or a recoloured torso).
-- Android share not tested (Session 3): share worked on my iPhone. Test the Web Share sheet on the Galaxy S20 FE (Chrome) in Phase 5.
-- Tuning values unconfirmed (Session 2): stumble 5 s / 70%, start speed, acceleration, cap and spawn spacing are GDD starting points. They live in `src/game/config.js` from Phase 1. Judge them in Phase 2 playtests (a first run should last about 30–60 s) and on the test phones in Phase 5.
+- Phase 5 device QA in progress (Session 9): I'm testing now. Record for the iPhone 14 (Safari) and Galaxy S20 FE (Chrome), each with `?debug`: FPS over 3 runs, draw calls (expect 25), browser version; the Android share sheet; the link preview card when the share text is pasted into WhatsApp or Messages (apps cache cards: use a new chat or add `?v=1`); on the iPhone, the logo clear of the notch and the hint clear of the home bar; one first-time tester's words, quoted as given. GDD §12 is the acceptance list.
+- Balancing pass pending (Sessions 7–9): I said it "feels a bit easy at the moment". Tune on the phone with URL overrides; a harder set to start from is `https://brisa-dash.pages.dev/?debug&twoBlockedChance=0.55&rowGapSeconds=1.3&minRowGap=10&acceleration=0.2&maxSpeed=20`. At the start speed `minRowGap` (12 m) sets the row spacing, not `rowGapSeconds`. Close when my chosen values are in `src/game/config.js`, with before → after values and run lengths logged (target 30–60 s for a first-timer).
+- Pickup readability on the phone (Session 8): the coral tint renders a little toward terracotta (it multiplies a light grey texture); the frappe is in brown and white. Judge all three cups on the phone; the levers are `CUP_HEIGHT` / `FRAPPE_HEIGHT` / `TAKEAWAY_HEIGHT` in `src/render/entities.js`.
+- Preview URL is hard-coded (Session 9): `og:url` and `og:image` in `index.html` name https://brisa-dash.pages.dev. If the Pages project is renamed or a custom domain is added, update both.
+- Parked (Session 3, mine): a Brisa Turquoise apron on the barista ("no apron for now, maybe later"). All of the character's colour comes from one texture, so it would need a code-built overlay box or a recoloured torso.
+- Unexplained test run (Session 7): once, `npm test` straight after `npm run credits` reported "9 failed, no tests"; it didn't reproduce in 4 runs. If it recurs, capture the full output.
 
 ### Session 1 — Wednesday 14 October 2026 — Agent rules and build log set up
 
@@ -87,86 +95,264 @@ Running record of how this project was built with Claude Code. "I" is the develo
 - **Where things stand / next step:** `main` holds `39fdef4` plus this session's commit (`docs/execution-plan.md`, build log, `CLAUDE.md`), not pushed. No code yet. Next is Phase 0 of `docs/execution-plan.md`: scaffold Vite + `three` + Vitest, the 9:16 page with palette tokens, a renderer with the DPR cap and a placeholder cube, the Kenney pack check, and the Cloudflare Pages connection (mine). Done when `npm test` and `npm run build` pass and the `*.pages.dev` URL shows the cube on a phone.
 - **Showcase line:** I had Claude Code turn a one-paragraph client email into a reviewed GDD, steering the fail rule to a forgiving "stumble" and keeping the runner a barista, then into a seven-phase execution plan where every phase ends playable and testable.
 
-### Session 3 — Wednesday 14 October 2026 — (in progress)
+*Sessions 3–9 were one continuous Claude Code conversation on Wednesday 14 October 2026. At my request ("could you please break the up the build-log to separate sessions for each phase?"), the log splits it into one session per phase. The pickup changes between Phases 4 and 5 get a session of their own.*
 
-- [direction] "lets continue with the execution, move to phase 0, i've already created the cloudflare pages with the npm run build command targeting the dist folder, waiting for actual things to build" — starts Phase 0; the Cloudflare Pages project is connected (build `npm run build`, output `dist`).
-- [note] Phase 0 scaffold built: `package.json` (three 0.186.1, vite 8.3.4, vitest 5.0.4), `.nvmrc` (24), `.gitignore`, `index.html`, `src/style.css` (palette tokens, 9:16 column, `touch-action: none`), `src/render/scene.js` (WebGL2 check, DPR cap 2, placeholder cube), `src/main.js`, `tests/smoke.test.js`. `npm test`: 1 file, 1 test passed. `npm run build`: JS 528.51 kB (131.39 kB gzip), with Vite's over-500 kB warning left in place. `vite preview` served the page and the bundle with HTTP 200. Committed as `740a757` and pushed to `origin/main` after I chose "Push now".
-- [note] Kenney check (subagent, downloads in the scratchpad only). Blocky Characters 2.0: 18 GLBs (the page says 20), one external texture per character, licence "Creative Commons Zero, CC0". Food Kit 2.0: 200 GLBs sharing `Textures/colormap.png`, CC0. Nature Kit 2.1: 329 GLBs with material colours and no textures, CC0. Download URLs: https://kenney.nl/media/pages/assets/blocky-characters/8369c0cf30-1749547469/kenney_blocky-characters_20.zip, https://kenney.nl/media/pages/assets/food-kit/83086fa91c-1719418518/kenney_food-kit.zip, https://kenney.nl/media/pages/assets/nature-kit/37ac38a37b-1677698939/kenney_nature-kit.zip. No parasol, deckchair or takeaway cup in any pack. Characters: 6 box meshes (72 triangles) with one shared material and a texture atlas, no skin, 27 rigid node animations (unused; the brief rules out an animation system).
-- [decision] Runner = character f, picked from the four Claude Code offered (b, c, f, q), which was its recommended option.
-- [decision] Apron: "no apron for now, maybe later". Claude Code had recommended a code-built overlay box.
-- [decision] Coffee pickup: "use cup-coffee and keep frappe as a potential addon for later." Claude Code had recommended comparing a coral primitive with `frappe.glb` on the phone in Phase 4.
-- [decision] The `credits` npm script was left out of Phase 0 and moves to Phase 4, because `scripts/gen-credits.mjs` doesn't exist yet and a script that fails when run is worse than none. `docs/execution-plan.md` was updated to match. (Claude Code's call)
-- [direction] "everything looks good on cloudflare, go ahead and continue. push the docs commits together with phase 1" — the Phase 0 phone check passed on the `*.pages.dev` deploy; Phase 1 starts, and `20b6603` + `2fe7bbb` get pushed with it.
-- [note] Phase 1 built:
-  - `src/game/config.js`: all the GDD (tune) values.
-  - `src/game/lanes.js`: lane state, 0.12 s eased slide, one queued move, edge moves ignored, `effectiveLane` = the target lane.
-  - `src/render/palette.js`, `scene.js`, `world.js`, `entities.js`: a Deep Ocean placeholder block with a run bob.
-  - `src/ui/input.js`: a swipe fires at 30 px, once per touch; arrows and A/D work too.
-  - `src/ui/screens.js`: the gesture hint, removed on the first successful lane change.
-  - `src/ui/debug.js`: `?debug` shows FPS and draw calls.
-  - `npm test`: 2 files, 8 tests passed (7 of them lane tests). `npm run build`: JS 535 kB (133.7 kB gzip).
-  - Headless Chrome (SwiftShader) screenshots at 480×854 showed the sea on the left, kerbs, scrolling dashes, the runner and the hint. Swipes and FPS still need checking on my phone.
-- [decision] Track: the sand, kerbs and sea planes stay still, and only the lane-line dashes move. They are recycled by wrapping z inside one `InstancedMesh`, which costs one draw call. The plan said "track segments, pooled and recycled"; this keeps the draw count down and has no seams. The GDD §7 Track row was updated to match. (Claude Code's call)
-- [decision] Colours not in the brand doc, added in `src/render/palette.js` to be tuned on the phone: sky `#cdeef0` (pale turquoise), beach `#e8cf9f` (darker than the promenade so the track edge reads), lane lines `#d6b98a`. Fog from 40 to 75 m hides recycled objects appearing at the far end. Camera: FOV 70 at (0, 3.4, 6.2) looking at (0, 0, -4); the first look point (0, 0.4, -6) left about a third of the screen as sky. (Claude Code's call)
-- [fix] Advisor review: in `src/ui/input.js`, a mouse pressed inside the column and released outside it never sent `pointerup` to the element, so the gesture stayed open and all later swipes were ignored. Touch wasn't affected, since touch captures the pointer implicitly. Fix: `setPointerCapture` on `pointerdown`.
-- [direction] "feels good, works well on both phone and desktop" — Phase 1 passed my check on the phone and on desktop. Then: "you could even move the player closer to the camera a bit and angle a camera just a bit more to see more further".
-- [change] Camera, following my direction. Claude Code first tried a closer and lower camera, (0, 3.0, 5.0) looking at (0, 0.3, -9). In the headless screenshot that pushed the horizon down to about 40% of the screen and squashed the far track. It settled on a higher, closer camera, (0, 4.0, 4.5) looking at (0, 0, -8). The horizon sits about 32% down, the runner is bigger and lower (about 65–83% of the screen height), and the track ahead takes about a third of the screen instead of a fifth. The gesture hint moved from `bottom: 18%` to `bottom: 4%` so the runner doesn't cover it. `npm test`: 8/8 passed.
-- [direction] "yes, this is much better. no need to push separately, can go with phase 2 go ahead and do phase2" — I accepted the camera change; `1c870d8` gets pushed together with Phase 2.
-- [note] Phase 2 built:
-  - Pure logic: `src/game/speed.js` (8 m/s + 0.15 m/s², capped at 18), `stumble.js` (steady/stumbling/dead, 5 s meter), `collision.js` (checks the whole step, so a long frame can't skip a hit), `spawner.js` (rows 1.5 s apart at the current speed and at least 12 m; 40% of rows block two lanes; 60% get a 3–5 cup line in a lane that's free in the row it leads into), `score.js`, and `run.js` (`updateRun` returns coffee, stumble and gameOver events).
-  - Rendering: the parasol-over-lounger obstacle and the coral cup are each one `InstancedMesh` built from merged, vertex-coloured primitives (one draw call each). Knock-aside: the obstacle tips over and slides out over 0.4 s. Runner wobble scales with the meter. Camera shake lasts 0.35 s.
-  - UI: HUD (score, coffee count, coral stumble meter), a "+10" pop projected above the runner, and a temporary run-over panel (tap, or R at any time, to restart).
-  - `npm test`: 7 files, 32 tests passed, including a fuzz of 5 seeds × 2 speeds × about 2000 rows checking each row leaves a lane free. `npm run build`: JS 547 kB (137.6 kB gzip). A headless screenshot showed the obstacles, cup lines and HUD with no console errors. Run length (target 30–60 s) is not judged yet; that needs my playtest.
-- [fix] Two test bugs, caught by the first run (30/32 passed): the cup-overlap fuzz compared every cup with every obstacle and timed out after 5 s, so it now checks only the neighbouring rows; and the knock test read `run.obstacles[0]` after that obstacle had correctly despawned.
-- [decision] The knock-aside animation runs on render time (a `WeakMap` in `entities.js`), not on run time, so the obstacle that ends the run still tips over after the run freezes. The logic's `knockedAt` field was removed. (Claude Code's call)
-- [fix] Advisor review: `updateRun` spaced new rows by the current (slowed) speed. Rows spawned during a stumble were therefore 0.7× closer and arrived bunched up once the runner recovered, a difficulty spike after every hit. They are now spaced by `baseSpeed`. New test "spaces rows by the unslowed speed while stumbling": it fails on the old line (1 failed) and passes with the fix. `npm test`: 33/33.
-- [direction] "everything is ok, I dont see what you were talking about (what e8ad98b should be fixing). does not matter for now. please go ahead with next phase" — I accepted the Phase 2 playtest without tuning changes. Claude Code explained that the row-spacing bug only shows above about 11.5 m/s (about 23 s into a run), because `minRowGap` 12 m hides it at lower speeds, and that the build I played didn't include the fix. Phase 3 starts; `e8ad98b` gets pushed with it.
-- [note] Phase 3 built:
-  - `src/ui/screens.js`: start screen (text logo "Brisa Dash", "by Brisa Café", Play, Credits), HUD shown only in a run, game-over panel (score, metres, coffees, Retry, Share score, Credits) after a 0.7 s delay so the final knock-over reads, pause panel, and a credits panel that reads `src/credits.json`.
-  - `src/ui/share.js`: `shareText` follows the GDD §9 template and says "1 coffee" for one. `shareScore` tries Web Share first; closing the share sheet (AbortError) does nothing; any other share error copies the text and link instead, showing "Copied!", or "Couldn't share" if there's no clipboard.
-  - `main.js` states: start → playing ⇄ paused (`visibilitychange`) → over → Retry. The swipe input moved from `#game` to the canvas, so taps on buttons never start a swipe. The Phase 2 R-key and tap-to-restart were removed.
-  - `npm test`: 8 files, 40 tests passed (7 new share tests).
-- [testing] Claude Code drove the built game in headless Chrome at 390×844 with touch on (puppeteer-core installed in the scratchpad, not the repo): Play, pause via `visibilitychange`, tap to resume, run until game over (6.9 s when never moving; score 65), Share with `navigator.share` removed (copied "I dashed 65 m and grabbed 0 coffees at Brisa Café — score 65! ☕🌊 Can you beat me? http://localhost:4173/"), Credits open and close, Retry, a touch swipe hiding the hint. No console errors. `?debug`: 9 draw calls.
-- [fix] Bugs the scripted run caught:
-  - The credits panel sat under the game-over screen (it comes earlier in the page), so Close was unreachable and the invisible panel blocked swipes after Retry. All screens now sit above the HUD and hint, and credits above the other screens.
-  - The hint drew over the pause dimming; the same layering fixed it.
-  - A favicon 404; an inline ☕ SVG favicon fixed it.
-- [decision] Gesture hint: it now comes back on each run until the first successful lane change, instead of showing on the first run only, so a player who crashed without swiping still sees it. The credits panel also lists three.js (MIT) and says "Brisa Café is a fictional café made up for this prototype", following the brief's legal note. Until Phase 4, the asset list says "No third-party assets yet: every shape is built in code." (Claude Code's call)
-- [testing] My phone check of Phase 3: "tested the share, it worked on iphone. still need to test later on android too. coffee emoji looked ok. pause when loosing focus works. retry and credits also work as need to."
-- [direction] "feels a bit easy at the moment, but lets get back to this once all relevant phases are done. lets take a note to have a balancing in phase 5" — a balancing pass was added to Phase 5 of `docs/execution-plan.md`. Then: "go ahead with phase 4".
-- [note] Phase 4 built:
-  - `public/models/` (212 KB): `blocky/character-f.glb` + `Textures/texture-f.png`, `food/cup-coffee.glb` + `Textures/colormap.png`, and `nature/` `tree_palm`, `tree_palmBend`, `tree_palmTall`, `rock_smallA`, `rock_largeA`. Copied from the packs downloaded earlier in this session; I re-checked each `License.txt` says "Creative Commons Zero, CC0".
-  - `src/render/models.js`: loads the models with GLTFLoader before Play is enabled (the button shows "Loading…"). A model that fails to load falls back to its primitive. Each model is scaled to a target height in code, and models are baked into one `InstancedMesh` for cups and scenery.
-  - Runner: `character-f`, 1.5 m tall, turned to face down the track. Cups: `cup-coffee.glb`, 0.4 m tall. Scenery: 14 palms and rocks beside the track in a fixed layout that repeats every 80 m, wrapped like the dashes (`createScenery` in `world.js`).
-  - Credits: `src/credits.json` is the single source. `npm run credits` (`scripts/gen-credits.mjs` + `scripts/credits-markdown.mjs`) writes `CREDITS.md`. The in-game credits screen lists the three packs. `tests/credits.test.js` fails if `CREDITS.md` doesn't match the JSON, if a file in `public/models` isn't credited, if a credited file is missing, or if an asset isn't CC0. Both drift cases were checked by breaking them on purpose: 2 failed, then 4/4 passed after restoring.
-  - `npm test`: 9 files, 44 tests, passing 3 times in a row. `npm run build`: JS 634 kB (161 kB gzip; GLTFLoader added about 24 kB gzip). `?debug`: 24 draw calls (runner 6, scenery 10, world 6, cups 1, obstacles 1).
-- [fix] The first headless screenshots showed dark grey palms and a dull character. Cause: Kenney's materials have `metallicFactor: 1` (the character's is unset, which glTF also treats as 1), and metallic surfaces render dark without an environment map. Fix: on load, every model material is replaced with `MeshLambertMaterial` (same colour and texture), matching the flat-lit scene and cheaper on phones. Palms were also lowered from 5–5.8 m to 3.8–4.6 m and moved further out (x ±4.0–4.3, far side 7.0–7.2), because a near palm's leaves cut into the top of the screen.
-- [testing] One unexplained run: `npm test` straight after `npm run credits` reported "9 failed, no tests". It didn't reproduce in 4 later runs (44/44 each); not investigated further.
-- [direction] "can you color the coffee cup to coral and make it a bit smaller? also would be nice to try the other kenney model too, could you include that also in the game so when the cups are put on the lane in batches, every set of cups would randomly choosen from model A or model B but model B (frappe) should be occuring less and should be worth a bit more points. summarize for me what would you do before executing, let me review it first" — Claude Code to propose the change for my review before building it.
-- [decision] "ok, go ahead. update the GDD to reflect two pickups" — I approved Claude Code's proposal as written: a coral-tinted mug at 0.3 m; `frappe.glb` in natural colours at 0.45 m; each cup line is one kind, frappe with a 20% chance; +10 per mug and +20 per frappe; frappes count in the ☕ total. This goes beyond the brief's "one pickup", by my decision.
-- [note] Two pickups built as approved:
-  - Logic: `spawner.js` picks one kind per line (`frappeLineChance` 0.2). `score.js` gained `pickupValue` (+10 mug, +20 frappe) and `score()` now takes pickup points. `run.js` keeps `pickupPoints`, and coffee events carry `kind` and `points`.
-  - Rendering: `entities.js` has two `InstancedMesh`es, the coral-tinted mug at 0.3 m and the frappe at 0.45 m. The "+20" pop shows for frappes. `public/models/food/frappe.glb` (22 KB) was added; it shares `Textures/colormap.png` with the mug. `credits.json` and `CREDITS.md` were updated.
-  - The credits test failed first (1 failed of 47) because `frappe.glb` wasn't credited yet, as designed. After crediting it, `npm test` gave 9 files, 47 tests passed. The new tests cover each line being one kind, the frappe share across 1000+ seeded lines staying within 20% ± 4 points, and a frappe scoring +20 while counting as one coffee.
-  - Headless screenshots: the normal build, plus a temporary build with `frappeLineChance: 1` (restored to 0.2 and rebuilt before committing). The coral mug comes out a little terracotta, and the frappe is thin and harder to spot. Draw calls go from 24 to 25.
-  - GDD §6, §7 and §11 were updated for two pickups.
-- [direction] "its better, but the frappes are too small compared to the mugs. I've also added a new model, with attribution CC in the model-to-import folder. could you please add those also ot the pool of collectables, same points as the mugs. the body of the cup should be recolored to match the palette"
-- [decision] The new model is "Low-Poly Takeaway Coffee Cup" by PickledCactusAlan (https://skfb.ly/oxqpp). Its Sketchfab page says "Creative Commons Attribution" (CC BY 4.0) and "Modelled in Maya, textured in Photoshop", so it is hand-made. Claude Code flagged that CC BY breaks the brief's CC0-only asset rule. I chose "Allow CC BY, credit it", with a credit that notes the recolour. Claude Code's recommended options for the other two questions were also accepted: a Brisa Turquoise body with the lid kept off-white, and cup lines split mug 40% / takeaway 40% / frappe 20%.
-- [note] Third pickup built, and the frappe raised from 0.45 to 0.65 m:
-  - `public/models/sketchfab/low-poly_takeaway_coffee_cup.glb` (48.8 KB) was copied from my `model-to-import/` folder. That folder is left untracked and untouched.
-  - The GLB lists `KHR_materials_pbrSpecularGlossiness` as required. This three.js version only warns about it and falls back to a plain material, so `loadModels` registers the extension name to silence the warning. `paintByUv` in `models.js` then colours the cup by texture half: the top half of the texture (lid) gets Sea Salt White and the bottom half (body) Brisa Turquoise. The original texture isn't used.
-  - Config: `cupLineMix` { coffee 0.4, takeaway 0.4, frappe 0.2 } replaced `frappeLineChance`. The takeaway cup is 0.5 m tall and worth +10.
-  - Credits: a new CC BY entry with a `changes` field. `CREDITS.md` and the credits screen show it, and the credits test now allows CC0 or CC BY 4.0 and requires `changes` for CC BY.
-  - GDD §6, §7, §8, §11 and §12 were updated, and §13 item 6 records the CC BY exception.
-  - `npm test`: 9 files, 47 tests passed. Headless screenshots came from temporary builds forcing each kind (config restored from a backup and rebuilt before committing). They showed the turquoise takeaway cup with its white lid, and the frappe now in proportion with the other cups.
-- [direction] "can you color the takeaway model's body to coral too? also please increate the size of the takeaway and the frappe a bit more? like by 0.05m maybe?"
-- [note] The takeaway body changed from Brisa Turquoise to Sunset Coral (`paintByUv` bottom colour). Sizes went up 0.05 m: takeaway 0.5 → 0.55 m, frappe 0.65 → 0.7 m. The credits `changes` text, `CREDITS.md`, GDD §7 and Part 1 were updated to match. `npm test`: 47/47. A headless screenshot from a temporary all-takeaway build (config restored and rebuilt) showed coral cups with white lids.
-- [hand edit] I had copied the attribution note `low-poly_takeaway_coffee_cup.txt` into `public/models/sketchfab/`, and the credits test flagged it as an uncredited file (46/47). Asked what to do, I said: "i moved it back to model-to-import. please add the folder to gitignore". `model-to-import/` was added to `.gitignore`; `npm test` is back to 47/47.
-- [direction] "ok, go ahead with the next phase please" — Phase 5 (brand polish, QA, balancing, release) starts.
-- [decision] Phase 5 choices, all Claude Code's recommended options: "Phone tuning via URL" for balancing, "Keep system font", and "Yes, with a game screenshot" for link previews.
-- [note] Phase 5 build work:
-  - `src/game/overrides.js` + `tests/overrides.test.js` (4 tests): with `?debug`, numeric config values (including dotted `cupLineMix.*`) can be overridden from the URL. Unknown keys, non-numbers, blanks and `laneCount` are ignored. `main.js` applies the overrides before anything reads `CONFIG`, and the debug panel lists them. A headless run with `?debug&twoBlockedChance=0.9&rowGapSeconds=1&cupLineMix.frappe=0.5&bogus=3` showed the three real overrides listed, `bogus` ignored, and mostly two-lane rows.
-  - Safe areas: the gesture hint, debug panel and screens are padded by `env(safe-area-inset-*)` for the notch and home bar. The HUD already was.
-  - Link preview: Open Graph and Twitter meta tags in `index.html`. The deployed URL, `https://brisa-dash.pages.dev`, was confirmed by fetching it and matching this build's HTML and model files. `public/og-image.png` (1200×630, 111 KB) shows the logo text and a real headless gameplay capture. The capture came from a temporary build that spawned only mugs and frappes, so the CC BY takeaway cup isn't in the image; the config was restored and rebuilt afterwards.
-  - `npm test`: 10 files, 51 tests passed.
-- [fix] Advisor review: `pickCupKind` assumed the shares added up to 1, so overriding one `cupLineMix` share from the URL silently skewed the mix. Shares are now relative (the roll is scaled by their total), and a new test checks that `{ coffee: 1, frappe: 1 }` gives about 50/50. `npm test`: 52/52.
+### Session 3 — Wednesday 14 October 2026 — Phase 0: scaffold, deploy pipeline and asset check
+
+- **Goal:** Phase 0 of `docs/execution-plan.md`, the next step from Session 2, which I started.
+- **Direction given:** "lets continue with the execution, move to phase 0, i've already created the cloudflare pages with the npm run build command targeting the dist folder, waiting for actual things to build". Asked before the first push, I chose "Push now".
+- **Course corrections:**
+  - Apron: Claude Code recommended a code-built overlay box. I answered "no apron for now, maybe later".
+  - Coffee pickup: Claude Code recommended deciding in Phase 4 by comparing a coral primitive with `frappe.glb` on the phone. I chose "use cup-coffee and keep frappe as a potential addon for later."
+- **What was built:**
+  1. Scaffold:
+     - `package.json` with three 0.186.1, vite 8.3.4 and vitest 5.0.4; `.nvmrc` (24); `.gitignore`.
+     - `index.html` and `src/style.css`: palette tokens, a 9:16 column with turquoise letterboxing, `touch-action: none`.
+     - `src/render/scene.js`: WebGL2 check, DPR cap 2, a spinning turquoise placeholder cube.
+     - `src/main.js` and `tests/smoke.test.js`.
+  2. Kenney check, done by a subagent; downloads stayed in the session scratchpad.
+     - Blocky Characters 2.0: 18 GLBs (the page says 20), one texture each.
+     - Food Kit 2.0: 200 GLBs sharing `Textures/colormap.png`.
+     - Nature Kit 2.1: 329 GLBs coloured by their materials, no textures.
+     - Licences: each `License.txt` says "Creative Commons Zero, CC0".
+     - None of the packs has a parasol, deckchair or takeaway cup.
+     - Each character is 6 box meshes (72 triangles) with one shared material and no skin. It also has 27 rigid node animations, which the game doesn't use.
+     - Download URLs: https://kenney.nl/media/pages/assets/blocky-characters/8369c0cf30-1749547469/kenney_blocky-characters_20.zip, https://kenney.nl/media/pages/assets/food-kit/83086fa91c-1719418518/kenney_food-kit.zip, https://kenney.nl/media/pages/assets/nature-kit/37ac38a37b-1677698939/kenney_nature-kit.zip.
+  3. GDD §7 and execution-plan Phase 4 updated with the model choices.
+- **Decisions:**
+  - Runner = character f (teal shirt, close to Brisa Turquoise), picked from a labelled sheet of the 18 characters. The other options offered were b, c and q. [proposed → accepted]
+  - No apron for now. [directed]
+  - Coffee pickup = `cup-coffee.glb`; `frappe.glb` parked. [directed]
+  - Obstacle = a parasol built from primitives, since no pack has one (the GDD's fallback). [Claude's call]
+  - `.nvmrc` pins Node 24 for Cloudflare, because Vitest 5 needs Node ≥ 22.12. [Claude's call]
+  - The `credits` npm script waits for Phase 4, because a script that fails when run is worse than none. [Claude's call]
+  - Vite's "chunk over 500 kB" warning left in place; the bundle is 131 kB gzipped, nearly all of it three.js. [Claude's call]
+- **What broke or was wrong:** An advisor review caught that the plan's Phase 4 wording ("copy textures next to the GLBs") would break the GLBs' relative `Textures/` paths. It was reworded before any copying.
+- **Hand edits:** None in the code. I created the Cloudflare Pages project in the dashboard myself (build `npm run build`, output `dist`).
+- **Testing / playtest notes:**
+  - `npm test`: 1 file, 1 test passed.
+  - `npm run build`: JS 528.51 kB (131.39 kB gzip).
+  - `vite preview` served the page and the bundle with HTTP 200.
+  - My phone check of the deploy came at the start of Session 4: "everything looks good on cloudflare".
+- **Learned:** Auditing the asset packs before writing any gameplay turned three "to verify" rows in the GDD into firm decisions (no pack has a parasol), so later phases never waited on assets.
+- **Where things stand / next step:** `740a757` is pushed. `20b6603` and `2fe7bbb` (docs) are local and went up with Phase 1. Next: Phase 1.
+- **Showcase line:** I connected Cloudflare Pages myself and had Claude Code scaffold Vite + three.js + Vitest and audit three Kenney packs. Then I picked the barista and the coffee cup from what the packs actually contain.
+
+### Session 4 — Wednesday 14 October 2026 — Phase 1: scene, track, lanes and controls
+
+- **Goal:** Phase 1, after I confirmed the Phase 0 deploy.
+- **Direction given:**
+  - "everything looks good on cloudflare, go ahead and continue. push the docs commits together with phase 1"
+  - After trying it: "feels good, works well on both phone and desktop" and "you could even move the player closer to the camera a bit and angle a camera just a bit more to see more further".
+  - On the result: "yes, this is much better."
+- **Course corrections:** The camera change was my direction. Claude Code's first attempt moved the camera closer and lower; its own screenshot showed the horizon about 40% down and the far track squashed. It moved the camera closer and *higher* instead.
+- **What was built:**
+  1. `src/game/config.js` (every tune value from the GDD) and `src/game/lanes.js`: 0.12 s eased slide, one queued move, moves past the edge ignored, `effectiveLane` = the target lane.
+  2. `src/render/palette.js`, `scene.js`, `world.js` and `entities.js`: sky, fog, the sea on the left, kerbs, scrolling lane dashes, and a Deep Ocean placeholder runner with a run bob.
+  3. Input and overlays:
+     - `src/ui/input.js`: a swipe fires at 30 px, once per touch; arrow keys and A/D work too.
+     - The gesture hint in `src/ui/screens.js`.
+     - `src/ui/debug.js`: `?debug` shows FPS and draw calls.
+  4. Camera moved to (0, 4.0, 4.5), looking at (0, 0, -8); the hint moved to `bottom: 4%`.
+- **Decisions:**
+  - The track's planes stay still, and only the lane dashes move, recycled in one `InstancedMesh`: one draw call and no seams. The plan had pooled track segments; GDD §7 was updated. [Claude's call]
+  - Colours not in the brand doc, to tune: sky `#cdeef0`, beach `#e8cf9f`, lane lines `#d6b98a`. Fog from 40 to 75 m hides objects as they appear. [Claude's call]
+  - Camera closer and higher. [directed; the values were Claude's call]
+  - Visual checks use headless Chrome screenshots before I'm asked to look. [Claude's call]
+- **What broke or was wrong:**
+  - An advisor review caught an input bug. A mouse pressed inside the column and released outside it left the gesture open, so every later swipe was ignored until a reload. `setPointerCapture` fixed it.
+  - Headless Chrome won't go narrower than 500 px, which put a fake turquoise strip in the screenshots. That was a capture artefact, not a bug.
+- **Hand edits:** None.
+- **Testing / playtest notes:**
+  - `npm test`: 2 files, 8 tests passed.
+  - `npm run build`: JS 535 kB (133.7 kB gzip).
+  - My check on the phone and on desktop passed.
+- **Learned:** Taking a screenshot after each visual change let Claude Code judge the camera framing itself and bring me one good option instead of two to try.
+- **Where things stand / next step:** `f8f4167` and `affe42a` are pushed. `1c870d8` (camera) is local and went up with Phase 2. Next: Phase 2.
+- **Showcase line:** I tried the lanes on my phone and asked for the runner to be closer with a longer view ahead. Claude Code compared two camera setups in screenshots and kept the one that gave the track ahead a third of the screen.
+
+### Session 5 — Wednesday 14 October 2026 — Phase 2: core gameplay loop
+
+- **Goal:** Phase 2: obstacles, coffee, the stumble rule and scoring.
+- **Direction given:**
+  - "yes, this is much better. no need to push separately, can go with phase 2 go ahead and do phase2"
+  - After playing: "everything is ok, I dont see what you were talking about (what e8ad98b should be fixing). does not matter for now. please go ahead with next phase".
+- **Course corrections:** None.
+- **What was built:**
+  1. Pure logic:
+     - `speed.js`: 8 m/s plus 0.15 m/s per second, capped at 18 m/s.
+     - `stumble.js`: steady / stumbling / dead, with a 5 s meter.
+     - `collision.js`: checks the whole step, so a long frame can't skip a hit.
+     - `spawner.js`: rows 1.5 s apart and at least 12 m apart. 40% of rows block two lanes. 60% get a line of 3–5 cups in a lane that's free in the row the line leads into.
+     - `score.js`, and `run.js`, whose `updateRun` returns coffee, stumble and gameOver events.
+  2. Rendering:
+     - The parasol-over-lounger obstacle and the cup are built from merged, vertex-coloured primitives, one `InstancedMesh` each.
+     - The knock-aside: the hit obstacle tips over and slides out of the lane in 0.4 s.
+     - Runner wobble, and a 0.35 s camera shake.
+  3. UI: the HUD (score, ☕ count, coral stumble meter), a "+10" pop above the runner, and a temporary run-over panel.
+- **Decisions:**
+  - The starting numbers above, all in `config.js` to tune. [Claude's call]
+  - The knock-aside runs on render time, so the obstacle that ends a run still tips over after the run freezes. [Claude's call]
+  - New rows are spaced by the unslowed speed. [Claude's call, after an advisor review]
+- **What broke or was wrong:**
+  - Two test bugs on the first run (30/32 passed), both fixed in the tests:
+    - The cup-overlap fuzz compared every cup with every obstacle and timed out.
+    - The knock test read an obstacle that had already (correctly) despawned.
+  - An advisor review caught a spacing bug. Rows spawned during a stumble were spaced by the slowed speed, so they arrived bunched up once the runner recovered. `e8ad98b` fixed it, and the new test fails on the old line.
+  - Why I didn't notice it: Claude Code explained that `minRowGap` (12 m) hides the bug below about 11.5 m/s, roughly 23 s into a run. The build I played also didn't include the fix.
+- **Hand edits:** None.
+- **Testing / playtest notes:**
+  - `npm test`: 7 files, 33 tests passed, including a fuzz of 5 seeds × 2 speeds × about 2000 rows.
+  - `npm run build`: JS 547 kB (137.6 kB gzip).
+  - My playtest: "everything is ok". Run length wasn't measured.
+- **Learned:** A review pass caught a difficulty spike that neither the unit tests nor my playtest showed, because it only appears above a speed a short test run never reaches.
+- **Where things stand / next step:** `81e4ac4` is pushed. `e8ad98b` is local and went up with Phase 3. Next: Phase 3.
+- **Showcase line:** Claude Code built the obstacle, coffee and stumble rules as pure, tested logic (33 tests, including a fuzz of about 20,000 rows). A review caught a difficulty spike after every stumble before I ever met it in play.
+
+### Session 6 — Wednesday 14 October 2026 — Phase 3: screens, flow and sharing
+
+- **Goal:** Phase 3: the full start → play → game over → retry loop, plus pause and share.
+- **Direction given:** "please go ahead with next phase" (at the end of Session 5).
+- **Course corrections:** None.
+- **What was built:**
+  1. `src/ui/screens.js`:
+     - Start screen: logo, "by Brisa Café", Play, Credits.
+     - HUD, shown only during a run.
+     - Game-over panel: score, metres, coffees, Retry, Share score, Credits.
+     - Pause panel, and a credits panel that reads `src/credits.json`.
+  2. `src/ui/share.js`:
+     - Builds the GDD §9 share text, saying "1 coffee" for one.
+     - Tries Web Share first; closing the share sheet does nothing.
+     - On any other error, it copies the text and link ("Copied!"), or shows "Couldn't share" if there's no clipboard.
+  3. `main.js`:
+     - States: start → playing ⇄ paused (`visibilitychange`) → over → Retry.
+     - Swipe input moved to the canvas, so taps on buttons never start a swipe.
+     - An inline ☕ SVG favicon.
+- **Decisions:**
+  - The gesture hint comes back each run until the first successful lane change. [Claude's call]
+  - The game-over panel waits 0.7 s so the final knock-over can be seen. [Claude's call]
+  - The credits panel credits three.js (MIT) and says "Brisa Café is a fictional café made up for this prototype", following the brief's legal note. [Claude's call]
+  - The mute toggle and best score stay in Phase 6, as the plan says. [Claude's call]
+- **What broke or was wrong:** A scripted headless run caught three bugs:
+  - The credits panel opened behind the game-over screen. Close was unreachable, and the invisible panel then blocked swipes after Retry.
+  - The hint drew over the pause dimming.
+  - The favicon returned a 404.
+
+  Fixing the screen layering and adding the inline favicon solved all three.
+- **Hand edits:** None.
+- **Testing / playtest notes:**
+  - `npm test`: 8 files, 40 tests passed.
+  - Claude Code drove the built game in headless Chrome at 390×844 with touch on (puppeteer-core, installed in the scratchpad). It went through Play, pause and resume, game over (6.9 s when never moving), Share with the copy fallback, Credits, Retry and a swipe. The copied text was "I dashed 65 m and grabbed 0 coffees at Brisa Café — score 65! ☕🌊 Can you beat me? http://localhost:4173/". No console errors; 9 draw calls.
+  - My phone check: "tested the share, it worked on iphone. still need to test later on android too. coffee emoji looked ok. pause when loosing focus works. retry and credits also work as need to."
+- **Learned:** Driving the real build with a scripted browser found layering bugs that unit tests can't see. I would have met them as "swipes stop working after Retry".
+- **Where things stand / next step:** `e059aa2` is pushed. Next: Phase 4.
+- **Showcase line:** Claude Code scripted a phone-sized browser through the whole start → run → game over → share → credits → retry loop and fixed the overlay bugs it found; my iPhone test then passed first time.
+
+### Session 7 — Wednesday 14 October 2026 — Phase 4: Kenney models, scenery and credits
+
+- **Goal:** Phase 4: replace the placeholders with the Kenney models, add scenery, and make the credits real.
+- **Direction given:** "feels a bit easy at the moment, but lets get back to this once all relevant phases are done. lets take a note to have a balancing in phase 5" and "go ahead with phase 4".
+- **Course corrections:** None.
+- **What was built:**
+  1. `public/models/` (212 KB): `character-f.glb` and its texture; `cup-coffee.glb` and `colormap.png`; the palms `tree_palm`, `tree_palmBend` and `tree_palmTall`; the rocks `rock_smallA` and `rock_largeA`. Claude Code re-checked each pack's `License.txt` before copying.
+  2. `src/render/models.js`:
+     - Loads the models before Play is enabled; the button shows "Loading…" until then.
+     - Scales each model to a target height and bakes it into an instanced mesh.
+     - Falls back to the primitive shape if a model fails to load.
+  3. The runner (1.5 m, turned to face down the track), the cup (0.4 m), and 14 palms and rocks in a layout that repeats every 80 m.
+  4. Credits: `src/credits.json` → `npm run credits` → `CREDITS.md`. The in-game screen lists the packs, and `tests/credits.test.js` guards against drift.
+  5. A balancing pass added to Phase 5 of `docs/execution-plan.md`.
+- **Decisions:**
+  - Balancing deferred to Phase 5. [directed]
+  - Model materials converted to flat Lambert. [Claude's call]
+  - Credits as one JSON source, with a generated `CREDITS.md` and a drift test. [Claude's call, following the plan]
+- **What broke or was wrong:**
+  - Dark models: the first screenshots showed dark grey palms and a dull character. Kenney's materials have `metallicFactor: 1`; the character's is unset, which glTF also treats as 1. Metallic surfaces render dark without an environment map. Converting the materials to Lambert on load fixed it.
+  - Palms too tall: a near palm's leaves cut into the top of the screen. They were lowered from 5–5.8 m to 3.8–4.6 m and moved further from the track.
+  - One unexplained `npm test` run reported "9 failed, no tests". Four later runs gave 44/44.
+- **Hand edits:** None.
+- **Testing / playtest notes:**
+  - `npm test`: 9 files, 44 tests passed, 3 times in a row.
+  - Both drift checks were broken on purpose (a stray edit to `CREDITS.md`, an uncredited GLB): 2 tests failed, then 4/4 passed after restoring.
+  - `npm run build`: JS 634 kB (161 kB gzip).
+  - `?debug`: 24 draw calls.
+- **Learned:** Kenney's GLBs arrive with metalness set to 1, which only shows once they're rendered. Checking screenshots rather than trusting the loader caught it in one pass.
+- **Where things stand / next step:** `4539e72` is pushed. Next: my look at the models on the phone, then Phase 5.
+- **Showcase line:** Claude Code swapped every placeholder for a credited CC0 Kenney model, caught a material setting that made them render dark, and added a test that fails if any shipped model is uncredited.
+
+### Session 8 — Wednesday 14 October 2026 — Pickup variety (Phase 4 follow-up)
+
+- **Goal:** My requests to vary the coffee pickups after seeing Phase 4.
+- **Direction given:**
+  - "can you color the coffee cup to coral and make it a bit smaller? also would be nice to try the other kenney model too, could you include that also in the game so when the cups are put on the lane in batches, every set of cups would randomly choosen from model A or model B but model B (frappe) should be occuring less and should be worth a bit more points. summarize for me what would you do before executing, let me review it first"
+  - "ok, go ahead. update the GDD to reflect two pickups"
+  - "its better, but the frappes are too small compared to the mugs. I've also added a new model, with attribution CC in the model-to-import folder. could you please add those also ot the pool of collectables, same points as the mugs. the body of the cup should be recolored to match the palette"
+  - "can you color the takeaway model's body to coral too? also please increate the size of the takeaway and the frappe a bit more? like by 0.05m maybe?"
+- **Course corrections:**
+  - Review first: I asked for a summary before any code. Claude Code proposed frappes on 20% of lines at +20, a 0.3 m mug, frappes in their own colours, and frappes counted as coffees. It also flagged that a second pickup goes beyond the brief's "one pickup". I approved it as written.
+  - Frappe size: 0.45 m was "too small compared to the mugs", so it went to 0.65 m, then 0.7 m.
+  - Takeaway body: I first accepted Claude Code's recommended Brisa Turquoise, then asked for Sunset Coral.
+  - Licence: Claude Code flagged that the new model is CC BY 4.0, against the brief's CC0-only rule. I chose "Allow CC BY, credit it".
+- **What was built:**
+  1. Coffee mug and frappe:
+     - The mug is tinted coral and 0.3 m tall; `frappe.glb` (22 KB) is 0.7 m.
+     - Each line of cups is one kind.
+     - `pickupValue` gives +10 per mug and +20 per frappe, and frappes count as coffees.
+  2. Takeaway cup: "Low-Poly Takeaway Coffee Cup" by PickledCactusAlan (https://skfb.ly/oxqpp), whose page says "Modelled in Maya, textured in Photoshop".
+     - Stored in `public/models/sketchfab/` (48.8 KB); 0.55 m tall, worth +10.
+     - It requires the `KHR_materials_pbrSpecularGlossiness` material extension, which this three.js version only warns about. Registering the extension's name silences the warning.
+     - `paintByUv` colours the cup by which half of its texture each part maps to: lid Sea Salt White, body Sunset Coral.
+  3. Config and docs:
+     - `cupLineMix` { coffee 0.4, takeaway 0.4, frappe 0.2 }.
+     - Credits gained a `changes` field for CC BY.
+     - GDD §6, §7, §8, §11, §12 and §13 item 6 updated.
+  4. `model-to-import/` added to `.gitignore`.
+- **Decisions:**
+  - Pickup kinds, values, mix and sizes. [directed]
+  - The CC BY exception, credited with title, author, source, licence and changes. [directed]
+  - Recolour in code by texture half, instead of shipping an edited texture. [Claude's call]
+  - Frappe kept in its own colours, and frappes counted as coffees. [proposed → accepted]
+- **What broke or was wrong:** The credits test failed when `frappe.glb` was added before its credit, which is what it's for. My attribution note in `public/models/` failed the same test (see hand edits).
+- **Hand edits:** I added `model-to-import/` with the GLB and its attribution `.txt`. I also copied the `.txt` into `public/models/sketchfab/`; after the test flagged it, I said "i moved it back to model-to-import. please add the folder to gitignore".
+- **Testing / playtest notes:**
+  - `npm test`: 9 files, 47 tests passed. They check that each line is one kind, that frappes make up 20% ± 4 points of 1000+ seeded lines, and that a frappe scores +20.
+  - Screenshots from temporary builds that forced each kind checked colours and sizes. The config was restored and rebuilt each time.
+- **Learned:** Making the licence rules a test (every shipped file credited; CC BY must state its changes) turned a late asset addition into a guided step instead of a compliance risk.
+- **Where things stand / next step:** `05971a4`, `f7a7d9f` and `ac5b17c` are pushed. `ea39a81` (`.gitignore`) is local and went up with Phase 5. Next: Phase 5.
+- **Showcase line:** I asked for more variety in the coffee pickups and brought in a CC BY takeaway cup. Claude Code flagged the clash with the brief's CC0 rule; once I approved an exception, it recoloured the model to the palette and credited it the way CC BY requires.
+
+### Session 9 — Wednesday 14 October 2026 — Phase 5 build work and wrap-up
+
+- **Goal:** The parts of Phase 5 that don't need the phones, then a wrap-up while I test.
+- **Direction given:** "ok, go ahead with the next phase please". For the wrap-up: "oh yes, do a wrap up please. could you please break the up the build-log to separate sessions for each phase? in the meantime I'll do the testing".
+- **Course corrections:** None.
+- **What was built:**
+  1. `src/game/overrides.js` and 4 tests:
+     - With `?debug`, numeric config values can be overridden from the URL, including dotted `cupLineMix.*` keys.
+     - Unknown keys, non-numbers, blanks and `laneCount` are ignored.
+     - The debug panel lists the active overrides.
+  2. Safe-area padding (`env(safe-area-inset-*)`) on the hint, the debug panel and every screen.
+  3. Link preview: Open Graph and Twitter tags, plus `public/og-image.png` (1200×630, 111 KB), composed from a real headless gameplay capture with the logo text.
+  4. `pickCupKind` treats the shares as relative, so overriding a single share from the URL behaves as expected.
+  5. This log split into Sessions 3–9, with Part 1 and Open issues rewritten. The "Session 3" references in GDD §11 and §13, `docs/execution-plan.md` and `tests/credits.test.js` were renumbered, and the execution plan gained a progress line.
+- **Decisions:**
+  - Balancing by URL overrides on the phone. [proposed → accepted]
+  - Keep the system font. [proposed → accepted]
+  - A link preview card with a game screenshot. [proposed → accepted]
+  - `og:url` and `og:image` point at https://brisa-dash.pages.dev, confirmed by fetching it and matching this build's files. [Claude's call]
+  - The CC BY takeaway cup kept out of the preview image, so the image needs no attribution of its own. [Claude's call]
+  - One build-log session per phase. [directed]
+- **What broke or was wrong:** An advisor review caught that `pickCupKind` assumed the shares add up to 1, so overriding one share silently skewed the mix. Fixed; a test checks that `{ coffee: 1, frappe: 1 }` gives about 50/50.
+- **Hand edits:** None.
+- **Testing / playtest notes:**
+  - `npm test`: 10 files, 52 tests passed.
+  - `npm run build`: JS 637.17 kB (162.50 kB gzip).
+  - A headless run with `?debug&twoBlockedChance=0.9&rowGapSeconds=1&cupLineMix.frappe=0.5&bogus=3` listed the three real overrides, ignored `bogus`, and showed mostly two-lane rows.
+  - Device QA is mine and in progress.
+- **Learned:** Making every gameplay number adjustable from the URL turns balancing from a commit-and-deploy loop into minutes on the device.
+- **Where things stand / next step:**
+  - `main` at `972e378` is pushed and deployed. This wrap-up is committed on top: docs, plus a comment in `tests/credits.test.js`.
+  - Phase 5 device QA and the balancing pass are mine and in progress (see Open issues).
+  - Next session: write my chosen balance values into `src/game/config.js`, record the device results and the first-time tester's words, and close Phase 5.
+  - Then Phase 6, in the plan's order: best score → SFX + mute → extra scenery → a second obstacle arrangement.
+- **Showcase line:** For the balancing pass I chose to tune on the phone, so Claude Code made every gameplay number adjustable from the URL. I can now try difficulty settings on the iPhone and S20 FE without a redeploy.

@@ -1,5 +1,7 @@
 # Brisa Dash — Execution Plan
 
+*Progress: Phases 0–4 done (Sessions 3–8); Phase 5 build work done, device QA and balancing in progress (Session 9).*
+
 *Status: approved, 14 October 2026 (Session 2). Built from [GDD.md](GDD.md). Each phase ends with something playable that can be committed. Tick phases off in [buildlog.md](buildlog.md); if the plan changes, edit this file in the same session.*
 
 The phases fit the brief's 3-day time box: Day 1 = Phases 0–1, Day 2 = Phases 2–3, Day 3 = Phases 4–5, then Phase 6 if there's time.
@@ -108,8 +110,8 @@ public/models/             only the GLBs actually used
 
 1. Palette and typography pass, button pressed states, and `env(safe-area-inset-*)` padding for the iPhone notch and home bar.
 2. Real-device test: iPhone 14 (Safari) and/or Galaxy S20 FE (Chrome). Record the browser versions and the FPS from `?debug`. Tune the speed and stumble values and log each change.
-   - **Balancing pass (added in Session 3):** after the Phase 3 playtest I said the game "feels a bit easy at the moment". Tune difficulty with the `src/game/config.js` settings. Row rate is fixed in time by design, so the main levers are `twoBlockedChance`, `rowGapSeconds`, `minRowGap`, `acceleration`/`maxSpeed` and `stumbleSeconds`. Log each before → after value with the run lengths observed.
-   - **How to tune on the phone (built in Session 3):** with `?debug` in the URL, any number in `src/game/config.js` can be overridden, and the debug panel lists the active overrides. Use a dotted key for `cupLineMix`; its shares are relative, so overriding one share works on its own. At the start speed, `minRowGap` (12 m) sets row spacing, not `rowGapSeconds`. A harder starting set to try:
+   - **Balancing pass (added in Session 7):** after the Phase 3 playtest I said the game "feels a bit easy at the moment". Tune difficulty with the `src/game/config.js` settings. Row rate is fixed in time by design, so the main levers are `twoBlockedChance`, `rowGapSeconds`, `minRowGap`, `acceleration`/`maxSpeed` and `stumbleSeconds`. Log each before → after value with the run lengths observed.
+   - **How to tune on the phone (built in Session 9):** with `?debug` in the URL, any number in `src/game/config.js` can be overridden, and the debug panel lists the active overrides. Use a dotted key for `cupLineMix`; its shares are relative, so overriding one share works on its own. At the start speed, `minRowGap` (12 m) sets row spacing, not `rowGapSeconds`. A harder starting set to try:
      `https://brisa-dash.pages.dev/?debug&twoBlockedChance=0.55&rowGapSeconds=1.3&minRowGap=10&acceleration=0.2&maxSpeed=20`
      Write the chosen values into `config.js` and log them.
 3. One first-time tester plays with no help. Record their feedback as given, with no success rate.

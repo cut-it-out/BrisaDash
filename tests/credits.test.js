@@ -30,7 +30,7 @@ describe('credits', () => {
     for (const file of credited) expect(existsSync(join(PUBLIC_DIR, file)), file).toBe(true);
   });
 
-  // CC0 is the default; CC BY 4.0 is allowed by my Session 3 decision, with the changes stated (CC BY requires it)
+  // CC0 is the default; CC BY 4.0 is allowed by my Session 8 decision, with the changes stated (CC BY requires it)
   it('every asset is CC0 or credited CC BY 4.0', () => {
     for (const asset of credits.assets) {
       expect(['CC0 1.0', 'CC BY 4.0']).toContain(asset.license);
