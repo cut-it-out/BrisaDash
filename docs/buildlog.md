@@ -95,3 +95,4 @@ Running record of how this project was built with Claude Code. "I" is the develo
 - [decision] Runner = character f, picked from the four Claude Code offered (b, c, f, q), which was its recommended option.
 - [decision] Apron: "no apron for now, maybe later". Claude Code had recommended a code-built overlay box.
 - [decision] Coffee pickup: "use cup-coffee and keep frappe as a potential addon for later." Claude Code had recommended comparing a coral primitive with `frappe.glb` on the phone in Phase 4.
+- [decision] The `credits` npm script was left out of Phase 0 and moves to Phase 4, because `scripts/gen-credits.mjs` doesn't exist yet and a script that fails when run is worse than none. `docs/execution-plan.md` was updated to match. (Claude Code's call)

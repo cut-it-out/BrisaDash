@@ -43,7 +43,7 @@ public/models/             only the GLBs actually used
 
 *Goal: an empty branded page live on `*.pages.dev`, so real-phone testing is possible from day one.*
 
-1. Scaffold Vite (vanilla JS) and add `three` and `vitest`. Add the `dev` (`vite --host` for LAN phone testing), `build`, `preview`, `test` and `credits` scripts. Add a `.gitignore` covering `node_modules` and `dist`.
+1. Scaffold Vite (vanilla JS) and add `three` and `vitest`. Add the `dev` (`vite --host` for LAN phone testing), `build`, `preview` and `test` scripts. The `credits` script comes in Phase 4, together with `scripts/gen-credits.mjs`. Add a `.gitignore` covering `node_modules` and `dist`.
 2. `index.html` + `style.css`: palette as CSS custom properties, a centred 9:16 column with brand-colour letterboxing, `touch-action: none` and `overscroll-behavior: none` on the game area (stops pull-to-refresh and double-tap zoom stealing swipes), and the viewport meta.
 3. `render/scene.js`: WebGL2 renderer with the DPR cap (`min(devicePixelRatio, 2)`, tune), resize to the column, a placeholder cube spinning in Turquoise. If WebGL2 is missing, show a plain "browser not supported" message.
 4. **Asset check (a risk, so it comes early):** download the three Kenney packs (Blocky Characters, Food Kit, Nature Kit) to a temporary folder outside the repo. Confirm the CC0 licence file in each and list the GLB files. Then decide model or primitive for each entity: runner, parasol/deckchair, takeaway cup, palm/rock. Check whether the character's apron is a separate material that can be tinted. Record the results in the build log. The models themselves are swapped in during Phase 4.
@@ -95,7 +95,7 @@ public/models/             only the GLBs actually used
 
 *Goal: swap the primitives for the CC0 models chosen in Phase 0 and make the credits real.*
 
-1. Copy only the chosen GLBs into `public/models/`: `character-f.glb` (Blocky Characters), `cup-coffee.glb` (Food Kit), and a few `tree_palm*` / `rock_*` models (Nature Kit). Copy each pack's texture next to its GLBs, because Blocky and Food Kit GLBs reference an external `Textures/*.png`. Load them with GLTFLoader before Play is enabled and clone them for the pools. Scale each pack separately: the character is about 2.7 units tall, the cup 0.5 and the palm 1.4. No apron for now. The obstacle stays a primitive parasol, because no pack has one.
+1. Copy only the chosen GLBs into `public/models/`: `character-f.glb` (Blocky Characters), `cup-coffee.glb` (Food Kit), and a few `tree_palm*` / `rock_*` models (Nature Kit). Blocky and Food Kit GLBs reference an external texture, so keep the exact relative path in each GLB's `images[].uri` (e.g. a `Textures/` folder beside the GLB), or point `GLTFLoader.setResourcePath()` at the folder. Load them with GLTFLoader before Play is enabled and clone them for the pools. Scale each pack separately: the character is about 2.7 units tall, the cup 0.5 and the palm 1.4. No apron for now. The obstacle stays a primitive parasol, because no pack has one.
 2. Add the brief's "little low-poly scenery": a few palms or rocks beside the track, pooled and recycled.
 3. `src/credits.json` is the single source (creator, pack, URL, licence, files used). `npm run credits` generates `CREDITS.md`. A Vitest test fails if `CREDITS.md` doesn't match the JSON or if a GLB in `public/models/` has no credit entry.
 4. Check the draw-call count in the debug overlay. Merge or instance meshes only if the phone numbers call for it.
