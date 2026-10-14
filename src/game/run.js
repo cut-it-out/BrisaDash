@@ -44,7 +44,9 @@ export function updateRun(run, dt) {
   const prevDistance = run.distance;
   run.distance += run.speed * dt;
 
-  spawnUntil(run.spawner, run.distance + config.spawnAhead, run.speed, run.rng, config, run.obstacles, run.coffees);
+  // Space rows by the unslowed speed: the runner has recovered by the time it reaches them
+  const spawnSpeed = baseSpeed(run.elapsed, config);
+  spawnUntil(run.spawner, run.distance + config.spawnAhead, spawnSpeed, run.rng, config, run.obstacles, run.coffees);
 
   const lane = effectiveLane(run.lanes);
   for (const obstacle of run.obstacles) {

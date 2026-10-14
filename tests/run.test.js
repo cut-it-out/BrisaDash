@@ -2,6 +2,8 @@ import { describe, expect, it } from 'vitest';
 import { CONFIG } from '../src/game/config.js';
 import { createRun, runMeter, runScore, updateRun } from '../src/game/run.js';
 import { score } from '../src/game/score.js';
+import { rowGap } from '../src/game/spawner.js';
+import { baseSpeed } from '../src/game/speed.js';
 import { seededRng } from './rng.js';
 
 // A run with hand-placed obstacles and cups, and nothing spawned on its own
@@ -66,6 +68,19 @@ describe('run', () => {
     expect(events.filter((e) => e.type === 'coffee')).toHaveLength(1);
     expect(run.coffeeCount).toBe(1);
     expect(runScore(run)).toBe(Math.floor(run.distance) + CONFIG.pointsPerCoffee);
+  });
+
+  it('spaces rows by the unslowed speed while stumbling', () => {
+    const run = createRun(CONFIG, seededRng(5));
+    run.stumble.mode = 'stumbling';
+    run.stumble.timeLeft = CONFIG.stumbleSeconds;
+    run.elapsed = 40; // late enough that the slowed and unslowed gaps differ
+    run.spawner.nextRowAt = 0;
+    runFor(run, 0.1);
+    const rows = [...new Set(run.obstacles.map((o) => o.at))].sort((a, b) => a - b);
+    const gaps = rows.slice(1).map((at, i) => at - rows[i]);
+    expect(gaps.length).toBeGreaterThan(1);
+    for (const gap of gaps) expect(gap).toBeCloseTo(rowGap(baseSpeed(run.elapsed, CONFIG), CONFIG), 1);
   });
 
   it('slows to the stumble speed after a hit', () => {
