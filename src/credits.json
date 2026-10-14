@@ -7,7 +7,10 @@
       "url": "https://kenney.nl/assets/blocky-characters",
       "license": "CC0 1.0",
       "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/",
-      "files": ["models/blocky/character-f.glb", "models/blocky/Textures/texture-f.png"]
+      "files": [
+        "models/blocky/character-f.glb",
+        "models/blocky/Textures/texture-f.png"
+      ]
     },
     {
       "pack": "Food Kit",
@@ -16,7 +19,11 @@
       "url": "https://kenney.nl/assets/food-kit",
       "license": "CC0 1.0",
       "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/",
-      "files": ["models/food/cup-coffee.glb", "models/food/frappe.glb", "models/food/Textures/colormap.png"]
+      "files": [
+        "models/food/cup-coffee.glb",
+        "models/food/frappe.glb",
+        "models/food/Textures/colormap.png"
+      ]
     },
     {
       "pack": "Nature Kit",
@@ -31,6 +38,17 @@
         "models/nature/tree_palmTall.glb",
         "models/nature/rock_smallA.glb",
         "models/nature/rock_largeA.glb"
+      ]
+    },
+    {
+      "pack": "Low-Poly Takeaway Coffee Cup",
+      "creator": "PickledCactusAlan",
+      "url": "https://sketchfab.com/3d-models/low-poly-takeaway-coffee-cup-9c6836087036459b98a1b978d02c2e00",
+      "license": "CC BY 4.0",
+      "licenseUrl": "http://creativecommons.org/licenses/by/4.0/",
+      "changes": "Recoloured in code: body Brisa Turquoise, lid Sea Salt White; the original texture is not used.",
+      "files": [
+        "models/sketchfab/low-poly_takeaway_coffee_cup.glb"
       ]
     }
   ]

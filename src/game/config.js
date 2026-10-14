@@ -17,7 +17,7 @@ export const CONFIG = {
   minRowGap: 12, // ...but never closer than this
   twoBlockedChance: 0.4, // otherwise a row blocks one lane
   coffeeLineChance: 0.6,
-  frappeLineChance: 0.2, // otherwise a line is coffee mugs
+  cupLineMix: { coffee: 0.4, takeaway: 0.4, frappe: 0.2 }, // share of cup lines of each kind (sums to 1)
   coffeeLineMin: 3,
   coffeeLineMax: 5,
   coffeeSpacing: 1.8,

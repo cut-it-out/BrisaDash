@@ -2,11 +2,12 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 
-// Kenney CC0 models in public/models (credited in src/credits.json and CREDITS.md)
+// Kenney CC0 models plus one CC BY 4.0 model in public/models (credited in src/credits.json and CREDITS.md)
 const MODEL_FILES = {
   runner: 'models/blocky/character-f.glb',
   cup: 'models/food/cup-coffee.glb',
   frappe: 'models/food/frappe.glb',
+  takeaway: 'models/sketchfab/low-poly_takeaway_coffee_cup.glb',
   palm: 'models/nature/tree_palm.glb',
   palmBend: 'models/nature/tree_palmBend.glb',
   palmTall: 'models/nature/tree_palmTall.glb',
@@ -18,6 +19,9 @@ const MODEL_FILES = {
 // and its entity falls back to the code-built placeholder.
 export async function loadModels() {
   const loader = new GLTFLoader();
+  // The takeaway cup lists this material extension as required; three.js dropped support for it.
+  // Registering the name stops the warning; the cup is coloured in code instead (see paintByUv).
+  loader.register(() => ({ name: 'KHR_materials_pbrSpecularGlossiness' }));
   const entries = await Promise.all(
     Object.entries(MODEL_FILES).map(async ([name, file]) => {
       try {
@@ -75,6 +79,20 @@ export function bakeModel(object, height) {
     for (const name of Object.keys(geometry.attributes)) if (!shared.includes(name)) geometry.deleteAttribute(name);
   }
   return { geometry: mergeGeometries(geometries, true), materials };
+}
+
+// Replaces a baked model's materials with flat vertex colours chosen by texture position:
+// texels in the top half of the texture (v < split) get topColor, the rest bottomColor.
+// glTF UVs start at the top-left of the image.
+export function paintByUv(baked, split, topColor, bottomColor) {
+  const uv = baked.geometry.attributes.uv;
+  const colors = new Float32Array(uv.count * 3);
+  const top = new THREE.Color(topColor);
+  const bottom = new THREE.Color(bottomColor);
+  for (let i = 0; i < uv.count; i++) (uv.getY(i) < split ? top : bottom).toArray(colors, i * 3);
+  baked.geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+  const flat = new THREE.MeshLambertMaterial({ vertexColors: true });
+  return { geometry: baked.geometry, materials: baked.materials.map(() => flat) };
 }
 
 export function instancedModel(scene, baked, capacity) {

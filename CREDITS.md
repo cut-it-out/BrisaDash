@@ -2,7 +2,7 @@
 
 <!-- Generated from src/credits.json by `npm run credits`. Edit the JSON, not this file. -->
 
-Every third-party asset used in Brisa Dash. All are CC0 (public domain); credit is given anyway.
+Every third-party asset used in Brisa Dash. CC0 assets are public domain and credited anyway; CC BY assets must be credited as below.
 
 ## Blocky Characters 2.0 by Kenney
 
@@ -31,6 +31,14 @@ Every third-party asset used in Brisa Dash. All are CC0 (public domain); credit 
   - `models/nature/tree_palmTall.glb`
   - `models/nature/rock_smallA.glb`
   - `models/nature/rock_largeA.glb`
+
+## Low-Poly Takeaway Coffee Cup by PickledCactusAlan
+
+- Source: https://sketchfab.com/3d-models/low-poly-takeaway-coffee-cup-9c6836087036459b98a1b978d02c2e00
+- License: CC BY 4.0 (http://creativecommons.org/licenses/by/4.0/)
+- Changes: Recoloured in code: body Brisa Turquoise, lid Sea Salt White; the original texture is not used.
+- Files used (under `public/`):
+  - `models/sketchfab/low-poly_takeaway_coffee_cup.glb`
 
 ## Code libraries
 

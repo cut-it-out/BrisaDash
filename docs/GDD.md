@@ -58,7 +58,7 @@ The wobble is just a **code-driven change of position and rotation** on a static
 ## 6. Scoring
 
 - **Distance:** +1 point per metre run (tune).
-- **Pickups:** +10 points per coffee mug and +20 per frappe (tune). A small "+10" or "+20" pops up above the runner on each pickup.
+- **Pickups:** +10 points per coffee mug or takeaway cup, and +20 per frappe (tune). A small "+10" or "+20" pops up above the runner on each pickup.
 - The HUD shows the score. The game-over screen shows the score, the distance in metres and the coffees collected. Frappes count as coffees in that total and in the share text; only the score shows their extra value.
 - **Best score (nice-to-have):** stored in `localStorage` on the device and shown as "Best: N" on the start and game-over screens.
 
@@ -69,11 +69,12 @@ The wobble is just a **code-driven change of position and rotation** on a static
 | Runner | A barista made from Kenney Blocky Character **`character-f.glb`** (teal shirt), in a static pose with a code-driven run bob. No apron for now; it may come later | Blocky Characters (CC0) |
 | Obstacle (one type) | A beach parasol or deckchair blocking one lane | Built from primitives (a parasol is a cylinder plus a cone). None of the three packs has a parasol or deckchair (checked 14 October 2026) |
 | Pickup A: coffee mug | The common pickup, spinning and bobbing: **`cup-coffee.glb`** (a ceramic cup with a handle), tinted Sunset Coral, 0.3 m tall. Worth +10 | Food Kit (CC0) |
-| Pickup B: frappe | The rarer pickup: **`frappe.glb`** (a takeaway cup with a lid and straw) in its own colours, 0.45 m tall. Worth +20 | Food Kit (CC0) |
+| Pickup B: frappe | The rarer pickup: **`frappe.glb`** (a takeaway cup with a lid and straw) in its own colours, 0.65 m tall. Worth +20 | Food Kit (CC0) |
+| Pickup C: takeaway cup | A common pickup: "Low-Poly Takeaway Coffee Cup", recoloured in code with a Brisa Turquoise body and a Sea Salt White lid, 0.5 m tall. Worth +10 | PickledCactusAlan on Sketchfab (**CC BY 4.0**, see §13) |
 | Track | A sandy promenade in Sunlit Sand with white kerbs and dashed lane lines | Code-built planes that stay still. Only the lane-line dashes move and get recycled (one instanced mesh) |
 | Scenery | A few palms or rocks beside the track, with turquoise sea on one side and sky behind | Nature Kit (CC0): `tree_palm*` and `rock_*` models, recycled |
 
-- **Spawning:** obstacles come in rows, and every row **leaves at least one lane free**. Coffees come in short lines of 3–5 cups (tune) in a lane that is free at that point, which rewards reading the road. Each line is all mugs or, with a 20% chance (tune), all frappes.
+- **Spawning:** obstacles come in rows, and every row **leaves at least one lane free**. Coffees come in short lines of 3–5 cups (tune) in a lane that is free at that point, which rewards reading the road. Each line is one kind of cup: mugs 40%, takeaway cups 40%, frappes 20% (tune).
 - **Recycling:** every track segment, obstacle, cup and scenery piece comes from a small pool and moves back ahead of the runner once it has passed behind the camera. No infinite world is built.
 - **Camera:** a fixed perspective camera behind and above the runner, looking down the track. The look-at point stays steady; the only camera motion is the stumble shake.
 - **Lighting:** ambient plus one directional light, with flat colours. No shadows by default; they could be added later only if the frame rate allows.
@@ -85,7 +86,7 @@ The wobble is just a **code-driven change of position and rotation** on a static
 | **Start** | The "Brisa Dash" logo as styled text with a "by Brisa Café" tagline, a **Play** button (Turquoise), Best score (if that's built), mute toggle, **Credits** link |
 | **HUD** (during a run) | Score at top centre (Deep Ocean text), coffee count, stumble meter (shown only while stumbling), mute toggle. The bottom half of the screen stays clear for the thumb |
 | **Game over** | Score, distance, coffees, best score, **Retry** (primary button), **Share score** (secondary button), **Credits** link. Panel in Sea Salt White |
-| **Credits** | An overlay listing every asset actually used: creator, pack, URL, CC0. Generated from the same data as `CREDITS.md` |
+| **Credits** | An overlay listing every asset actually used: creator, pack, URL, licence (CC0, or CC BY with the changes made). Generated from the same data as `CREDITS.md` |
 
 - **Orientation:** the game is designed for portrait. In landscape or on a desktop, the 9:16 game column is centred and the sides are filled with the brand colour (letterboxing). There is no "rotate your phone" blocker.
 - **Pausing:** the run pauses automatically when the tab is hidden (`visibilitychange`) and shows a "Tap to resume" panel when the player comes back.
@@ -109,7 +110,7 @@ The wobble is just a **code-driven change of position and rotation** on a static
 **Must-haves (from the brief):**
 - A real-time 3D three-lane runner
 - Swipe and keyboard controls
-- One obstacle type and two pickups: a coffee mug and a rarer, higher-value frappe. The brief asked for one; I added the second in Session 3
+- One obstacle type and three pickups: a coffee mug, a takeaway cup and a rarer, higher-value frappe. The brief asked for one; I added the others in Session 3
 - The stumble fail rule
 - Distance plus pickup scoring
 - The start, HUD, game-over and credits screens
@@ -135,7 +136,7 @@ The wobble is just a **code-driven change of position and rotation** on a static
 
 - A complete 3D loop (start → play → game over → replay) works in a tested WebGL2 mobile browser, and lanes and obstacles stay readable in portrait.
 - One first-time tester finds the swipe control and finishes a run without help. Their feedback is recorded as given, not turned into a success rate.
-- Share or copy produces meaningful text and a link that works. Every asset used is credited and verified as CC0.
+- Share or copy produces meaningful text and a link that works. Every asset used is credited and verified as CC0, apart from the one CC BY 4.0 model allowed in §13, which is credited with its required attribution.
 - Tests on a real phone report any performance limits honestly. The target is smooth play near 30 FPS on the tested phone. The test phones are an iPhone 14 and/or a Samsung Galaxy S20 FE; record which browser was used when testing.
 
 ## 13. Review decisions (14 October 2026)
@@ -145,3 +146,4 @@ The wobble is just a **code-driven change of position and rotation** on a static
 3. **Runner:** a barista. A customer chasing their order was rejected because it "would not send the right message" for the café.
 4. **Stumble numbers:** start at a 5 s window and 70% speed. They'll be adjusted after playtests.
 5. **Test devices:** an iPhone 14 and/or a Samsung Galaxy S20 FE, the older phones the game should run well on.
+6. **CC BY exception (Session 3):** the takeaway cup, "Low-Poly Takeaway Coffee Cup" by PickledCactusAlan (https://skfb.ly/oxqpp), is CC BY 4.0, not CC0. Its page says it was "Modelled in Maya, textured in Photoshop", so it is hand-made. I allowed it as the one exception to the brief's CC0-only rule. It is credited in-game and in `CREDITS.md` with title, author, source, licence and the changes made (recoloured in code).

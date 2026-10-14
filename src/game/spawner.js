@@ -1,6 +1,6 @@
 // Obstacle rows and coffee lines (GDD §7). Every row leaves at least one lane free.
 // Coffee lines sit in a lane that is free in the row they lead into, between that row and the one before.
-// Each line is all coffee mugs or, less often, all frappes.
+// Each line is one kind of cup, picked by config.cupLineMix.
 // rng is a function returning [0, 1), injected so tests are repeatable.
 
 export function createSpawner(config) {
@@ -20,6 +20,15 @@ function shuffledLanes(laneCount, rng) {
   return lanes;
 }
 
+function pickCupKind(rng, mix) {
+  let roll = rng();
+  for (const [kind, share] of Object.entries(mix)) {
+    roll -= share;
+    if (roll < 0) return kind;
+  }
+  return Object.keys(mix)[0]; // only reached through rounding
+}
+
 function spawnRow(at, prevAt, rng, config, obstacles, coffees) {
   const lanes = shuffledLanes(config.laneCount, rng);
   const blockedCount = Math.min(rng() < config.twoBlockedChance ? 2 : 1, config.laneCount - 1);
@@ -34,7 +43,7 @@ function spawnRow(at, prevAt, rng, config, obstacles, coffees) {
   const fits = Math.floor((at - prevAt - 2 * config.coffeeMargin) / config.coffeeSpacing) + 1;
   const count = Math.min(wanted, fits);
   if (count < config.coffeeLineMin) return;
-  const kind = rng() < config.frappeLineChance ? 'frappe' : 'coffee'; // one kind per line
+  const kind = pickCupKind(rng, config.cupLineMix); // one kind per line
   for (let k = 0; k < count; k++) {
     coffees.push({ lane, at: at - config.coffeeMargin - k * config.coffeeSpacing, kind, collected: false });
   }

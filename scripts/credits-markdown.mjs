@@ -5,15 +5,16 @@ export function creditsMarkdown(credits) {
     '',
     '<!-- Generated from src/credits.json by `npm run credits`. Edit the JSON, not this file. -->',
     '',
-    'Every third-party asset used in Brisa Dash. All are CC0 (public domain); credit is given anyway.',
+    'Every third-party asset used in Brisa Dash. CC0 assets are public domain and credited anyway; CC BY assets must be credited as below.',
     '',
   ];
   for (const asset of credits.assets) {
     lines.push(
-      `## ${asset.pack} ${asset.version} by ${asset.creator}`,
+      `## ${asset.pack}${asset.version ? ` ${asset.version}` : ''} by ${asset.creator}`,
       '',
       `- Source: ${asset.url}`,
       `- License: ${asset.license} (${asset.licenseUrl})`,
+      ...(asset.changes ? [`- Changes: ${asset.changes}`] : []),
       '- Files used (under `public/`):',
       ...asset.files.map((file) => `  - \`${file}\``),
       '',

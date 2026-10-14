@@ -26,6 +26,7 @@ describe('score', () => {
 
   it('a frappe is worth more than a coffee mug', () => {
     expect(pickupValue('coffee', CONFIG)).toBe(CONFIG.pointsPerCoffee);
+    expect(pickupValue('takeaway', CONFIG)).toBe(CONFIG.pointsPerCoffee);
     expect(pickupValue('frappe', CONFIG)).toBe(CONFIG.pointsPerFrappe);
     expect(CONFIG.pointsPerFrappe).toBeGreaterThan(CONFIG.pointsPerCoffee);
   });

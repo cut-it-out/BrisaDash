@@ -73,7 +73,7 @@ describe('spawner', () => {
     }
   });
 
-  it('each coffee line is one kind, and about frappeLineChance of lines are frappes', () => {
+  it('each coffee line is one kind, and the kinds follow cupLineMix', () => {
     const { coffees } = spawnMany(11, CONFIG.startSpeed, 200_000);
     const sorted = [...coffees].sort((a, b) => a.at - b.at);
     const lines = [[sorted[0]]];
@@ -84,10 +84,12 @@ describe('spawner', () => {
       else lines.push([sorted[i]]);
     }
     for (const line of lines) expect(new Set(line.map((c) => c.kind)).size).toBe(1);
-    const frappeShare = lines.filter((line) => line[0].kind === 'frappe').length / lines.length;
     expect(lines.length).toBeGreaterThan(1000);
-    expect(frappeShare).toBeGreaterThan(CONFIG.frappeLineChance - 0.04);
-    expect(frappeShare).toBeLessThan(CONFIG.frappeLineChance + 0.04);
+    for (const [kind, share] of Object.entries(CONFIG.cupLineMix)) {
+      const actual = lines.filter((line) => line[0].kind === kind).length / lines.length;
+      expect(actual, kind).toBeGreaterThan(share - 0.04);
+      expect(actual, kind).toBeLessThan(share + 0.04);
+    }
   });
 
   it('rows spread out as speed grows', () => {

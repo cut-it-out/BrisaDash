@@ -141,8 +141,10 @@ export function createCreditsScreen(overlay, credits) {
     ? credits.assets
         .map(
           (a) =>
-            `<li><strong>${escapeHtml(a.pack)}</strong> by ${escapeHtml(a.creator)} (${escapeHtml(a.license)})<br>
-             <a href="${escapeHtml(a.url)}" target="_blank" rel="noopener">${escapeHtml(a.url)}</a></li>`,
+            `<li><strong>${escapeHtml(a.pack)}</strong> by ${escapeHtml(a.creator)}
+             (<a href="${escapeHtml(a.licenseUrl)}" target="_blank" rel="noopener">${escapeHtml(a.license)}</a>)<br>
+             <a href="${escapeHtml(a.url)}" target="_blank" rel="noopener">${escapeHtml(a.url)}</a>
+             ${a.changes ? `<br><small>${escapeHtml(a.changes)}</small>` : ''}</li>`,
         )
         .join('')
     : '<li>No third-party assets yet: every shape is built in code.</li>';

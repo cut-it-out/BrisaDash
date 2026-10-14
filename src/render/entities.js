@@ -3,12 +3,13 @@ import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { CONFIG } from '../game/config.js';
 import { lanePosition } from '../game/lanes.js';
 import { runMeter } from '../game/run.js';
-import { bakeModel, instancedModel, normalise } from './models.js';
+import { bakeModel, instancedModel, normalise, paintByUv } from './models.js';
 import { PALETTE } from './palette.js';
 
 const RUNNER_HEIGHT = 1.5; // (tune)
 const CUP_HEIGHT = 0.3; // (tune) the Kenney mug is squat: about 0.45 wide at this height
-const FRAPPE_HEIGHT = 0.45; // (tune) tall and thin: about 0.23 wide
+const FRAPPE_HEIGHT = 0.65; // (tune) tall and thin: about 0.34 wide
+const TAKEAWAY_HEIGHT = 0.5; // (tune) about 0.36 wide
 const BOB_HEIGHT = 0.12; // (tune)
 const BOB_STEPS_PER_SECOND = 5; // (tune)
 const WOBBLE_ANGLE = 0.3; // radians at a full stumble meter (tune)
@@ -122,6 +123,7 @@ function primitiveCup() {
 }
 
 // Pickups (GDD §7): Kenney cup-coffee.glb tinted Sunset Coral (the tint multiplies the mostly white texture),
+// the CC BY takeaway cup recoloured to the palette (Brisa Turquoise body, Sea Salt White lid),
 // and the rarer frappe.glb in its own colours. One InstancedMesh per kind.
 export function createCoffees(scene, models) {
   const mug = models.cup ? bakeModel(models.cup, CUP_HEIGHT) : primitiveCup();
@@ -129,11 +131,18 @@ export function createCoffees(scene, models) {
   const meshes = {
     coffee: instancedModel(scene, mug, MAX_COFFEES),
     frappe: instancedModel(scene, models.frappe ? bakeModel(models.frappe, FRAPPE_HEIGHT) : primitiveCup(), MAX_COFFEES),
+    takeaway: instancedModel(
+      scene,
+      models.takeaway
+        ? paintByUv(bakeModel(models.takeaway, TAKEAWAY_HEIGHT), 0.5, PALETTE.seaSaltWhite, PALETTE.brisaTurquoise)
+        : primitiveCup(),
+      MAX_COFFEES,
+    ),
   };
   const dummy = new THREE.Object3D();
 
   function update(run, timeSeconds) {
-    const counts = { coffee: 0, frappe: 0 };
+    const counts = { coffee: 0, frappe: 0, takeaway: 0 };
     for (const coffee of run.coffees) {
       const mesh = meshes[coffee.kind];
       if (counts[coffee.kind] === MAX_COFFEES) continue;
