@@ -16,8 +16,8 @@ export function createScene(canvas) {
 
   // Fixed camera behind and above the runner, looking down the track (GDD §7)
   const camera = new THREE.PerspectiveCamera(70, 1, 0.1, 100);
-  camera.position.set(0, 3.4, 6.2);
-  camera.lookAt(0, 0, -4);
+  camera.position.set(0, 4.0, 4.5);
+  camera.lookAt(0, 0, -8);
 
   scene.add(new THREE.AmbientLight(0xffffff, 1.6));
   const sun = new THREE.DirectionalLight(0xffffff, 1.4);
