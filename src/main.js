@@ -9,6 +9,7 @@ import { createCoffees, createObstacles, createRunner } from './render/entities.
 import { loadModels } from './render/models.js';
 import { createCameraShake, createScene, hasWebGL2 } from './render/scene.js';
 import { createScenery, createWorld } from './render/world.js';
+import { loadBest, recordScore } from './ui/best.js';
 import { createDebugOverlay } from './ui/debug.js';
 import { bindInput } from './ui/input.js';
 import {
@@ -57,6 +58,8 @@ if (!hasWebGL2()) {
     onCredits: creditsScreen.show,
   });
   const pauseScreen = createPauseScreen(overlay, { onResume: resume });
+  let best = loadBest();
+  startScreen.setBest(best);
   startScreen.show(); // Play stays disabled until the models have loaded
 
   const models = await loadModels();
@@ -132,7 +135,10 @@ if (!hasWebGL2()) {
       overSeconds += dt;
       if (overSeconds >= GAME_OVER_DELAY_SECONDS) {
         hud.hide();
-        gameOverScreen.show(runScore(run), Math.floor(run.distance), run.coffeeCount);
+        const score = runScore(run);
+        const newBest = best > 0 && score > best; // a first run just sets the best
+        best = recordScore(score, best);
+        gameOverScreen.show(score, Math.floor(run.distance), run.coffeeCount, best, newBest);
       }
     }
 

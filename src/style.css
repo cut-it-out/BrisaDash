@@ -209,6 +209,12 @@ body {
   color: var(--sunset-coral);
 }
 
+.best {
+  margin: -8px 0 16px;
+  font-weight: 800;
+  color: var(--deep-ocean);
+}
+
 .panel {
   display: flex;
   flex-direction: column;
@@ -239,8 +245,13 @@ body {
 }
 
 .final-stats {
-  margin-bottom: 8px;
   font-weight: 600;
+}
+
+.final-best {
+  margin-bottom: 8px;
+  font-weight: 800;
+  color: var(--sunset-coral);
 }
 
 .button {

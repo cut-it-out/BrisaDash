@@ -397,3 +397,12 @@ Running record of how this project was built with Claude Code. "I" is the develo
   - Phase 5 passes on the iPhone 14. The Galaxy S20 FE check is mine, "later" (see Open issues).
   - Next session: Phase 6 in the plan's order: best score → SFX + mute → extra scenery → a second obstacle arrangement. Judge the new balance while playing it.
 - **Showcase line:** My own iPhone tests and the first-time testers both said the game was too easy, so I raised the speed ramp, the row density and the two-lane blocks by hand. The iPhone 14 held close to 60 fps, against the brief's 30 fps target.
+
+### Session 11 — Wednesday 14 October 2026 — (in progress)
+
+- [direction] "lets plan out phase 6 before we go about it. I would like to add some additional topics to phase6: add some boats/animals (seagull?) to the water side, add some building to the right side. also would like to see some gray rocks (from kenney's pack) to spice things up even more. some additional obstackle(s)" — Phase 6 planning, before any code.
+- [decision] Chose "Add Kenney packs (Recommended)" for boats and buildings (Watercraft Kit, City Kit (Suburban), both CC0), lifting the 3-pack limit to 5. Claude Code had also offered primitives only, or a mix.
+- [direction] "low houses/villas (first option) but keep the palm trees also (on both sides) just maybe use a bit less" — buildings on the right side.
+- [direction] "lets do seagulls too, but should have the option in config to switch them off easily if I dont like them" — code-built gulls, since no Kenney seagull exists.
+- [decision] Chose "New obstacle looks" over a new arrangement only, or both. The original "second obstacle arrangement" stays in the plan as the first thing to cut.
+- [decision] Approved the Phase 6 plan (now in `docs/execution-plan.md`): best score → SFX + mute → asset audit with a contact sheet I pick from → extra scenery → new obstacle looks → second arrangement.

@@ -30,13 +30,20 @@ export function createStartScreen(overlay, { onPlay, onCredits }) {
     'start-screen',
     `<h1 class="logo">Brisa <span>Dash</span></h1>
      <p class="tagline">by Brisa Café</p>
+     <p class="best" hidden></p>
      <button class="button primary" data-action="play" disabled>Loading…</button>
      <button class="link" data-action="credits">Credits</button>`,
   );
   element.querySelector('[data-action="play"]').addEventListener('click', onPlay);
   element.querySelector('[data-action="credits"]').addEventListener('click', onCredits);
   const playButton = element.querySelector('[data-action="play"]');
+  const bestEl = element.querySelector('.best');
   return {
+    // Shown only once there is a best score on this device
+    setBest(best) {
+      bestEl.hidden = best <= 0;
+      bestEl.textContent = `Best: ${best}`;
+    },
     show() {
       element.hidden = false;
       playButton.focus({ preventScroll: true });
@@ -94,6 +101,7 @@ export function createGameOverScreen(overlay, { onRetry, onShare, onCredits }) {
        <h2>Run over</h2>
        <div class="final-score"></div>
        <div class="final-stats"></div>
+       <div class="final-best"></div>
        <button class="button primary" data-action="retry">Retry</button>
        <button class="button secondary" data-action="share">Share score</button>
        <button class="link" data-action="credits">Credits</button>
@@ -106,9 +114,10 @@ export function createGameOverScreen(overlay, { onRetry, onShare, onCredits }) {
   let labelTimer = 0;
 
   return {
-    show(score, metres, coffees) {
+    show(score, metres, coffees, best, newBest) {
       element.querySelector('.final-score').textContent = score;
       element.querySelector('.final-stats').textContent = `${metres} m · ☕ ${coffees}`;
+      element.querySelector('.final-best').textContent = newBest ? `New best: ${best}!` : `Best: ${best}`;
       shareButton.textContent = 'Share score';
       element.hidden = false;
       element.querySelector('[data-action="retry"]').focus({ preventScroll: true });

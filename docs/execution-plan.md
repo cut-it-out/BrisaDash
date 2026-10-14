@@ -121,7 +121,20 @@ public/models/             only the GLBs actually used
 
 ## Phase 6 — Nice-to-haves (only once Phase 5 passes)
 
-Build order (Claude Code's proposal, cheapest first): **best score** (`localStorage` wrapped in try/catch, "Best: N" on the start and game-over screens) → **SFX + mute toggle** (CC0 pack checked and credited, muted by default, audio unlocked on the first gesture) → **extra scenery** → **a second obstacle arrangement**. If time runs short, cut in the GDD §11 order (SFX first).
+Build order (Claude Code's proposal, cheapest first; extended in Session 11 with my scenery and obstacle additions). Each step is its own commit. If time runs short, cut in the GDD §11 order (SFX first).
+
+1. **Best score:** `localStorage` wrapped in try/catch, "Best: N" on the start and game-over screens.
+2. **SFX + mute toggle:** CC0 pack checked and credited, muted by default, audio unlocked on the first gesture.
+3. **Asset audit for the new models** (before any scenery code). Download Kenney Watercraft Kit (boats), City Kit (Suburban) (houses) and Nature Kit again (for gray `stone_*` models; the current `rock_*` are orange "dirt" with green "grass" tops) into separate scratchpad folders. Confirm each `License.txt` says CC0, list the GLBs and their `Textures/` references, and render a labelled contact sheet of houses, boats, gray stones and obstacle candidates from all five packs (crate, buoy, barrel, cooler, bench…). I pick from the sheet. Primitive obstacle fallbacks: a sandcastle or a beach-ball stand.
+4. **Extra scenery** (`src/render/world.js`, `src/render/models.js`):
+   - Rows in `SCENERY_LAYOUT`: fewer palms (10 → about 6, both sides), gray stones on both sides and a few in the shallow sea, low houses in a row on the right behind the palms, boats on the sea with a code bob/roll. If Nature Kit has no gray stones, recolour the current rocks' `dirt`/`grass` materials to grays.
+   - Portrait view is only about 43° wide, so start close: houses x ≈ 7–10, boats x ≈ −7 to −12, gulls over x ≈ −5 to −10 at 3–6 m. Headless screenshots gate the layout.
+   - Seagulls: code-built (white body + wings in a shallow V; no Kenney seagull exists), one `InstancedMesh`, gliding over the sea with a code bob and bank. `seagullCount` in `config.js` (0 = off; `?debug&seagullCount=0` to try it).
+   - Credit the two new packs in `src/credits.json` and run `npm run credits`.
+5. **New obstacle looks:** 1–2 more obstacle types mixed into rows, picked per obstacle from an `obstacleMix` in `config.js` (relative shares via `pickCupKind`, dotted URL overrides). Same hit rule and free-lane rule; one `InstancedMesh` per kind; knock-aside unchanged. Spawner tests: kinds come from the mix, every kind appears, the free-lane fuzz test still passes.
+6. **A second obstacle arrangement:** kept from the original plan, first to cut.
+
+Draw calls go from about 25 to roughly 35–40. Check `?debug` on the iPhone 14 after steps 4 and 5 and trim the layout if FPS drops well below the current ~60.
 
 ---
 
