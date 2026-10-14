@@ -475,3 +475,7 @@ Running record of how this project was built with Claude Code. "I" is the develo
 - [correction] "one of the rock on the right side sometimes placed that it is entering the play area. it does not interfere with gameplay, but it is disturbing and misleading if that lane is free or not" — from my iPhone and Android screenshots.
 - [playtest] "other not mentioned things look good. android also plays fine, it has continuous 110+ fps" — my Android screenshot showed 118 FPS and 42 draw calls; the iPhone 14 screenshot showed 60 FPS and 42 draw calls.
 - [playtest] "android share also ok, checked it" — the Android share sheet works.
+- [correction] "The deck chair looks very bad, not like a deck chair and planter look out of place. Any other options? Like a basic circle table maybe?" — after the screenshot sheet; nothing was pushed.
+- [correction] "Also the parasols beds headrest/back looks like if it is tilted in the wrong direction" — the lounger backrest was rotated -0.9 rad, raising its seat-side edge.
+- [direction] "I will look for a cc0 or attribution deck chair model also"
+- [decision] "Café tablet and menu board, but: move the chairs closer together and in front of the table, the menu board should be rotated 30 degrees" — picked from mock-ups of a café table, a menu board, a surfboard rack and a windbreak; the deckchair and planter are dropped.

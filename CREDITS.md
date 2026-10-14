@@ -46,7 +46,6 @@ Every third-party asset used in Brisa Dash. CC0 assets are public domain and cre
   - `models/city/building-type-k.glb`
   - `models/city/building-type-m.glb`
   - `models/city/building-type-r.glb`
-  - `models/city/planter.glb`
   - `models/city/Textures/colormap.png`
 
 ## Watercraft Kit 2.1 by Kenney

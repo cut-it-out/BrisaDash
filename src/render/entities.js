@@ -9,7 +9,6 @@ const RUNNER_HEIGHT = 1.5; // (tune)
 const CUP_HEIGHT = 0.3; // (tune) the Kenney mug is squat: about 0.45 wide at this height
 const FRAPPE_HEIGHT = 0.8; // (tune) tall and thin: about 0.36 wide
 const TAKEAWAY_HEIGHT = 0.58; // (tune) about 0.4 wide
-const PLANTER_HEIGHT = 0.6; // (tune) about 1.3 wide and 1 deep
 const BOB_HEIGHT = 0.12; // (tune)
 const BOB_STEPS_PER_SECOND = 5; // (tune)
 const WOBBLE_ANGLE = 0.3; // radians at a full stumble meter (tune)
@@ -68,36 +67,66 @@ function parasolModel() {
     painted(new THREE.CylinderGeometry(0.04, 0.04, 2.0, 6).translate(0, 1.0, 0), PALETTE.seaSaltWhite),
     painted(new THREE.ConeGeometry(0.85, 0.45, 8).translate(0, 2.1, 0), PALETTE.brisaTurquoise),
     painted(new THREE.BoxGeometry(0.6, 0.3, 1.0).translate(0, 0.15, 0.1), PALETTE.seaSaltWhite),
-    painted(new THREE.BoxGeometry(0.6, 0.08, 0.6).rotateX(-0.9).translate(0, 0.5, -0.45), PALETTE.seaSaltWhite),
+    painted(new THREE.BoxGeometry(0.6, 0.08, 0.6).rotateX(0.9).translate(0, 0.5, -0.45), PALETTE.seaSaltWhite), // backrest, leaning back
   ]);
 }
 
-// A deckchair from primitives, facing the runner: a white frame and a turquoise and white striped canvas
-// sloping from the top of the back (behind) down to the front bar, about 1 m tall and 1 m wide
-function deckchairModel() {
-  const slope = 0.615; // radians: the canvas drops 0.6 m over 0.85 m towards the runner
-  const canvasStripe = (x, color) =>
-    painted(new THREE.BoxGeometry(0.3, 0.03, 1.04).rotateX(slope).translate(x, 0.7, -0.075), color);
-  const rail = (x) => painted(new THREE.BoxGeometry(0.05, 0.05, 1.1).rotateX(slope).translate(x, 0.7, -0.075), PALETTE.seaSaltWhite);
-  const frontLeg = (x) => painted(new THREE.BoxGeometry(0.05, 0.42, 0.05).translate(x, 0.21, 0.38), PALETTE.seaSaltWhite);
-  const backLeg = (x) => painted(new THREE.BoxGeometry(0.05, 1.03, 0.05).rotateX(0.245).translate(x, 0.5, -0.625), PALETTE.seaSaltWhite);
-  return primitiveModel([
-    canvasStripe(-0.3, PALETTE.brisaTurquoise),
-    canvasStripe(0, PALETTE.seaSaltWhite),
-    canvasStripe(0.3, PALETTE.brisaTurquoise),
-    ...[-0.47, 0.47].flatMap((x) => [rail(x), frontLeg(x), backLeg(x)]),
-    painted(new THREE.BoxGeometry(0.99, 0.05, 0.05).translate(0, 0.42, 0.38), PALETTE.seaSaltWhite), // front bar
+// A round café table with two stools tucked in on the runner's side, scaled up a little so it reads from afar:
+// about 1 m across and 0.9 m tall
+const TABLE_SCALE = 1.2; // (tune)
+
+function cafeTableModel() {
+  const stool = (x) => [
+    painted(new THREE.CylinderGeometry(0.17, 0.17, 0.06, 12).translate(x, 0.45, 0.45), PALETTE.brisaTurquoise),
+    painted(new THREE.CylinderGeometry(0.025, 0.025, 0.42, 6).translate(x, 0.21, 0.45), PALETTE.seaSaltWhite),
+    painted(new THREE.CylinderGeometry(0.14, 0.14, 0.03, 12).translate(x, 0.015, 0.45), PALETTE.seaSaltWhite),
+  ];
+  const model = primitiveModel([
+    painted(new THREE.CylinderGeometry(0.42, 0.42, 0.05, 16).translate(0, 0.75, 0), PALETTE.seaSaltWhite),
+    painted(new THREE.CylinderGeometry(0.43, 0.43, 0.025, 16).translate(0, 0.715, 0), PALETTE.brisaTurquoise),
+    painted(new THREE.CylinderGeometry(0.035, 0.035, 0.72, 8).translate(0, 0.36, 0), PALETTE.deepOcean),
+    painted(new THREE.CylinderGeometry(0.25, 0.25, 0.03, 16).translate(0, 0.015, 0), PALETTE.deepOcean),
+    ...stool(-0.24),
+    ...stool(0.24),
   ]);
+  model.geometry.scale(TABLE_SCALE, TABLE_SCALE, TABLE_SCALE);
+  return model;
 }
 
-// Obstacles (GDD §7): three looks that all hit the same way, picked per obstacle by config.obstacleMix.
-// The parasol and the deckchair are built in code; the promenade planter (City Kit Suburban) falls back
-// to the parasol if its model didn't load. One InstancedMesh per look. None of them is coral: coral means a cup.
+// A café A-frame menu board: a Deep Ocean chalkboard in a white frame, a turquoise header and chalk lines.
+// Two panels lean against each other, about 0.7 m wide and 1 m tall, turned 30° to the runner
+const BOARD_TURN = Math.PI / 6;
+function menuBoardModel() {
+  const panel = (facing) => {
+    const parts = [
+      painted(new THREE.BoxGeometry(0.7, 1.0, 0.04), PALETTE.seaSaltWhite),
+      painted(new THREE.BoxGeometry(0.6, 0.86, 0.02).translate(0, -0.02, 0.02), PALETTE.deepOcean),
+      painted(new THREE.BoxGeometry(0.6, 0.12, 0.02).translate(0, 0.36, 0.025), PALETTE.brisaTurquoise),
+      ...[
+        [0.44, 0.15],
+        [0.34, 0.02],
+        [0.4, -0.11],
+        [0.28, -0.24],
+      ].map(([w, y]) => painted(new THREE.BoxGeometry(w, 0.03, 0.02).translate(0, y, 0.03), PALETTE.seaSaltWhite)),
+    ];
+    // facing 1: towards the runner (+z), top leaning back; facing -1: the other panel
+    return parts.map((g) =>
+      g.rotateY(facing > 0 ? 0 : Math.PI).rotateX(-facing * 0.22).translate(0, 0.49, facing * 0.11),
+    );
+  };
+  const model = primitiveModel([...panel(1), ...panel(-1)]);
+  model.geometry.rotateY(BOARD_TURN);
+  return model;
+}
+
+// Obstacles (GDD §7): three looks that all hit the same way, picked per obstacle by config.obstacleMix:
+// the parasol over a lounger, the café table and the menu board, all built in code.
+// One InstancedMesh per look. None of them is coral: coral means a cup.
 export function createObstacles(scene, models) {
   const meshes = {
     parasol: instancedModel(scene, parasolModel(), MAX_OBSTACLES),
-    deckchair: instancedModel(scene, deckchairModel(), MAX_OBSTACLES),
-    planter: instancedModel(scene, models.planter ? bakeModel(models.planter, PLANTER_HEIGHT) : parasolModel(), MAX_OBSTACLES),
+    cafeTable: instancedModel(scene, cafeTableModel(), MAX_OBSTACLES),
+    menuBoard: instancedModel(scene, menuBoardModel(), MAX_OBSTACLES),
   };
   const knockStarted = new WeakMap(); // obstacle → render time its knock-aside began
   const dummy = new THREE.Object3D();

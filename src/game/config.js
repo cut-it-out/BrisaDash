@@ -19,7 +19,7 @@ export const CONFIG = {
   twoBlockedChance: 0.55, // otherwise a row blocks one lane
   zigzagChance: 0.2, // share of rows that come as a zigzag pair (two two-lane rows, free lanes side by side)
   zigzagRunSeconds: 0.5, // free running between the hit windows of a zigzag pair's two rows
-  obstacleMix: { parasol: 0.5, deckchair: 0.25, planter: 0.25 }, // share of obstacles of each look; all hit the same way
+  obstacleMix: { parasol: 0.5, cafeTable: 0.25, menuBoard: 0.25 }, // share of obstacles of each look; all hit the same way
   coffeeLineChance: 0.6,
   cupLineMix: { coffee: 0.4, takeaway: 0.4, frappe: 0.2 }, // share of cup lines of each kind (sums to 1)
   coffeeLineMin: 3,
