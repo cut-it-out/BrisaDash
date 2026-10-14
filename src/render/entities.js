@@ -65,7 +65,7 @@ export function createRunner(scene, model) {
 }
 
 // Obstacle from primitives: a parasol over a lounger (no pack has one, GDD §7)
-const LOUNGER_WIDTH = 0.75; // (tune) was 0.6 until Session 12
+const LOUNGER_WIDTH = 0.8; // (tune) was 0.6 until Session 12
 function parasolModel() {
   return primitiveModel([
     painted(new THREE.CylinderGeometry(0.04, 0.04, 2.0, 6).translate(0, 1.0, 0), PALETTE.seaSaltWhite),
