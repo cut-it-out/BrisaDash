@@ -36,7 +36,7 @@ Every third-party asset used in Brisa Dash. CC0 assets are public domain and cre
 
 - Source: https://sketchfab.com/3d-models/low-poly-takeaway-coffee-cup-9c6836087036459b98a1b978d02c2e00
 - License: CC BY 4.0 (http://creativecommons.org/licenses/by/4.0/)
-- Changes: Recoloured in code: body Brisa Turquoise, lid Sea Salt White; the original texture is not used.
+- Changes: Recoloured in code: body Sunset Coral, lid Sea Salt White; the original texture is not used.
 - Files used (under `public/`):
   - `models/sketchfab/low-poly_takeaway_coffee_cup.glb`
 

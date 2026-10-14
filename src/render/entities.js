@@ -8,8 +8,8 @@ import { PALETTE } from './palette.js';
 
 const RUNNER_HEIGHT = 1.5; // (tune)
 const CUP_HEIGHT = 0.3; // (tune) the Kenney mug is squat: about 0.45 wide at this height
-const FRAPPE_HEIGHT = 0.65; // (tune) tall and thin: about 0.34 wide
-const TAKEAWAY_HEIGHT = 0.5; // (tune) about 0.36 wide
+const FRAPPE_HEIGHT = 0.7; // (tune) tall and thin: about 0.36 wide
+const TAKEAWAY_HEIGHT = 0.55; // (tune) about 0.4 wide
 const BOB_HEIGHT = 0.12; // (tune)
 const BOB_STEPS_PER_SECOND = 5; // (tune)
 const WOBBLE_ANGLE = 0.3; // radians at a full stumble meter (tune)
@@ -123,7 +123,7 @@ function primitiveCup() {
 }
 
 // Pickups (GDD §7): Kenney cup-coffee.glb tinted Sunset Coral (the tint multiplies the mostly white texture),
-// the CC BY takeaway cup recoloured to the palette (Brisa Turquoise body, Sea Salt White lid),
+// the CC BY takeaway cup recoloured to the palette (Sunset Coral body, Sea Salt White lid),
 // and the rarer frappe.glb in its own colours. One InstancedMesh per kind.
 export function createCoffees(scene, models) {
   const mug = models.cup ? bakeModel(models.cup, CUP_HEIGHT) : primitiveCup();
@@ -134,7 +134,7 @@ export function createCoffees(scene, models) {
     takeaway: instancedModel(
       scene,
       models.takeaway
-        ? paintByUv(bakeModel(models.takeaway, TAKEAWAY_HEIGHT), 0.5, PALETTE.seaSaltWhite, PALETTE.brisaTurquoise)
+        ? paintByUv(bakeModel(models.takeaway, TAKEAWAY_HEIGHT), 0.5, PALETTE.seaSaltWhite, PALETTE.sunsetCoral)
         : primitiveCup(),
       MAX_COFFEES,
     ),
