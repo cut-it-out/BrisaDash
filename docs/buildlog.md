@@ -461,7 +461,7 @@ Running record of how this project was built with Claude Code. "I" is the develo
   - Not yet done: listening to the sounds, phone FPS with the new scenery, run lengths with the Session 10 balance. All mine (see Open issues).
 - **Learned:** A labelled contact sheet with sizes made model choices quick and reviewable. Checking the colour language in a screenshot caught a coral obstacle that would have looked like a pickup.
 - **Where things stand / next step:**
-  - Phase 6 built and committed on `main` in four commits, a credits-panel fix and this wrap-up; pushed together with the unpushed Session 9 and 10 wrap-ups, so the Session 10 balance goes live at the same time; to GitHub, so Cloudflare Pages deploys it to https://brisa-dash.pages.dev.
+  - Phase 6 built and committed on `main` in four commits, a credits-panel fix and this wrap-up. Pushed to GitHub together with the unpushed Session 9 and 10 wrap-ups, so the Session 10 balance goes live at the same time; Cloudflare Pages deploys it to https://brisa-dash.pages.dev.
   - `npm test` 68/68.
   - Next: my review on the iPhone 14 with `?debug`: FPS and draw calls, the sounds, the villas/boats/gulls/obstacle looks, and run lengths with the new balance and zigzag pairs. Tune with `seagullCount`, `obstacleMix.*`, `zigzagChance`, `zigzagGapSeconds` from the URL, then write any changes into `src/game/config.js`.
 - **Showcase line:** I asked for a livelier seafront and more obstacle variety, chose new Kenney packs over primitives, and asked for a switch to turn the seagulls off. Claude Code audited four packs, picked villas, boats, stones, a tent and a barrel from labelled sheets, and shipped best score, sound and a zigzag row pattern in one Phase 6 build for me to review on the phone.
