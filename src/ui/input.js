@@ -8,6 +8,7 @@ export function bindInput(element, thresholdPx, onMove) {
     if (pointerId !== null) return;
     pointerId = event.pointerId;
     startX = event.clientX;
+    element.setPointerCapture(event.pointerId); // a mouse released outside the column still ends the gesture
   });
 
   element.addEventListener('pointermove', (event) => {
