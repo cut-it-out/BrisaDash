@@ -338,6 +338,19 @@ body {
   z-index: 2;
 }
 
+/* Nine packs no longer fit a phone screen: the panel scrolls inside the screen's padding,
+   with touch scrolling allowed here only (the game column blocks it everywhere else) */
+.credits-screen .panel {
+  max-height: 100%;
+  overflow-y: auto;
+  touch-action: pan-y;
+  overscroll-behavior: contain;
+}
+
+.credits-screen .panel > * {
+  flex-shrink: 0;
+}
+
 .credits-screen ul {
   margin: 0;
   padding: 0;
