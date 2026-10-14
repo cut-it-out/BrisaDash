@@ -30,17 +30,23 @@ export function createStartScreen(overlay, { onPlay, onCredits }) {
     'start-screen',
     `<h1 class="logo">Brisa <span>Dash</span></h1>
      <p class="tagline">by Brisa Café</p>
-     <button class="button primary" data-action="play">Play</button>
+     <button class="button primary" data-action="play" disabled>Loading…</button>
      <button class="link" data-action="credits">Credits</button>`,
   );
   element.querySelector('[data-action="play"]').addEventListener('click', onPlay);
   element.querySelector('[data-action="credits"]').addEventListener('click', onCredits);
+  const playButton = element.querySelector('[data-action="play"]');
   return {
     show() {
       element.hidden = false;
-      element.querySelector('[data-action="play"]').focus({ preventScroll: true });
+      playButton.focus({ preventScroll: true });
     },
     hide: () => (element.hidden = true),
+    setReady() {
+      playButton.disabled = false;
+      playButton.textContent = 'Play';
+      playButton.focus({ preventScroll: true });
+    },
   };
 }
 

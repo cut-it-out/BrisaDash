@@ -1,3 +1,37 @@
 {
-  "assets": []
+  "assets": [
+    {
+      "pack": "Blocky Characters",
+      "version": "2.0",
+      "creator": "Kenney",
+      "url": "https://kenney.nl/assets/blocky-characters",
+      "license": "CC0 1.0",
+      "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/",
+      "files": ["models/blocky/character-f.glb", "models/blocky/Textures/texture-f.png"]
+    },
+    {
+      "pack": "Food Kit",
+      "version": "2.0",
+      "creator": "Kenney",
+      "url": "https://kenney.nl/assets/food-kit",
+      "license": "CC0 1.0",
+      "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/",
+      "files": ["models/food/cup-coffee.glb", "models/food/Textures/colormap.png"]
+    },
+    {
+      "pack": "Nature Kit",
+      "version": "2.1",
+      "creator": "Kenney",
+      "url": "https://kenney.nl/assets/nature-kit",
+      "license": "CC0 1.0",
+      "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/",
+      "files": [
+        "models/nature/tree_palm.glb",
+        "models/nature/tree_palmBend.glb",
+        "models/nature/tree_palmTall.glb",
+        "models/nature/rock_smallA.glb",
+        "models/nature/rock_largeA.glb"
+      ]
+    }
+  ]
 }

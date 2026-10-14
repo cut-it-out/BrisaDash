@@ -263,6 +263,11 @@ body {
   color: var(--brisa-turquoise);
 }
 
+.button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
 .button:active {
   transform: translateY(1px);
   filter: brightness(0.92);

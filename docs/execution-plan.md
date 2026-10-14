@@ -108,6 +108,7 @@ public/models/             only the GLBs actually used
 
 1. Palette and typography pass, button pressed states, and `env(safe-area-inset-*)` padding for the iPhone notch and home bar.
 2. Real-device test: iPhone 14 (Safari) and/or Galaxy S20 FE (Chrome). Record the browser versions and the FPS from `?debug`. Tune the speed and stumble values and log each change.
+   - **Balancing pass (added in Session 3):** after the Phase 3 playtest I said the game "feels a bit easy at the moment". Tune difficulty with the `src/game/config.js` settings. Row rate is fixed in time by design, so the main levers are `twoBlockedChance`, `rowGapSeconds`, `minRowGap`, `acceleration`/`maxSpeed` and `stumbleSeconds`. Log each before → after value with the run lengths observed.
 3. One first-time tester plays with no help. Record their feedback as given, with no success rate.
 4. Share check from the live `*.pages.dev` URL: the link in the shared text opens the game.
 

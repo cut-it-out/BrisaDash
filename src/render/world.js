@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { CONFIG } from '../game/config.js';
+import { bakeModel, instancedModel } from './models.js';
 import { PALETTE } from './palette.js';
 
 const NEAR_Z = 8; // just behind the camera
@@ -60,6 +61,59 @@ export function createWorld(scene) {
       }
     }
     dashes.instanceMatrix.needsUpdate = true;
+  }
+  update(0);
+
+  return { update };
+}
+
+// Palms and rocks beside the track (Kenney Nature Kit, GDD §7). A fixed layout repeats every SPAN metres,
+// wrapped in z like the dashes. One InstancedMesh per model, so each model costs one draw call per material.
+// [model, x, offset along the span (m), height (m), turn (radians)]; the sea starts at x ≈ -4.75
+const SCENERY_LAYOUT = [
+  ['palmTall', -4.0, 0, 4.4, 0.4],
+  ['rockSmall', -4.6, 9, 0.5, 1.2],
+  ['palm', -4.0, 17, 4, 2.1],
+  ['palmBend', -4.1, 35, 3.8, 3.6],
+  ['rockLarge', -4.6, 44, 0.6, 0.3],
+  ['palmTall', -4.0, 52, 4.6, 5.1],
+  ['palm', -4.0, 68, 4.2, 1.0],
+  ['palm', 4.3, 7, 4.2, 2.8],
+  ['rockLarge', 3.4, 15, 0.7, 4.0],
+  ['palmBend', 7.0, 24, 3.9, 0.9],
+  ['palmTall', 4.3, 40, 4.5, 4.4],
+  ['rockSmall', 3.3, 49, 0.45, 2.2],
+  ['palm', 7.2, 58, 4, 5.9],
+  ['palmBend', 4.3, 74, 3.8, 1.7],
+];
+
+export function createScenery(scene, models) {
+  const byModel = new Map();
+  for (const [name, x, offset, height, turn] of SCENERY_LAYOUT) {
+    if (!models[name]) continue; // a missing model just leaves gaps in the scenery
+    if (!byModel.has(name)) byModel.set(name, []);
+    byModel.get(name).push({ x, offset, height, turn });
+  }
+
+  const groups = [...byModel].map(([name, placements]) => {
+    const baked = bakeModel(models[name], 1); // unit height; each placement scales it
+    const mesh = instancedModel(scene, baked, placements.length);
+    mesh.count = placements.length;
+    return { mesh, placements };
+  });
+  const dummy = new THREE.Object3D();
+
+  function update(distance) {
+    for (const { mesh, placements } of groups) {
+      placements.forEach((p, i) => {
+        dummy.position.set(p.x, 0, FAR_Z + ((p.offset + distance) % SPAN));
+        dummy.rotation.set(0, p.turn, 0);
+        dummy.scale.setScalar(p.height);
+        dummy.updateMatrix();
+        mesh.setMatrixAt(i, dummy.matrix);
+      });
+      mesh.instanceMatrix.needsUpdate = true;
+    }
   }
   update(0);
 
