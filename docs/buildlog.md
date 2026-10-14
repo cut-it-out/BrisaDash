@@ -13,16 +13,16 @@ Running record of how this project was built with Claude Code. "I" is the develo
 - UI: HTML/CSS overlay for the start screen, gesture hint, score, game over, one-tap retry, a text logo and a visible Credits link on the start and end screens (directed, brief).
 - Sharing: Web Share API when available, otherwise copy text plus link. No leaderboard (directed, brief).
 - Engineering: canvas and camera resize for portrait phones, capped device pixel ratio, few draw calls, keyboard arrows for desktop testing, HTTPS deployment. Target is smooth play near 30 FPS on the tested phone, reported honestly (directed, brief).
-- Assets: verified CC0 low-poly 3D packs, preferably glTF/GLB, plus one CC BY 4.0 exception, the takeaway cup (directed, Session 8; GDD §13 item 6). Three Kenney packs are allowed: Blocky Characters, Food Kit and Nature Kit. This lifts the brief's limit of one primary plus one supporting pack. Code-built primitives are allowed as fallbacks. No AI-generated art. Only assets actually used get recorded in `CREDITS.md` (directed, Session 2).
+- Assets: verified CC0 low-poly 3D packs, preferably glTF/GLB, plus one CC BY 4.0 exception, the takeaway cup (directed, Session 8; GDD §13 item 6). Three Kenney packs are allowed: Blocky Characters, Food Kit and Nature Kit. This lifts the brief's limit of one primary plus one supporting pack (directed, Session 2). City Kit (Suburban) and Watercraft Kit were added for houses and boats, and three Kenney CC0 sound packs (Interface Sounds, Impact Sounds, Digital Audio) for sound, making 9 credited packs (directed, Session 11). Code-built primitives are allowed as fallbacks. No AI-generated art. Only assets actually used get recorded in `CREDITS.md`.
 - Design source: `docs/GDD.md`, reviewed 14 October 2026. Runner = a barista (Kenney Blocky Character); obstacle = a beach parasol or deckchair; English only (directed / proposed → accepted, Session 2).
-- Models (packs checked 14 October 2026, all three CC0): runner = `character-f.glb` (teal shirt), 1.5 m, with no apron for now; obstacle = a primitive parasol over a lounger, because no pack has a parasol or deckchair; scenery = Nature Kit `tree_palm*` / `rock_*`, 14 pieces repeating every 80 m (directed, Session 3; sizes Session 7).
+- Models (all CC0 except the takeaway cup): runner = `character-f.glb` (teal shirt), 1.5 m, with no apron for now (directed, Session 3). Obstacles = three looks with one behaviour, picked per obstacle by `obstacleMix`: a primitive parasol over a lounger 50%, Nature Kit `tent_smallClosed` tinted Brisa Turquoise 25%, Food Kit `barrel` 25%; obstacles are never coral, since coral means a pickup (new looks directed, picks Claude's call, Session 11). Scenery = 24 pieces repeating every 80 m: 6 Nature Kit palms, 4 sandy rocks, 6 `stone_*` tinted gray, 5 City Kit (Suburban) villas with terracotta roofs on the right, 3 Watercraft Kit boats on the sea; plus 4 code-built seagulls, `seagullCount` 0 turns them off (directed, Session 11; picks Claude's call).
 - Pickups: `cup-coffee.glb` tinted Sunset Coral (0.3 m, +10), the CC BY takeaway cup recoloured with a Sunset Coral body and Sea Salt White lid (0.58 m, +10), and the rarer `frappe.glb` in its own colours (0.8 m, +20). Each cup line is one kind, split by `cupLineMix` (mug 40% / takeaway 40% / frappe 20%; shares are relative). Three pickups go beyond the brief's "one pickup" (directed, Session 8; takeaway and frappe heights set by me by hand, Session 10).
-- Rendering: every model material becomes flat `MeshLambertMaterial`, because Kenney's PBR materials are metallic and render dark (Claude's call, Session 7). Obstacles, each cup kind, lane dashes and each scenery model are one `InstancedMesh` each; the track, kerbs and sea are static planes; about 25 draw calls in total (Claude's call, Sessions 4–8).
+- Rendering: every model material becomes flat `MeshLambertMaterial`, because Kenney's PBR materials are metallic and render dark (Claude's call, Session 7). Obstacles, each cup kind, lane dashes and each scenery model are one `InstancedMesh` each; the track, kerbs and sea are static planes; about 25 draw calls before Phase 6, 40 with every Phase 6 model on screen (Claude's call, Sessions 4–11).
 - Camera: FOV 70 at (0, 4.0, 4.5) looking at (0, 0, -8), for a closer runner and a longer view ahead (directed, Session 4).
 - Node: `.nvmrc` pins Node 24 for the Cloudflare build (Vitest 5 needs Node ≥ 22.12) (Claude's call, Session 3).
 - Fail rule: the stumble. The first hit slows the runner to 70% for a 5 s window; a second hit inside that window ends the run. Both numbers are starting points to tune (directed, Session 2).
 - Scoring: distance plus pickup points: +1 per metre, +10 per coffee mug or takeaway cup, +20 per frappe, all to tune. Frappes count as coffees in the ☕ total and the share text (proposed → accepted, Session 2; frappe added, directed, Session 8).
-- Audio: a few CC0 SFX, muted by default; first on the cut list (directed, Session 2).
+- Audio: a few CC0 SFX, muted by default (directed, Session 2). Built in Session 11 with Web Audio: pickup clink, frappe chime, stumble thud, game-over tone, button click, as mono MP3s in `public/sounds/`; a top-right mute toggle remembered on the device (Claude's call, Session 11).
 - Hosting: Cloudflare Pages at https://brisa-dash.pages.dev (confirmed Session 9), building `npm run build` → `dist` on every push to `main` of GitHub `cut-it-out/BrisaDash`. No custom domain. Claude Code asks before pushing; I've had docs and fixes ride along with the next phase's push (directed, Sessions 2–4).
 - Test devices: an iPhone 14 and/or a Samsung Galaxy S20 FE (directed, Session 2).
 - Toolchain: Vite + `three` from npm + Vitest, in plain JavaScript. Test command `npm test`; build `npm run build` → `dist/` (directed, Session 2).
@@ -32,7 +32,7 @@ Running record of how this project was built with Claude Code. "I" is the develo
 - Balancing: tuned on the phone with `?debug&<configKey>=<value>` URL overrides (`src/game/overrides.js`), listed in the debug panel; the final values get written into `src/game/config.js` (proposed → accepted, Session 9). Current values, set by me by hand after phone tests and first-time testers both found it too easy: acceleration 0.25, maxSpeed 40, rowGapSeconds 1.2, minRowGap 9, twoBlockedChance 0.55, to be judged while playing Phase 6 (directed, Session 10).
 - Link preview: Open Graph tags in `index.html` and `public/og-image.png` (1200×630, a real gameplay capture with the logo; the CC BY cup kept out of it). `og:url` and `og:image` point at https://brisa-dash.pages.dev (proposed → accepted, Session 9).
 - Branding: an assumed palette in `docs/brisa-cafe-brand-palette.md`: Brisa Turquoise `#168F9C` (primary/CTA), Deep Ocean `#174B64` (text/HUD), Sunlit Sand `#F3DFBB` (environment), Sunset Coral `#E87F63` (coffee pickups/highlights), Sea Salt White `#FCFAF4` (panels) (directed, brief).
-- Nice-to-haves, only once the core game is finished: a device-local best score and a second obstacle configuration. Cut first: extra scenery, best score, extra patterns (directed, brief).
+- Nice-to-haves, only once the core game is finished: a device-local best score and a second obstacle configuration. Cut first: extra scenery, best score, extra patterns (directed, brief). All built in Session 11: best score in `localStorage` ("Best: N" / "New best: N!"), and zigzag pairs as the second arrangement (`zigzagChance` 0.2: two two-lane rows with neighbouring free lanes, at least 0.5 s apart) (directed, Session 11).
 - Time box: at most 3 focused days. Day 1 is the scene, camera, CC0 pack, swipes and lanes. Day 2 is obstacles, pickups, collisions, scoring and the overlay. Day 3 is styling, sharing, portrait QA, deployment and credits (directed, brief).
 - Agent process: the rules in `CLAUDE.md` → "Agent Behavior": surgical edits, verify through CLI output before claiming a fix, simplicity over abstraction, ask instead of guessing, present 2–3 options with trade-offs when several patterns are valid (directed, Session 1).
 - Build log: lives at `docs/buildlog.md` in attributed voice and replaces the old `docs/build-log-template.md` (proposed → accepted, Session 1).
@@ -44,6 +44,7 @@ Running record of how this project was built with Claude Code. "I" is the develo
 (Keep current; every session updates this list.)
 
 - Android device QA (Sessions 9–10), mine, "later": on the Galaxy S20 FE (Chrome) with `?debug`, record FPS over 3 runs, draw calls (expect 25), the browser version and the Android share sheet. The iPhone 14 is done (Session 10); its Safari version and draw-call count were not recorded, so add them if convenient. GDD §12 is the acceptance list.
+- Phase 6 review on the phone (Session 11), mine: the build is live. On the iPhone 14 with `?debug`, record FPS and draw calls (40 in headless Edge with everything on screen, 26 before), listen to the five sounds (chosen without listening), and judge the villas, boats, stones, seagulls (`seagullCount=0` turns them off), the tent and barrel (`obstacleMix.*`) and the zigzag pairs (`zigzagChance`, `zigzagGapSeconds`). Write any changes into `src/game/config.js`.
 - New balance to judge (Session 10): my hand-set values in `src/game/config.js` (acceleration 0.25, maxSpeed 40, rowGapSeconds 1.2, minRowGap 9, twoBlockedChance 0.55) get judged while playing Phase 6. Two effects to keep in mind: `minRowGap` no longer has any effect, because spacing is max(minRowGap, speed × rowGapSeconds) (`src/game/spawner.js`) and 8 × 1.2 = 9.6 m already beats 9 m; and maxSpeed 40 is only reached after 128 s (`src/game/speed.js`), so speed keeps climbing for the whole of a 30–60 s run (23 m/s at 60 s, past the old 18 cap). Close when run lengths are logged (target 30–60 s for a first-timer) and I'm happy with the values.
 - Preview URL is hard-coded (Session 9): `og:url` and `og:image` in `index.html` name https://brisa-dash.pages.dev. If the Pages project is renamed or a custom domain is added, update both.
 - Parked (Session 3, mine): a Brisa Turquoise apron on the barista ("no apron for now, maybe later"). All of the character's colour comes from one texture, so it would need a code-built overlay box or a recoloured torso.
@@ -398,12 +399,68 @@ Running record of how this project was built with Claude Code. "I" is the develo
   - Next session: Phase 6 in the plan's order: best score → SFX + mute → extra scenery → a second obstacle arrangement. Judge the new balance while playing it.
 - **Showcase line:** My own iPhone tests and the first-time testers both said the game was too easy, so I raised the speed ramp, the row density and the two-lane blocks by hand. The iPhone 14 held close to 60 fps, against the brief's 30 fps target.
 
-### Session 11 — Wednesday 14 October 2026 — (in progress)
+### Session 11 — Wednesday 14 October 2026 — Phase 6: best score, sound, villas, boats, seagulls, new obstacles
 
-- [direction] "lets plan out phase 6 before we go about it. I would like to add some additional topics to phase6: add some boats/animals (seagull?) to the water side, add some building to the right side. also would like to see some gray rocks (from kenney's pack) to spice things up even more. some additional obstackle(s)" — Phase 6 planning, before any code.
-- [decision] Chose "Add Kenney packs (Recommended)" for boats and buildings (Watercraft Kit, City Kit (Suburban), both CC0), lifting the 3-pack limit to 5. Claude Code had also offered primitives only, or a mix.
-- [direction] "low houses/villas (first option) but keep the palm trees also (on both sides) just maybe use a bit less" — buildings on the right side.
-- [direction] "lets do seagulls too, but should have the option in config to switch them off easily if I dont like them" — code-built gulls, since no Kenney seagull exists.
-- [decision] Chose "New obstacle looks" over a new arrangement only, or both. The original "second obstacle arrangement" stays in the plan as the first thing to cut.
-- [decision] Approved the Phase 6 plan (now in `docs/execution-plan.md`): best score → SFX + mute → asset audit with a contact sheet I pick from → extra scenery → new obstacle looks → second arrangement.
-- [direction] "continue implementation with all the steps in phase6, I will review and check everything at the end. once done, please commit everything to github so I can check live on cloudflare too" — so Claude Code picks the models and sounds itself; I review at the end.
+- **Goal:** Plan Phase 6 with my additions, then build all of it and push, so I can review it live (from me; Session 10's next step was Phase 6).
+- **Direction given:**
+  - "lets plan out phase 6 before we go about it. I would like to add some additional topics to phase6: add some boats/animals (seagull?) to the water side, add some building to the right side. also would like to see some gray rocks (from kenney's pack) to spice things up even more. some additional obstackle(s)"
+  - Buildings: "low houses/villas (first option) but keep the palm trees also (on both sides) just maybe use a bit less".
+  - Seagulls: "lets do seagulls too, but should have the option in config to switch them off easily if I dont like them".
+  - After approving the plan: "continue implementation with all the steps in phase6, I will review and check everything at the end. once done, please commit everything to github so I can check live on cloudflare too".
+- **Course corrections:**
+  - Sourcing: Claude Code offered primitives only, a mix, or new Kenney packs; I chose "Add Kenney packs (Recommended)" for boats and houses.
+  - Obstacles: Claude Code asked whether I meant new looks or a new arrangement; I chose "New obstacle looks". The plan's original arrangement step was kept as first to cut, and was built too, since I asked for "all the steps".
+  - Because I handed over the picks, Claude Code chose the sounds and models itself from the audit sheets; they are listed below for my review.
+- **What was built:**
+  1. Best score (`src/ui/best.js`): `localStorage` behind try/catch, "Best: N" on the start screen once one exists, "Best: N" or "New best: N!" on the game-over panel. "New best" is not shown on a first run.
+  2. Sound (`src/ui/audio.js`, `createMuteToggle` in `src/ui/screens.js`):
+     - Web Audio, muted by default; the choice is remembered on the device.
+     - The context is created or resumed by the unmute, Play, Retry and resume taps (iOS's "interrupted" state included).
+     - Sounds, converted to mono MP3 with ffmpeg and levelled: `glass_002` (mug/takeaway), `confirmation_001` (frappe), `click_001` (taps) from Interface Sounds; `impactSoft_heavy_000` (stumble) from Impact Sounds; `lowDown` (game over) from Digital Audio. 40 KB in `public/sounds/`.
+     - The mute button sits top-right over every screen.
+  3. Model audit by a subagent: Watercraft Kit 2.1, City Kit (Suburban) 2.0, Nature Kit 2.1 and Food Kit 2.0, each `License.txt` quoting "Creative Commons Zero, CC0", with labelled contact sheets of houses, boats, stones and 26 obstacle candidates.
+  4. Scenery (`src/render/world.js`): the layout went from 14 to 24 pieces per 80 m.
+     - Palms 10 → 6, three per side.
+     - The sandy rocks kept, plus six gray stones: `stone_smallA/largeA/smallH`, tinted `#8f969c` because Nature Kit's "stone" is pale cyan. Some sit in the shallows.
+     - Five villas on the right at x 9–10, facing the track: `building-type-g/k/m/r`. The shared `colormap.png` has the green roof colours replaced by the pack's variation-b terracotta.
+     - Three boats on the sea at x −8 to −11, bobbing and rolling: `boat-sail-a`, `boat-speed-j`, `boat-fishing-small`.
+  5. Seagulls (`createSeagulls`): code-built gulls (white body, grey V wings with dark tips, coral beak) circling over the sea ahead of the runner, banking into the turn. Set by `seagullCount` (4; 0 = off; `?debug&seagullCount=0`).
+  6. Obstacle looks: each obstacle gets a `kind` from `obstacleMix` (parasol 0.5 / tent 0.25 / barrel 0.25, dotted URL overrides work).
+     - Nature Kit `tent_smallClosed` tinted Brisa Turquoise, 1.1 m; Food Kit `barrel` lying across the lane, 0.95 m.
+     - One InstancedMesh per look; same hit rule and knock-aside.
+     - `pickCupKind` renamed `pickKind`.
+  7. Second arrangement: zigzag pairs (`zigzagChance` 0.2). Two two-lane rows `max(6 m, 0.7 s × speed)` apart, whose free lanes are neighbours.
+  8. Credits: 9 packs in `src/credits.json` and `CREDITS.md`; `tests/credits.test.js` now also requires every file in `public/sounds` to be credited.
+  9. Docs: Phase 6 rewritten in `docs/execution-plan.md`; GDD §6, §7, §8, §10, §11 and §13.
+- **Decisions:**
+  - New Kenney packs for boats and houses (5 model packs), rather than primitives. [directed]
+  - Low villas, palms kept on both sides but fewer. [directed]
+  - Code-built seagulls with a config switch. [directed]
+  - New obstacle looks. [directed]
+  - All of Phase 6 built in one go, with Claude Code making the asset picks, and pushed for my review. [directed]
+  - Sounds chosen by name, length and loudness: Claude Code couldn't listen to them. [Claude's call]
+  - The tent tinted turquoise, not coral: in this game coral means a cup to collect. A coral tent was tried first and changed after the screenshot. [Claude's call]
+  - Keep the sandy rocks and add gray stones, rather than replace them, since I asked to "spice things up even more". [Claude's call]
+  - Houses: terracotta roofs swapped into the shared City Kit texture for a Mediterranean look. Flat-roofed p/q were skipped because their upper floor is charcoal. [Claude's call, from the audit's suggestion]
+  - Zigzag gap of at least 0.5 s between hit windows at every speed, checked by a test. [Claude's call]
+  - Mute choice remembered on the device; "New best" not shown on a first run. [Claude's call]
+- **What broke or was wrong:**
+  - First seagull pass: the heading formula was off by 90° for clockwise circles. Claude Code caught it while checking the maths, before any screenshot.
+  - In the first screenshot the gulls were specks behind the debug panel; they were scaled ×1.6 and brought lower and closer.
+  - Adding the obstacle `kind` draw changed the seeded random sequence, so `tests/run.test.js` "spaces rows by the unslowed speed" met a zigzag pair and failed (12.6 m gap vs 21.6 m expected). The test now accepts either gap at the unslowed speed; it still tells slowed from unslowed spacing apart.
+  - The audit found Nature Kit's "gray" stones are pale cyan in the files, and that each pack ships a different `Textures/colormap.png`. Each pack keeps its own folder.
+- **Hand edits:** None seen this session; the tree was clean at the start (`git status`).
+- **Testing / playtest notes:**
+  - `npm test`: 12 files, 68 tests passed (52 at the start of the session).
+  - `npm run build`: JS 644.47 kB (164.90 kB gzip). `public/models` 840 KB, `public/sounds` 40 KB.
+  - Headless Edge (SwiftShader, 390×693) through `vite preview`:
+    - A stored best of 321 survived a 147-point run; a stored 10 became "New best: 58!" and was saved.
+    - Nothing fetched while muted; after unmuting, all five MP3s returned 200 with no console warnings, and the choice survived a reload.
+    - Screenshots checked the gulls, the scenery, tents only, and the default mix. 40 draw calls with every model on screen, up from 26.
+  - Not yet done: listening to the sounds, phone FPS with the new scenery, run lengths with the Session 10 balance. All mine (see Open issues).
+- **Learned:** A labelled contact sheet with sizes made model choices quick and reviewable. Checking the colour language in a screenshot caught a coral obstacle that would have looked like a pickup.
+- **Where things stand / next step:**
+  - Phase 6 built and committed on `main` in four commits plus this wrap-up; pushed to GitHub, so Cloudflare Pages deploys it to https://brisa-dash.pages.dev.
+  - `npm test` 68/68.
+  - Next: my review on the iPhone 14 with `?debug`: FPS and draw calls, the sounds, the villas/boats/gulls/obstacle looks, and run lengths with the new balance and zigzag pairs. Tune with `seagullCount`, `obstacleMix.*`, `zigzagChance`, `zigzagGapSeconds` from the URL, then write any changes into `src/game/config.js`.
+- **Showcase line:** I asked for a livelier seafront and more obstacle variety, chose new Kenney packs over primitives, and asked for a switch to turn the seagulls off. Claude Code audited four packs, picked villas, boats, stones, a tent and a barrel from labelled sheets, and shipped best score, sound and a zigzag row pattern in one Phase 6 build for me to review on the phone.

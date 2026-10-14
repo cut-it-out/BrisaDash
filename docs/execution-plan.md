@@ -1,6 +1,6 @@
 # Brisa Dash — Execution Plan
 
-*Progress: Phases 0–4 done (Sessions 3–8); Phase 5 done on the iPhone 14 (Sessions 9–10), Android check still to do; Phase 6 next.*
+*Progress: Phases 0–4 done (Sessions 3–8); Phase 5 done on the iPhone 14 (Sessions 9–10), Android check still to do; Phase 6 built in Session 11, waiting for my review on the phone.*
 
 *Status: approved, 14 October 2026 (Session 2). Built from [GDD.md](GDD.md). Each phase ends with something playable that can be committed. Tick phases off in [buildlog.md](buildlog.md); if the plan changes, edit this file in the same session.*
 
@@ -135,6 +135,8 @@ Build order (Claude Code's proposal, cheapest first; extended in Session 11 with
 6. **A second obstacle arrangement:** kept from the original plan, first to cut.
 
 Draw calls go from about 25 to roughly 35–40. Check `?debug` on the iPhone 14 after steps 4 and 5 and trim the layout if FPS drops well below the current ~60.
+
+**Built in Session 11** (Claude Code's picks, for my review): sounds from Kenney Interface Sounds, Impact Sounds and Digital Audio; houses `building-type-g/k/m/r` with terracotta roofs; boats `boat-sail-a`, `boat-speed-j`, `boat-fishing-small`; gray-tinted `stone_smallA/largeA/smallH` added next to the sandy rocks; obstacles = parasol 50% / turquoise tent 25% / barrel 25% (`obstacleMix`); zigzag pairs 20% of rows (`zigzagChance`). Headless Edge showed 40 draw calls with every model on screen.
 
 ---
 

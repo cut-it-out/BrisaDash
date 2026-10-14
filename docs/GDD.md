@@ -67,14 +67,15 @@ The wobble is just a **code-driven change of position and rotation** on a static
 | Entity | What it is | Source |
 |---|---|---|
 | Runner | A barista made from Kenney Blocky Character **`character-f.glb`** (teal shirt), in a static pose with a code-driven run bob. No apron for now; it may come later | Blocky Characters (CC0) |
-| Obstacle (one type) | A beach parasol or deckchair blocking one lane | Built from primitives (a parasol is a cylinder plus a cone). None of the three packs has a parasol or deckchair (checked 14 October 2026) |
+| Obstacles (three looks, one behaviour) | Each blocks one lane and hits the same way. The look is picked per obstacle by `obstacleMix` (tune): a beach parasol over a lounger 50%, a beach tent 25%, a barrel lying across the lane 25%. Obstacles are turquoise or brown, never coral, because coral means a cup to collect | Parasol built from primitives (no pack has one, checked 14 October 2026). Tent: Nature Kit `tent_smallClosed.glb` tinted Brisa Turquoise, 1.1 m. Barrel: Food Kit `barrel.glb`, 0.95 m (CC0) |
 | Pickup A: coffee mug | The common pickup, spinning and bobbing: **`cup-coffee.glb`** (a ceramic cup with a handle), tinted Sunset Coral, 0.3 m tall. Worth +10 | Food Kit (CC0) |
 | Pickup B: frappe | The rarer pickup: **`frappe.glb`** (a takeaway cup with a lid and straw) in its own colours, 0.8 m tall. Worth +20 | Food Kit (CC0) |
 | Pickup C: takeaway cup | A common pickup: "Low-Poly Takeaway Coffee Cup", recoloured in code with a Sunset Coral body and a Sea Salt White lid, 0.58 m tall. Worth +10 | PickledCactusAlan on Sketchfab (**CC BY 4.0**, see §13) |
 | Track | A sandy promenade in Sunlit Sand with white kerbs and dashed lane lines | Code-built planes that stay still. Only the lane-line dashes move and get recycled (one instanced mesh) |
-| Scenery | A few palms or rocks beside the track, with turquoise sea on one side and sky behind | Nature Kit (CC0): `tree_palm*` and `rock_*` models, recycled |
+| Scenery | Palms, sandy rocks and gray stones on both sides; a few stones in the shallows; a row of white villas with terracotta roofs on the right; three boats on the turquoise sea on the left, bobbing. One layout of 24 pieces (6 palms, 4 rocks, 6 stones, 5 villas, 3 boats) repeats every 80 m | Nature Kit: `tree_palm*`, `rock_*` and `stone_*` (tinted gray). City Kit (Suburban): `building-type-g/k/m/r` with the pack's terracotta roof colours swapped into the shared texture. Watercraft Kit: `boat-sail-a`, `boat-speed-j`, `boat-fishing-small` (all CC0) |
+| Seagulls | Four gulls circling over the sea ahead of the runner, banking into the turn with a slow bob. `seagullCount` in `config.js` sets how many; 0 turns them off | Built from primitives (no pack has a seagull) |
 
-- **Spawning:** obstacles come in rows, and every row **leaves at least one lane free**. Coffees come in short lines of 3–5 cups (tune) in a lane that is free at that point, which rewards reading the road. Each line is one kind of cup: mugs 40%, takeaway cups 40%, frappes 20% (tune).
+- **Spawning:** obstacles come in rows, and every row **leaves at least one lane free**. A share of rows (`zigzagChance`, 20%, tune) come as a **zigzag pair**: two rows that each block two lanes, about 0.7 s apart, whose free lanes sit side by side, so the runner has to swipe straight after the first row. That leaves at least 0.5 s between the two rows' hit windows at any speed. Coffees come in short lines of 3–5 cups (tune) in a lane that is free at that point, which rewards reading the road. Each line is one kind of cup: mugs 40%, takeaway cups 40%, frappes 20% (tune).
 - **Recycling:** every track segment, obstacle, cup and scenery piece comes from a small pool and moves back ahead of the runner once it has passed behind the camera. No infinite world is built.
 - **Camera:** a fixed perspective camera behind and above the runner, looking down the track. The look-at point stays steady; the only camera motion is the stumble shake.
 - **Lighting:** ambient plus one directional light, with flat colours. No shadows by default; they could be added later only if the frame rate allows.
@@ -83,7 +84,7 @@ The wobble is just a **code-driven change of position and rotation** on a static
 
 | Screen | Contents |
 |---|---|
-| **Start** | The "Brisa Dash" logo as styled text with a "by Brisa Café" tagline, a **Play** button (Turquoise), Best score (if that's built), mute toggle, **Credits** link |
+| **Start** | The "Brisa Dash" logo as styled text with a "by Brisa Café" tagline, a **Play** button (Turquoise), Best score (once there is one), mute toggle, **Credits** link |
 | **HUD** (during a run) | Score at top centre (Deep Ocean text), coffee count, stumble meter (shown only while stumbling), mute toggle. The bottom half of the screen stays clear for the thumb |
 | **Game over** | Score, distance, coffees, best score, **Retry** (primary button), **Share score** (secondary button), **Credits** link. Panel in Sea Salt White |
 | **Credits** | An overlay listing every asset actually used: creator, pack, URL, licence (CC0, or CC BY with the changes made). Generated from the same data as `CREDITS.md` |
@@ -110,7 +111,7 @@ The wobble is just a **code-driven change of position and rotation** on a static
 **Must-haves (from the brief):**
 - A real-time 3D three-lane runner
 - Swipe and keyboard controls
-- One obstacle type and three pickups: a coffee mug, a takeaway cup and a rarer, higher-value frappe. The brief asked for one; I added the others in Session 8
+- One obstacle type (three looks since Phase 6, one behaviour) and three pickups: a coffee mug, a takeaway cup and a rarer, higher-value frappe. The brief asked for one; I added the others in Session 8
 - The stumble fail rule
 - Distance plus pickup scoring
 - The start, HUD, game-over and credits screens
@@ -119,10 +120,11 @@ The wobble is just a **code-driven change of position and rotation** on a static
 - `CREDITS.md` and the in-game credits
 - HTTPS deployment on Cloudflare Pages
 
-**Nice-to-haves:**
-- Sound effects (added this session)
+**Nice-to-haves (all built in Phase 6):**
+- Sound effects (added in the Session 2 review)
 - Best score
-- A second obstacle arrangement, only once the core game is finished
+- A second obstacle arrangement: the zigzag pair (§7)
+- Added in Phase 6 (Session 11) at my direction: two more obstacle looks (a tent and a barrel), and extra scenery (villas, boats, gray stones, seagulls). Both go past the brief's "one obstacle type" and "little low-poly scenery" on purpose
 
 **Cut first, in this order:**
 1. Sound effects
@@ -141,7 +143,7 @@ The wobble is just a **code-driven change of position and rotation** on a static
 
 ## 13. Review decisions (14 October 2026)
 
-1. **Asset packs:** three CC0 packs are allowed: Blocky Characters, Food Kit and Nature Kit. This lifts the brief's two-pack limit for this project.
+1. **Asset packs:** three CC0 packs are allowed: Blocky Characters, Food Kit and Nature Kit. This lifts the brief's two-pack limit for this project. In Phase 6 (Session 11) I added two more CC0 model packs, City Kit (Suburban) and Watercraft Kit, for houses and boats, and three CC0 Kenney sound packs (Interface Sounds, Impact Sounds, Digital Audio).
 2. **Share link:** the default Cloudflare Pages `*.pages.dev` address. No custom domain.
 3. **Runner:** a barista. A customer chasing their order was rejected because it "would not send the right message" for the café.
 4. **Stumble numbers:** start at a 5 s window and 70% speed. They'll be adjusted after playtests.

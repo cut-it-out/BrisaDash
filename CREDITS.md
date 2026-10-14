@@ -98,4 +98,4 @@ Every third-party asset used in Brisa Dash. CC0 assets are public domain and cre
 
 - three.js (https://threejs.org), MIT License
 
-Everything else (track, parasols, loungers, sea) is built in code. Brisa Café is a fictional café made up for this prototype.
+Everything else (track, parasols, loungers, sea, seagulls) is built in code. Brisa Café is a fictional café made up for this prototype.
