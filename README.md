@@ -10,9 +10,9 @@ A one-thumb 3D beach runner for phones: dodge the parasols, grab the coffee, bea
 
 Brisa Dash is a 3D endless runner made for Brisa Café, a fictional beach café on the Costa del Sol. The idea is a short game people play on their phone while they wait for their coffee, opened from a QR code or a shared link.
 
-It's a self-directed brief exercise, not a commission: the client email in [the brief](docs/BRIEF_brisa-dash.md) is invented. It was built in 2 days, 14–15 October 2026.
+It's a self-directed brief exercise, not a commission: the client email in [the brief](docs/BRIEF_brisa-dash.md) is invented. It was built in one day, 14 October 2026, with the last session running past midnight.
 
-Case study: https://ndrew.surfingseagullgames.com/prototypes/brisa-dash/ (not live yet).
+Case study: https://ndrew.surfingseagullgames.com/prototypes/brisa-dash/
 
 ## How to play
 
